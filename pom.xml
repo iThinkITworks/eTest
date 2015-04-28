@@ -85,9 +85,9 @@
 			<artifactId>vaadin-themes</artifactId>
 		</dependency>
 	 <dependency>
-	  <groupId>com.google.guava</groupId>
-	  <artifactId>guava</artifactId>
-	  <version>18.0</version>
+	  <groupId>com.vaadin</groupId>
+	  <artifactId>vaadin-theme-compiler</artifactId>
+	  <version>7.2.grid-SNAPSHOT</version>
 	 </dependency>
 	</dependencies>
 
