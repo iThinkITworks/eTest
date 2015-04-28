@@ -89,6 +89,11 @@
 	  <artifactId>vaadin-theme-compiler</artifactId>
 	  <version>7.2.grid-SNAPSHOT</version>
 	 </dependency>
+	 <dependency>
+	  <groupId>mysql</groupId>
+	  <artifactId>mysql-connector-java</artifactId>
+	  <version>5.1.35</version>
+	 </dependency>
 	</dependencies>
 
 	<build>

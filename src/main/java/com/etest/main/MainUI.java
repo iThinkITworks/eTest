@@ -1,6 +1,8 @@
 package com.etest.main;
 
 import com.etest.model.User;
+import com.etest.service.UserLoginService;
+import com.etest.serviceprovider.UserLoginServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.LoginView;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +16,7 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
+import com.vaadin.event.ShortcutAction;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -24,10 +27,12 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -38,8 +43,12 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import static com.vaadin.ui.UI.getCurrent;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -125,12 +134,15 @@ private boolean testMode = false;
         }
         
         getPage().setTitle("eTest Generator");
-//        setContent(root);
-        updateContent();
-        root.setWidth("100%");
-
-        root.addMenu(buildMenu());
-
+        
+        Window sub = loginWindow();
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
+        }
+        sub.center();
+        sub.setModal(true);        
+        sub.addCloseListener(loginWindowCloseListener);
+   
         navigator = new Navigator(this, viewDisplay);
 
         navigator.addView("common", CommonParts.class);
@@ -195,20 +207,6 @@ private boolean testMode = false;
         });
     }
 
-    private void updateContent() {
-        User user = (User) VaadinSession.getCurrent().getAttribute(
-                User.class.getName());
-        if (user != null && "admin".equals(user.getUserType())) {
-            // Authenticated user
-            setContent(root);
-            removeStyleName("loginview");
-            getNavigator().navigateTo(getNavigator().getState());
-        } else {
-            setContent(new LoginView(root, this));
-            addStyleName("loginview");
-        }
-    }
-    
     private boolean browserCantRenderFontsConsistently() {
         // PhantomJS renders font correctly about 50% of the time, so
         // disable it to have consistent screenshots
@@ -309,12 +307,15 @@ private boolean testMode = false;
         title.setSizeUndefined();
         top.addComponent(title);
         top.setExpandRatio(title, 1);
-
+        
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         final StringGenerator sg = new StringGenerator();
-        final MenuBar.MenuItem settingsItem = settings.addItem(sg.nextString(true)
-                + " " + sg.nextString(true) + sg.nextString(false),
+//        final MenuBar.MenuItem settingsItem = settings.addItem(sg.nextString(true)
+//                + " " + sg.nextString(true) + sg.nextString(false),
+//                new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
+//                null);
+        final MenuBar.MenuItem settingsItem = settings.addItem(VaadinSession.getCurrent().getAttribute("username").toString(),
                 new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
                 null);
         settingsItem.addItem("Edit Profile", menuCommand);
@@ -509,5 +510,124 @@ private boolean testMode = false;
             }
         }
         
+    };
+
+    private Window loginWindow(){        
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSizeFull();
+        vlayout.setSpacing(true);
+        vlayout.setMargin(true);
+        
+        final Window sub = new Window("", vlayout);
+        sub.setSizeFull();
+        sub.setResizable(false);
+        sub.setClosable(false);
+        
+        Component loginForm = buildLoginForm(sub);
+        vlayout.addComponent(loginForm);
+        vlayout.setComponentAlignment(loginForm, Alignment.MIDDLE_CENTER);
+        sub.setContent(vlayout);
+        
+        Notification notification = new Notification(
+                "Welcome to eTest Generator");
+        notification
+                .setDescription("<span>This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.</span> <span>Close this <b>Notification</b> to continue.</span>");
+        notification.setHtmlContentAllowed(true);
+        notification.setStyleName("tray dark small closable login-help");
+        notification.setPosition(Position.BOTTOM_CENTER);
+        notification.show(Page.getCurrent());
+        notification.setDelayMsec(-1);
+        
+        return sub;
+    }
+
+    private Component buildLoginForm(Window sub) {        
+        final VerticalLayout loginPanel = new VerticalLayout();
+        loginPanel.setSizeUndefined();
+        loginPanel.setSpacing(true);
+        Responsive.makeResponsive(loginPanel);
+        loginPanel.addStyleName("login-panel");
+
+        loginPanel.addComponent(buildLabels());
+        loginPanel.addComponent(buildFields(sub));
+        loginPanel.addComponent(new CheckBox("Remember me", true));
+        return loginPanel;
+    }
+    
+    private Component buildFields(final Window sub) {
+        final UserLoginService userLoginService = new UserLoginServiceImpl();
+        HorizontalLayout fields = new HorizontalLayout();
+        fields.setSpacing(true);
+        fields.addStyleName("fields");
+
+        final TextField username = new TextField("Username");
+        username.setIcon(FontAwesome.USER);
+        username.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+
+        final PasswordField password = new PasswordField("Password");
+        password.setIcon(FontAwesome.LOCK);
+        password.addStyleName(ValoTheme.TEXTFIELD_INLINE_ICON);
+
+        final Button signin = new Button("Sign In");
+        signin.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        signin.setClickShortcut(ShortcutAction.KeyCode.ENTER);
+        signin.focus();
+
+        fields.addComponents(username, password, signin);
+        fields.setComponentAlignment(signin, Alignment.BOTTOM_LEFT);
+
+        signin.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(final Button.ClickEvent event) {
+                if(username.getValue().isEmpty() || username.getValue() == null){
+                    Notification.show("provide a username", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
+                if(password.getValue().isEmpty() || password.getValue() == null){
+                    Notification.show("password is required", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
+                boolean result = userLoginService.loginResult(username.getValue(), password.getValue());
+                if(!result){
+                    Notification.show("Failed Login!", Type.ERROR_MESSAGE);
+                    return;
+                } else {
+//                    sub.setClosable(true);
+                    sub.close();
+                }
+            }
+        });
+        return fields;
+    }
+    
+    private Component buildLabels() {
+        CssLayout labels = new CssLayout();
+        labels.addStyleName("labels");
+
+        Label welcome = new Label("Welcome");
+        welcome.setSizeUndefined();
+        welcome.addStyleName(ValoTheme.LABEL_H4);
+        welcome.addStyleName(ValoTheme.LABEL_COLORED);
+        labels.addComponent(welcome);
+
+        Label title = new Label("eTest Dashboard");
+        title.setSizeUndefined();
+        title.addStyleName(ValoTheme.LABEL_H3);
+        title.addStyleName(ValoTheme.LABEL_LIGHT);
+        labels.addComponent(title);
+        return labels;
+    }
+    
+    Window.CloseListener loginWindowCloseListener = new Window.CloseListener() {
+
+        @Override
+        public void windowClose(Window.CloseEvent e) {
+            setContent(root);
+            root.setWidth("100%");
+            root.addMenu(buildMenu());
+            Notification.show("WELCOME "+VaadinSession.getCurrent().getAttribute("username"));
+        }
     };
 }
