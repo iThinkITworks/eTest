@@ -30,7 +30,9 @@ public class DBConnection {
             conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
             return conn;
         } catch (ClassNotFoundException | SQLException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
+            ErrorDBNotification.errorNotificationOnDBAccess("Connection failed to DB, SEVERE");
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);            
             return null;
         }
     }

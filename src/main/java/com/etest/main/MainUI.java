@@ -1,10 +1,11 @@
 package com.etest.main;
 
-import com.etest.model.User;
 import com.etest.service.UserLoginService;
 import com.etest.serviceprovider.UserLoginServiceImpl;
 import com.etest.valo.*;
-import com.etest.view.LoginView;
+import com.etest.view.DashboardView;
+import com.etest.view.systemadministration.*;
+import com.etest.view.testbank.*;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -12,7 +13,6 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
@@ -40,7 +40,6 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
@@ -145,34 +144,43 @@ private boolean testMode = false;
    
         navigator = new Navigator(this, viewDisplay);
 
-        navigator.addView("common", CommonParts.class);
-        navigator.addView("labels", Labels.class);
-        navigator.addView("buttons-and-links", ButtonsAndLinks.class);
-        navigator.addView("textfields", TextFields.class);
-        navigator.addView("datefields", DateFields.class);
-        navigator.addView("comboboxes", ComboBoxes.class);
-        navigator.addView("checkboxes", CheckBoxes.class);
-        navigator.addView("sliders", Sliders.class);
-        navigator.addView("menubars", MenuBars.class);
-        navigator.addView("panels", Panels.class);
-        navigator.addView("trees", Trees.class);
-        navigator.addView("tables", Tables.class);
-        navigator.addView("splitpanels", SplitPanels.class);
-        navigator.addView("tabs", Tabsheets.class);
-        navigator.addView("accordions", Accordions.class);
-        navigator.addView("colorpickers", ColorPickers.class);
-        navigator.addView("selects", NativeSelects.class);
-        navigator.addView("calendar", CalendarTest.class);
-        navigator.addView("forms", Forms.class);
-        navigator.addView("popupviews", PopupViews.class);
-        navigator.addView("dragging", Dragging.class);
+        navigator.addView("dashboard", DashboardView.class);
+        navigator.addView("curriculum", CurriculumView.class);
+        navigator.addView("faculty-member", FacultyMemberView.class);
+        navigator.addView("syllabus", SyllabusView.class);
+        navigator.addView("semestral-team", SemestralTeamView.class);
+        navigator.addView("housekeeping", HousekeepingView.class);
+        navigator.addView("cells", CellView.class);
+        navigator.addView("run-item-analysis", RunItemAnalysisView.class);
+        
+//        navigator.addView("common", CommonParts.class);
+//        navigator.addView("labels", Labels.class);
+//        navigator.addView("buttons-and-links", ButtonsAndLinks.class);
+//        navigator.addView("textfields", TextFields.class);
+//        navigator.addView("datefields", DateFields.class);
+//        navigator.addView("comboboxes", ComboBoxes.class);
+//        navigator.addView("checkboxes", CheckBoxes.class);
+//        navigator.addView("sliders", Sliders.class);
+//        navigator.addView("menubars", MenuBars.class);
+//        navigator.addView("panels", Panels.class);
+//        navigator.addView("trees", Trees.class);
+//        navigator.addView("tables", Tables.class);
+//        navigator.addView("splitpanels", SplitPanels.class);
+//        navigator.addView("tabs", Tabsheets.class);
+//        navigator.addView("accordions", Accordions.class);
+//        navigator.addView("colorpickers", ColorPickers.class);
+//        navigator.addView("selects", NativeSelects.class);
+//        navigator.addView("calendar", CalendarTest.class);
+//        navigator.addView("forms", Forms.class);
+//        navigator.addView("popupviews", PopupViews.class);
+//        navigator.addView("dragging", Dragging.class);
 
         final String f = Page.getCurrent().getUriFragment();
         if (f == null || f.equals("")) {
-            navigator.navigateTo("common");
+            navigator.navigateTo("dashboard");
         }
 
-        navigator.setErrorView(CommonParts.class);
+        navigator.setErrorView(DashboardView.class);
 
         navigator.addViewChangeListener(new ViewChangeListener() {
 
@@ -257,27 +265,36 @@ private boolean testMode = false;
     
     CssLayout buildMenu() {
         // Add items
-        menuItems.put("common", "Common UI Elements");
-        menuItems.put("labels", "Labels");
-        menuItems.put("buttons-and-links", "Buttons & Links");
-        menuItems.put("textfields", "Text Fields");
-        menuItems.put("datefields", "Date Fields");
-        menuItems.put("comboboxes", "Combo Boxes");
-        menuItems.put("selects", "Selects");
-        menuItems.put("checkboxes", "Check Boxes & Option Groups");
-        menuItems.put("sliders", "Sliders & Progress Bars");
-        menuItems.put("colorpickers", "Color Pickers");
-        menuItems.put("menubars", "Menu Bars");
-        menuItems.put("trees", "Trees");
-        menuItems.put("tables", "Tables");
-        menuItems.put("dragging", "Drag and Drop");
-        menuItems.put("panels", "Panels");
-        menuItems.put("splitpanels", "Split Panels");
-        menuItems.put("tabs", "Tabs");
-        menuItems.put("accordions", "Accordions");
-        menuItems.put("popupviews", "Popup Views");
-        // menuItems.put("calendar", "Calendar");
-        menuItems.put("forms", "Forms");
+        menuItems.put("dashboard", "Dashboard");
+        menuItems.put("curriculum", "Curriculum");
+        menuItems.put("faculty-member", "Faculty Member");
+        menuItems.put("syllabus", "Syllabus");
+        menuItems.put("semestral-team", "Semestral Team");
+        menuItems.put("housekeeping", "Housekeeping");
+        menuItems.put("cells", "Create/Modify/Approve Cells");
+        menuItems.put("run-item-analysis", "Run Item Analysis");
+        
+//        menuItems.put("common", "Dashboard");
+//        menuItems.put("labels", "Labels");
+//        menuItems.put("buttons-and-links", "Buttons & Links");
+//        menuItems.put("textfields", "Text Fields");
+//        menuItems.put("datefields", "Date Fields");
+//        menuItems.put("comboboxes", "Combo Boxes");
+//        menuItems.put("selects", "Selects");
+//        menuItems.put("checkboxes", "Check Boxes & Option Groups");
+//        menuItems.put("sliders", "Sliders & Progress Bars");
+//        menuItems.put("colorpickers", "Color Pickers");
+//        menuItems.put("menubars", "Menu Bars");
+//        menuItems.put("trees", "Trees");
+//        menuItems.put("tables", "Tables");
+//        menuItems.put("dragging", "Drag and Drop");
+//        menuItems.put("panels", "Panels");
+//        menuItems.put("splitpanels", "Split Panels");
+//        menuItems.put("tabs", "Tabs");
+//        menuItems.put("accordions", "Accordions");
+//        menuItems.put("popupviews", "Popup Views");
+//        menuItems.put("calendar", "Calendar");
+//        menuItems.put("forms", "Forms");
 
         final HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
@@ -310,7 +327,7 @@ private boolean testMode = false;
         
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
-        final StringGenerator sg = new StringGenerator();
+//        final StringGenerator sg = new StringGenerator();
 //        final MenuBar.MenuItem settingsItem = settings.addItem(sg.nextString(true)
 //                + " " + sg.nextString(true) + sg.nextString(false),
 //                new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
@@ -330,53 +347,74 @@ private boolean testMode = false;
         Label label = null;
         int count = -1;
         for (final Map.Entry<String, String> item : menuItems.entrySet()) {
-            if (item.getKey().equals("labels")) {
-                label = new Label("Components", ContentMode.HTML);
+            if (item.getKey().equals("curriculum")) {
+                label = new Label("System Administration", ContentMode.HTML);
                 label.setPrimaryStyleName("valo-menu-subtitle");
                 label.addStyleName("h4");
                 label.setSizeUndefined();
                 menuItemsLayout.addComponent(label);
             }
-            if (item.getKey().equals("panels")) {
-                label.setValue(label.getValue()
-                        + " <span class=\"valo-menu-badge\">" + count
-                        + "</span>");
-                count = 0;
-                label = new Label("Containers", ContentMode.HTML);
+            
+            if (item.getKey().equals("cells")) {
+                label = new Label("Test Bank", ContentMode.HTML);
                 label.setPrimaryStyleName("valo-menu-subtitle");
                 label.addStyleName("h4");
                 label.setSizeUndefined();
                 menuItemsLayout.addComponent(label);
             }
-            if (item.getKey().equals("forms")) {
-                label.setValue(label.getValue()
-                        + " <span class=\"valo-menu-badge\">" + count
-                        + "</span>");
-                count = 0;
-                label = new Label("Other", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
-                label.setSizeUndefined();
-                menuItemsLayout.addComponent(label);
-            }
+            
+//            if (item.getKey().equals("labels")) {
+//                label = new Label("eTest Modules", ContentMode.HTML);
+//                label.setPrimaryStyleName("valo-menu-subtitle");
+//                label.addStyleName("h4");
+//                label.setSizeUndefined();
+//                menuItemsLayout.addComponent(label);
+//            }
+//            
+//            if (item.getKey().equals("panels")) {
+//                label.setValue(label.getValue()
+//                        + " <span class=\"valo-menu-badge\">" + count
+//                        + "</span>");
+//                count = 0;
+//                label = new Label("Community", ContentMode.HTML);
+//                label.setPrimaryStyleName("valo-menu-subtitle");
+//                label.addStyleName("h4");
+//                label.setSizeUndefined();
+//                menuItemsLayout.addComponent(label);
+//            }
+//            
+//            if (item.getKey().equals("forms")) {
+//                label.setValue(label.getValue()
+//                        + " <span class=\"valo-menu-badge\">" + count
+//                        + "</span>");
+//                count = 0;
+//                label = new Label("Other", ContentMode.HTML);
+//                label.setPrimaryStyleName("valo-menu-subtitle");
+//                label.addStyleName("h4");
+//                label.setSizeUndefined();
+//                menuItemsLayout.addComponent(label);
+//            }
+            
             final Button b = new Button(item.getValue(), new Button.ClickListener() {
                 @Override
                 public void buttonClick(final ClickEvent event) {
                     navigator.navigateTo(item.getKey());
                 }
             });
-            if (count == 2) {
-                b.setCaption(b.getCaption()
-                        + " <span class=\"valo-menu-badge\">123</span>");
-            }
+            
+//            if (count == 2) {
+//                b.setCaption(b.getCaption()
+//                        + " <span class=\"valo-menu-badge\">123</span>");
+//            }
+            
             b.setHtmlContentAllowed(true);
             b.setPrimaryStyleName("valo-menu-item");
             b.setIcon(testIcon.get());
             menuItemsLayout.addComponent(b);
             count++;
         }
-        label.setValue(label.getValue() + " <span class=\"valo-menu-badge\">"
-                + count + "</span>");
+//        label.setValue(label.getValue() + " <span class=\"valo-menu-badge\">"
+//                + count + "</span>");
 
         return menu;
     }
@@ -550,7 +588,7 @@ private boolean testMode = false;
 
         loginPanel.addComponent(buildLabels());
         loginPanel.addComponent(buildFields(sub));
-        loginPanel.addComponent(new CheckBox("Remember me", true));
+//        loginPanel.addComponent(new CheckBox("Remember me", true));
         return loginPanel;
     }
     
@@ -590,8 +628,7 @@ private boolean testMode = false;
                 }
                 
                 boolean result = userLoginService.loginResult(username.getValue(), password.getValue());
-                if(!result){
-                    Notification.show("Failed Login!", Type.ERROR_MESSAGE);
+                if(!result){                    
                     return;
                 } else {
 //                    sub.setClosable(true);

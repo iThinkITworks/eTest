@@ -5,10 +5,7 @@
  */
 package com.etest.connection;
 
-import com.etest.global.LoginSession;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -40,7 +37,8 @@ public class UserLoginDAO {
                 result = true;
             }
         } catch (SQLException ex) {
-            ErrorDBNotification.errorConnectoToDB();
+            ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(UserLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         
