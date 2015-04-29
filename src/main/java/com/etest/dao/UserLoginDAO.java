@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.connection;
+package com.etest.dao;
 
+import com.etest.connection.DBConnection;
+import com.etest.connection.ErrorDBNotification;
 import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,9 +20,7 @@ import java.util.logging.Logger;
  * @author jetdario
  */
 public class UserLoginDAO {
-        
-    VaadinSession session;
-    
+            
     public static boolean loginResult(String username, String password){
         Connection conn = DBConnection.connectToDB();
         Statement stmt = null;
@@ -40,6 +40,16 @@ public class UserLoginDAO {
             ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(UserLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.errorNotificationOnDBAccess("Cannot close DB Connection");
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(UserLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return result;

@@ -5,7 +5,7 @@
  */
 package com.etest.serviceprovider;
 
-import com.etest.connection.UserLoginDAO;
+import com.etest.dao.UserLoginDAO;
 import com.etest.service.UserLoginService;
 
 /**
