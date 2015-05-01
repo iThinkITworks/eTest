@@ -25,7 +25,7 @@ import com.vaadin.server.ThemeResource;
 
 /**
  *
- * @since
+ * @since 2015
  * @author Vaadin Ltd
  */
 public class TestIcon {

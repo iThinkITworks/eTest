@@ -49,7 +49,7 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
- * @since
+ * @since 2015
  * @author Vaadin Ltd
  */
 public class Dragging extends VerticalLayout implements View {

@@ -16,6 +16,7 @@ public class Faculty {
     private String middlename;
     private String lastname;
     private String position;
+    private String facultyStatus;
 
     public int getFacultyId() {
         return facultyId;
@@ -37,6 +38,10 @@ public class Faculty {
         return position;
     }
 
+    public String getFacultyStatus(){
+        return facultyStatus;
+    }
+    
     public void setFacultyId(int facultyId) {
         this.facultyId = facultyId;
     }
@@ -55,6 +60,10 @@ public class Faculty {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+    
+    public void setFacultyStatus(String facultyStatus){
+        this.facultyStatus = facultyStatus;
     }
     
 }

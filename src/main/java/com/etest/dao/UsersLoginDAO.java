@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author jetdario
  */
-public class UserLoginDAO {
+public class UsersLoginDAO {
             
     public static boolean loginResult(String username, String password){
         Connection conn = DBConnection.connectToDB();
@@ -39,7 +39,7 @@ public class UserLoginDAO {
         } catch (SQLException ex) {
             ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(UserLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -48,7 +48,7 @@ public class UserLoginDAO {
             } catch (SQLException ex) {
                 ErrorDBNotification.errorNotificationOnDBAccess("Cannot close DB Connection");
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(UserLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UsersLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         

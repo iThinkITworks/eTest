@@ -39,7 +39,7 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
- * @since
+ * @since 2015
  * @author Vaadin Ltd
  */
 public class Forms extends VerticalLayout implements View {

@@ -9,13 +9,14 @@ package com.etest.model;
  *
  * @author jetdario
  */
-public class User extends Faculty {
+public class Users extends Faculty {
     
     private int userId;
     private String username_;
     private String password_;
     private String userType;
     private String assignment;
+    private String name;
 
     public int getUserId() {
         return userId;
@@ -37,6 +38,10 @@ public class User extends Faculty {
         return assignment;
     }
 
+    public String getName(){
+        return name;
+    }
+    
     public void setUserId(int userId) {
         this.userId = userId;
     }
@@ -57,4 +62,7 @@ public class User extends Faculty {
         this.assignment = assignment;
     }    
     
+    public void setName(String name){
+        this.name = name;
+    }
 }

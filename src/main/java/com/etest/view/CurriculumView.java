@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration;
+package com.etest.view;
 
 import com.etest.common.CommonTextField;
 import com.etest.common.CommonComboBox;
@@ -52,11 +52,7 @@ public class CurriculumView extends VerticalLayout implements View {
         setWidth("100%");
         setMargin(true);
         setSpacing(true);
-        
-        Label h1 = new Label("Curriculum View");
-        h1.addStyleName("h1");
-        addComponent(h1);
-        
+                
         yearLevel = CommonComboBox.getYearLevelComboBox("Year Level..");
         yearLevel.setWidth("200px");
         addComponent(yearLevel);

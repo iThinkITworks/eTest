@@ -9,7 +9,7 @@ package com.etest.service;
  *
  * @author jetdario
  */
-public interface UserLoginService {
+public interface UsersLoginService {
     
     public boolean loginResult(String username, String password);
     

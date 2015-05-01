@@ -20,8 +20,10 @@ import com.vaadin.ui.components.calendar.event.BasicEvent;
 /**
  * Test CalendarEvent implementation.
  * 
- * @see com.vaadin.addon.calendar.test.ui.Calendar.Event
+ * 
  */
+
+//@see com.vaadin.addon.calendar.test.ui.Calendar.Event
 public class CalendarTestEvent extends BasicEvent {
 
     private static final long serialVersionUID = 2820133201983036866L;

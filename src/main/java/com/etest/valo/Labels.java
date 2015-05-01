@@ -25,7 +25,7 @@ import com.vaadin.ui.VerticalLayout;
 
 /**
  * 
- * @since
+ * @since 2015
  * @author Vaadin Ltd
  */
 public class Labels extends VerticalLayout implements View {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration;
+package com.etest.view;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
@@ -14,12 +14,12 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author jetdario
  */
-public class FacultyMemberView extends VerticalLayout implements View {
+public class SyllabusView extends VerticalLayout implements View{
 
-    public FacultyMemberView() {
+    public SyllabusView() {
         setSizeFull();
         
-        Label h1 = new Label("Faculty View");
+        Label h1 = new Label("Syllabus View");
         h1.addStyleName("h1");
         addComponent(h1);
     }

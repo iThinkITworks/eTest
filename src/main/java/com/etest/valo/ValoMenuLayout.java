@@ -22,7 +22,7 @@ import com.vaadin.ui.HorizontalLayout;
 
 /**
  * 
- * @since
+ * @since 2015
  * @author Vaadin Ltd
  */
 public class ValoMenuLayout extends HorizontalLayout {

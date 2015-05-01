@@ -5,18 +5,18 @@
  */
 package com.etest.serviceprovider;
 
-import com.etest.dao.UserLoginDAO;
-import com.etest.service.UserLoginService;
+import com.etest.dao.UsersLoginDAO;
+import com.etest.service.UsersLoginService;
 
 /**
  *
  * @author jetdario
  */
-public class UserLoginServiceImpl implements UserLoginService {
+public class UsersLoginServiceImpl implements UsersLoginService {
 
     @Override
     public boolean loginResult(String username, String password) {
-        return UserLoginDAO.loginResult(username, password);
+        return UsersLoginDAO.loginResult(username, password);
     }
     
 }

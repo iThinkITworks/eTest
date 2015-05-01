@@ -1,7 +1,12 @@
 package com.etest.main;
 
-import com.etest.service.UserLoginService;
-import com.etest.serviceprovider.UserLoginServiceImpl;
+import com.etest.view.SyllabusView;
+import com.etest.view.HousekeepingView;
+import com.etest.view.SemestralTeamView;
+import com.etest.view.FacultyMemberView;
+import com.etest.view.CurriculumView;
+import com.etest.service.UsersLoginService;
+import com.etest.serviceprovider.UsersLoginServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
 import com.etest.view.systemadministration.*;
@@ -133,6 +138,10 @@ private boolean testMode = false;
         }
         
         getPage().setTitle("eTest Generator");
+        
+//        setContent(root);
+//        root.setWidth("100%");
+//        root.addMenu(buildMenu());
         
         Window sub = loginWindow();
         if(sub.getParent() == null){
@@ -327,12 +336,10 @@ private boolean testMode = false;
         
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
-//        final StringGenerator sg = new StringGenerator();
-//        final MenuBar.MenuItem settingsItem = settings.addItem(sg.nextString(true)
-//                + " " + sg.nextString(true) + sg.nextString(false),
+//        final MenuBar.MenuItem settingsItem = settings.addItem(VaadinSession.getCurrent().getAttribute("username").toString(),
 //                new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
 //                null);
-        final MenuBar.MenuItem settingsItem = settings.addItem(VaadinSession.getCurrent().getAttribute("username").toString(),
+        final MenuBar.MenuItem settingsItem = settings.addItem("Admin",
                 new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
                 null);
         settingsItem.addItem("Edit Profile", menuCommand);
@@ -593,7 +600,7 @@ private boolean testMode = false;
     }
     
     private Component buildFields(final Window sub) {
-        final UserLoginService userLoginService = new UserLoginServiceImpl();
+        final UsersLoginService userLoginService = new UsersLoginServiceImpl();
         HorizontalLayout fields = new HorizontalLayout();
         fields.setSpacing(true);
         fields.addStyleName("fields");
