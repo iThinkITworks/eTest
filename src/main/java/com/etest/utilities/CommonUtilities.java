@@ -36,6 +36,15 @@ public class CommonUtilities {
         return val;
     }
     
+    public static float convertStringToFloat(String str){
+        float val = 0;
+        if(str != null || !str.isEmpty()){
+            val = Float.parseFloat(str);
+        }
+        
+        return val;
+    }
+    
     public static boolean checkInputIfInteger(String str){
         boolean result;
         
@@ -53,6 +62,18 @@ public class CommonUtilities {
         boolean result;
         try{
             double val = Double.parseDouble(str);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        
+        return result;
+    }
+    
+    public static boolean checkInputIfFloat(String str){
+        boolean result;
+        try{
+            double val = Float.parseFloat(str);
             result = true;
         } catch (Exception e) {
             result = false;

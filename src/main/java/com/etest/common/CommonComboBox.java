@@ -5,10 +5,14 @@
  */
 package com.etest.common;
 
+import com.etest.dao.CurriculumDAO;
+import com.etest.service.CurriculumService;
+import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.ComboBox;
+import java.util.Map;
 
 /**
  *
@@ -16,6 +20,7 @@ import com.vaadin.ui.ComboBox;
  */
 public class CommonComboBox {
 
+    CurriculumService cs = new CurriculumServiceImpl();
     Item item;
     
     public CommonComboBox(){        
@@ -56,6 +61,21 @@ public class CommonComboBox {
         i.getItemProperty("y").setValue("Second Semester");
         select.addStyleName("small");
         select.setImmediate(true);
+        return select;
+    }
+    
+    public static ComboBox getSubjectFromCurriculum(String inputPrompt){
+        ComboBox select = new ComboBox();
+        select.setWidth("100%");       
+        select.setInputPrompt(inputPrompt);
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        Item i;
+        for(Map.Entry<Integer, String> entry : CurriculumDAO.getSubjectsFromCurriculum().entrySet()){
+            i = select.addItem(entry.getKey());
+            i.getItemProperty("y").setValue(entry.getValue());
+        }
         return select;
     }
 }

@@ -9,6 +9,7 @@ import com.etest.dao.CurriculumDAO;
 import com.etest.model.Curriculum;
 import com.etest.service.CurriculumService;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -39,6 +40,11 @@ public class CurriculumServiceImpl implements CurriculumService {
     @Override
     public Curriculum getCurriculumById(int curriculumId) {
         return CurriculumDAO.getCurriculumById(curriculumId);
+    }
+
+    @Override
+    public Map<Integer, String> getSubjectsFromCurriculum() {
+        return CurriculumDAO.getSubjectsFromCurriculum();
     }
     
 }

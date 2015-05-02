@@ -7,6 +7,7 @@ package com.etest.service;
 
 import com.etest.model.Curriculum;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -23,4 +24,6 @@ public interface CurriculumService {
     public boolean removeCurriculum(int curriculumId);
     
     public Curriculum getCurriculumById(int curriculumId);
+    
+    public Map<Integer, String> getSubjectsFromCurriculum();
 }

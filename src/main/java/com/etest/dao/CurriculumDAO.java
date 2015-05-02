@@ -15,7 +15,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -191,5 +193,35 @@ public class CurriculumDAO {
         }
         
         return curriculum;
+    }
+    
+    public static Map<Integer, String> getSubjectsFromCurriculum(){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Map<Integer, String> subjectListMap = new HashMap<Integer, String>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT CurriculumID, Subject FROM curriculum "
+                    + "WHERE CurriculumStatus IS NULL");
+            while(rs.next()){
+                subjectListMap.put(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")), rs.getString("Subject"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CurriculumDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CurriculumDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return subjectListMap;
     }
 }

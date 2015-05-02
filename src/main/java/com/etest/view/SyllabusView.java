@@ -5,6 +5,7 @@
  */
 package com.etest.view;
 
+import com.etest.view.systemadministration.SyllabusMainUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
@@ -17,11 +18,9 @@ import com.vaadin.ui.VerticalLayout;
 public class SyllabusView extends VerticalLayout implements View{
 
     public SyllabusView() {
-        setSizeFull();
+        setWidth("100%");
         
-        Label h1 = new Label("Syllabus View");
-        h1.addStyleName("h1");
-        addComponent(h1);
+        addComponent(new SyllabusMainUI());
     }
 
     @Override
