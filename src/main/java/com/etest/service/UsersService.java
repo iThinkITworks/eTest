@@ -9,8 +9,12 @@ package com.etest.service;
  *
  * @author jetdario
  */
-public interface UsersLoginService {
+public interface UsersService {
     
     public boolean loginResult(String username, String password);
+    
+    public boolean updateUsersColumnValue(String column, 
+            String value, 
+            int facultyId);
     
 }

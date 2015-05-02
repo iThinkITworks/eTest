@@ -39,6 +39,7 @@ public class FacultyDAO {
                 Users u = new Users();
                 u.setName(rs.getString("name"));
                 u.setUsername_(rs.getString("LoginName"));
+                u.setFacultyId(CommonUtilities.convertStringToInt(rs.getString("FacultyID")));
                 userList.add(u);
             }
         } catch (SQLException ex) {
@@ -278,6 +279,36 @@ public class FacultyDAO {
             
             result = true;
         } catch (SQLException ex) {            
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(FacultyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return result;
+    }
+    
+    public static boolean updateFacultyColumnValue(String column, 
+            String value, 
+            int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE faculty SET "
+                    + ""+column+" = ? "
+                    + "WHERE FacultyID = ?");
+            pstmt.setString(1, value.toLowerCase());
+            pstmt.setInt(2, facultyId);
+            pstmt.executeUpdate();
+                 
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();                
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(FacultyDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(FacultyDAO.class.getName()).log(Level.SEVERE, null, ex);
         }

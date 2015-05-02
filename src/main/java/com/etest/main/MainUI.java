@@ -5,8 +5,8 @@ import com.etest.view.HousekeepingView;
 import com.etest.view.SemestralTeamView;
 import com.etest.view.FacultyMemberView;
 import com.etest.view.CurriculumView;
-import com.etest.service.UsersLoginService;
-import com.etest.serviceprovider.UsersLoginServiceImpl;
+import com.etest.service.UsersService;
+import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
 import com.etest.view.systemadministration.*;
@@ -600,7 +600,7 @@ private boolean testMode = false;
     }
     
     private Component buildFields(final Window sub) {
-        final UsersLoginService userLoginService = new UsersLoginServiceImpl();
+        final UsersService userLoginService = new UsersServiceImpl();
         HorizontalLayout fields = new HorizontalLayout();
         fields.setSpacing(true);
         fields.addStyleName("fields");

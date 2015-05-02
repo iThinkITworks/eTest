@@ -9,6 +9,7 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author jetdario
  */
-public class UsersLoginDAO {
+public class UsersDAO {
             
     public static boolean loginResult(String username, String password){
         Connection conn = DBConnection.connectToDB();
@@ -39,7 +40,7 @@ public class UsersLoginDAO {
         } catch (SQLException ex) {
             ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(UsersLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -48,7 +49,41 @@ public class UsersLoginDAO {
             } catch (SQLException ex) {
                 ErrorDBNotification.errorNotificationOnDBAccess("Cannot close DB Connection");
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(UsersLoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public static boolean updateUsersColumnValue(String column, 
+            String value, 
+            int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE users SET "
+                    + ""+column+" = ? "
+                    + "WHERE FacultyID = ? ");
+            pstmt.setString(1, value.toLowerCase());
+            pstmt.setInt(2, facultyId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.errorNotificationOnDBAccess("Cannot close DB Connection");
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         

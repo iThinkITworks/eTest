@@ -10,7 +10,7 @@ import com.etest.model.Users;
 import com.etest.service.FacultyService;
 import com.etest.serviceprovider.facultyServiceImpl;
 import com.etest.view.systemadministration.FacultyMainUI;
-import com.etest.view.systemadministration.datasource.FacultyDataGrid;
+import com.etest.view.systemadministration.datagrid.FacultyDataGrid;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.validator.NullValidator;

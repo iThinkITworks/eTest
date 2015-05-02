@@ -6,12 +6,17 @@
 package com.etest.common;
 
 import com.etest.dao.CurriculumDAO;
+import com.etest.dao.FacultyDAO;
+import com.etest.model.Users;
 import com.etest.service.CurriculumService;
+import com.etest.service.FacultyService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
+import com.etest.serviceprovider.facultyServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.ComboBox;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -21,6 +26,7 @@ import java.util.Map;
 public class CommonComboBox {
 
     CurriculumService cs = new CurriculumServiceImpl();
+    FacultyService fs = new facultyServiceImpl();
     Item item;
     
     public CommonComboBox(){        
@@ -76,6 +82,56 @@ public class CommonComboBox {
             i = select.addItem(entry.getKey());
             i.getItemProperty("y").setValue(entry.getValue());
         }
+        return select;
+    }
+    
+    public static ComboBox getAllFaculty(String inputPrompt){
+        ComboBox select = new ComboBox();
+        select.setWidth("100%");
+        select.setInputPrompt(inputPrompt);
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        Item i;
+        for(Users u : FacultyDAO.getAllFaculty()){
+            i = select.addItem(u.getFacultyId());
+            i.getItemProperty("y").setValue(u.getName());
+        }
+        select.addStyleName("small");
+        return select;
+    }
+    
+    public static ComboBox getFacultyPosition(String inputPrompt){
+        ComboBox select = new ComboBox();
+        select.setWidth("100%");       
+        select.setInputPrompt(inputPrompt);
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        Item i = select.addItem(1);
+        i.getItemProperty("y").setValue("Faculty");
+        i = select.addItem(2);
+        i.getItemProperty("y").setValue("Dean");
+        select.addStyleName("small");
+        select.setImmediate(true);
+        return select;
+    }
+    
+    public static ComboBox getFacultyUserType(String inputPrompt){
+        ComboBox select = new ComboBox();
+        select.setWidth("100%");       
+        select.setInputPrompt(inputPrompt);
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        Item i = select.addItem(1);
+        i.getItemProperty("y").setValue("Year Level Coordinator");
+        i = select.addItem(2);
+        i.getItemProperty("y").setValue("Team Leader");
+        i = select.addItem(3);
+        i.getItemProperty("y").setValue("Member");
+        select.addStyleName("small");
+        select.setImmediate(true);
         return select;
     }
 }

@@ -28,4 +28,8 @@ public interface FacultyService {
     public boolean updateFaculty(Users users);
     
     public boolean removeFaculty(int facultyId);
+    
+    public boolean updateFacultyColumnValue(String column, 
+            String value, 
+            int facultyId);
 }

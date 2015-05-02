@@ -13,7 +13,7 @@ import com.etest.service.SyllabusService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.etest.view.systemadministration.datasource.SyllabusDataGrid;
+import com.etest.view.systemadministration.datagrid.SyllabusDataGrid;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -100,6 +100,7 @@ public class SyllabusMainUI extends VerticalLayout {
         formBtn.setWidth("100%");
         formBtn.setIcon(FontAwesome.SAVE);
         formBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        formBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         formBtn.addClickListener(buttonClickListener);
         form.addComponent(formBtn);
         

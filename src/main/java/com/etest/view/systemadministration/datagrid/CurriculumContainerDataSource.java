@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration.datasource;
+package com.etest.view.systemadministration.datagrid;
 
 import com.etest.common.CommonVariableMap;
 import com.etest.model.Curriculum;

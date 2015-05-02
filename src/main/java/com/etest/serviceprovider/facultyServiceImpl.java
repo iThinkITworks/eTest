@@ -50,5 +50,14 @@ public class facultyServiceImpl implements FacultyService {
     public boolean removeFaculty(int facultyId) {
         return FacultyDAO.removeFaculty(facultyId);
     }
-    
+
+    @Override
+    public boolean updateFacultyColumnValue(String column, 
+            String value, 
+            int facultyId) {
+        return FacultyDAO.updateFacultyColumnValue(column, 
+                value, 
+                facultyId);
+    }
+   
 }

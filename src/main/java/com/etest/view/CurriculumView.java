@@ -12,9 +12,9 @@ import com.etest.model.Curriculum;
 import com.etest.service.CurriculumService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.etest.view.systemadministration.datasource.CurriculumDataGrid;
-import com.etest.view.systemadministration.datasource.CurriculumDataTable;
-import com.etest.view.systemadministration.datasource.CurriculumWindow;
+import com.etest.view.systemadministration.datagrid.CurriculumDataGrid;
+import com.etest.view.systemadministration.datagrid.CurriculumDataTable;
+import com.etest.view.systemadministration.datagrid.CurriculumWindow;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -74,6 +74,7 @@ public class CurriculumView extends VerticalLayout implements View {
         Button saveBtn = new Button("Enter Curriculum");
         saveBtn.setWidth("200px");
         saveBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        saveBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         saveBtn.addClickListener(buttonClickListener);
         addComponent(saveBtn);
         

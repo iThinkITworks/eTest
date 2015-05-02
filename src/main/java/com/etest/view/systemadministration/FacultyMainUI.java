@@ -8,13 +8,14 @@ package com.etest.view.systemadministration;
 import com.etest.model.Users;
 import com.etest.service.FacultyService;
 import com.etest.serviceprovider.facultyServiceImpl;
-import com.etest.view.systemadministration.datasource.FacultyDataGrid;
+import com.etest.view.systemadministration.datagrid.FacultyDataGrid;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.GridLayout;
@@ -52,6 +53,9 @@ public class FacultyMainUI extends VerticalLayout {
     Users u;
     Grid grid = new FacultyDataGrid();
     
+    Button setPositionBtn = new Button("SET POSITION TO FACULTY");
+    Button setUserTypeBtn = new Button("SET USER TYPE TO FACULTY");
+    
     private int facultyId;
     
     public FacultyMainUI() {
@@ -69,8 +73,20 @@ public class FacultyMainUI extends VerticalLayout {
         
         enableAddNewFaculty.setVisible(false);
         removeFaculty.setVisible(false);
-        
+                
         addComponent(hlayout);
+        
+        setPositionBtn.setWidth("400px");
+        setPositionBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        setPositionBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        setPositionBtn.addClickListener(positionBtnListener);
+        addComponent(setPositionBtn);
+        
+        setUserTypeBtn.setWidth("400px");
+        setUserTypeBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        setUserTypeBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        setUserTypeBtn.addClickListener(userTypeBtnListener);
+        addComponent(setUserTypeBtn);
     }
         
     FormLayout buildForm(){
@@ -131,7 +147,7 @@ public class FacultyMainUI extends VerticalLayout {
         
         return form;
     } 
-    
+        
     Panel getDataGridPanel(){
         Panel panel = new Panel("Faculty");
         panel.setSizeFull();
@@ -231,6 +247,28 @@ public class FacultyMainUI extends VerticalLayout {
     
     };
         
+    Button.ClickListener positionBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            Window sub = new SetPositionToFacultyWindow();
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        }
+    };
+    
+    Button.ClickListener userTypeBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            Window sub = new SetUserTypeToFaculty();
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        }
+    };
+    
     CheckBox.ValueChangeListener checkBoxValueListener = new CheckBox.ValueChangeListener() {
 
         @Override

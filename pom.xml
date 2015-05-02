@@ -5,7 +5,7 @@
 	<groupId>com.etest</groupId>
 	<artifactId>etest</artifactId>
 	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>etest</name>
 
 	<properties>
