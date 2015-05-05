@@ -7,6 +7,7 @@ package com.etest.dao;
 
 import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
+import com.etest.utilities.CommonUtilities;
 import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -90,4 +91,33 @@ public class UsersDAO {
         return result;
     }
     
+    public static int getUserIdByFacultyId(int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int userId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT UserID FROM users "
+                    + "WHERE FacultyID = "+facultyId+" ");
+            while(rs.next()){
+                userId = CommonUtilities.convertStringToInt(rs.getString("UserID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        }
+        
+        return userId;
+    }
 }

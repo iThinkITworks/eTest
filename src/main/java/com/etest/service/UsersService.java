@@ -17,4 +17,5 @@ public interface UsersService {
             String value, 
             int facultyId);
     
+    public int getUserIdByFacultyId(int facultyId);
 }

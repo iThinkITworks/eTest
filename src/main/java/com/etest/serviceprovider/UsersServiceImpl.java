@@ -27,5 +27,10 @@ public class UsersServiceImpl implements UsersService {
                 value, 
                 facultyId);
     }
+
+    @Override
+    public int getUserIdByFacultyId(int facultyId) {
+        return UsersDAO.getUserIdByFacultyId(facultyId);
+    }
     
 }

@@ -5,7 +5,7 @@
  */
 package com.etest.view;
 
-import com.etest.view.systemadministration.SemestralTeamUI;
+import com.etest.view.systemadministration.FacultyMainUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.VerticalLayout;
@@ -14,12 +14,12 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author jetdario
  */
-public class SemestralTeamView extends VerticalLayout implements View {
-
-    public SemestralTeamView() {
+public class FacultyView extends VerticalLayout implements View {
+    
+    public FacultyView() {
         setWidth("100%");
         
-        addComponent(new SemestralTeamUI());
+        addComponent(new FacultyMainUI());
     }
 
     @Override

@@ -34,7 +34,7 @@ public class FacultyDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM enrolled_faculty_view "
-                    + "WHERE FacultyStatus IS NULL");
+                    + "WHERE FacultyStatus = 0");
             while(rs.next()){
                 Users u = new Users();
                 u.setName(rs.getString("name"));
@@ -68,7 +68,7 @@ public class FacultyDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT name FROM enrolled_faculty_view "
-                    + "WHERE FacultyStatus IS NULL "
+                    + "WHERE FacultyStatus = 0 "
                     + "AND facultyID = "+facultyId+" ");            
             while(rs.next()){
                 name = rs.getString("name");
@@ -99,7 +99,7 @@ public class FacultyDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT FacultyID FROM enrolled_faculty_view "
-                    + "WHERE FacultyStatus IS NULL "
+                    + "WHERE FacultyStatus = 0 "
                     + "AND name = '"+name+"' ");            
             while(rs.next()){
                 facultyId = CommonUtilities.convertStringToInt(rs.getString("FacultyID"));
@@ -141,7 +141,7 @@ public class FacultyDAO {
                     + "u.UserID AS UserID "
                     + "FROM faculty f INNER JOIN "
                     + "Users u ON f.FacultyID = u.FacultyID "
-                    + "WHERE FacultyStatus IS NULL "
+                    + "WHERE FacultyStatus = 0 "
                     + "AND f.FacultyID = "+facultyId+" ");            
             while(rs.next()){
                 u.setFirstname(rs.getString("Firstname"));
@@ -273,7 +273,7 @@ public class FacultyDAO {
             pstmt = conn.prepareStatement("UPDATE faculty SET "
                     + "FacultyStatus = ? "
                     + "WHERE FacultyID = ?");
-            pstmt.setString(1, "deleted");
+            pstmt.setInt(1, 1);
             pstmt.setInt(2, facultyId);
             pstmt.executeUpdate();                        
             

@@ -105,7 +105,8 @@ public class CurriculumDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM curriculum WHERE CurriculumStatus IS NULL");
+            rs = stmt.executeQuery("SELECT * FROM curriculum WHERE "
+                    + "CurriculumStatus = 0");
             while(rs.next()){
                 Curriculum curriculum = new Curriculum();
                 curriculum.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
@@ -141,7 +142,7 @@ public class CurriculumDAO {
             pstmt = conn.prepareStatement("UPDATE curriculum "
                     + "SET CurriculumStatus = ? "
                     + "WHERE CurriculumID = ? ");
-            pstmt.setString(1, "removed");
+            pstmt.setInt(1, 1);
             pstmt.setInt(2, curriculumId);
             pstmt.executeUpdate();
             
@@ -170,7 +171,8 @@ public class CurriculumDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM curriculum WHERE CurriculumID = "+curriculumId+" ");
+            rs = stmt.executeQuery("SELECT * FROM curriculum "
+                    + "WHERE CurriculumID = "+curriculumId+" ");
             while(rs.next()){                
                 curriculum.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 curriculum.setYearLevel(CommonUtilities.convertStringToInt(rs.getString("YearLevel")));
@@ -204,7 +206,7 @@ public class CurriculumDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT CurriculumID, Subject FROM curriculum "
-                    + "WHERE CurriculumStatus IS NULL");
+                    + "WHERE CurriculumStatus = 0");
             while(rs.next()){
                 subjectListMap.put(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")), rs.getString("Subject"));
             }

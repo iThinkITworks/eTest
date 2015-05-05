@@ -34,7 +34,7 @@ public class SyllabusDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM enrolled_syllabus_view "
-                    + "WHERE CurriculumStatus IS NULL");
+                    + "WHERE CurriculumStatus = 0");
             while(rs.next()){
                 Syllabus s = new Syllabus();
                 s.setSyllabusId(CommonUtilities.convertStringToInt(rs.getString("SyllabusID")));

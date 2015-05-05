@@ -3,7 +3,7 @@ package com.etest.main;
 import com.etest.view.SyllabusView;
 import com.etest.view.HousekeepingView;
 import com.etest.view.SemestralTeamView;
-import com.etest.view.FacultyMemberView;
+import com.etest.view.FacultyView;
 import com.etest.view.CurriculumView;
 import com.etest.service.UsersService;
 import com.etest.serviceprovider.UsersServiceImpl;
@@ -155,7 +155,7 @@ private boolean testMode = false;
 
         navigator.addView("dashboard", DashboardView.class);
         navigator.addView("curriculum", CurriculumView.class);
-        navigator.addView("faculty-member", FacultyMemberView.class);
+        navigator.addView("faculty-member", FacultyView.class);
         navigator.addView("syllabus", SyllabusView.class);
         navigator.addView("semestral-team", SemestralTeamView.class);
         navigator.addView("housekeeping", HousekeepingView.class);

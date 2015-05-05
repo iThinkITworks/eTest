@@ -9,7 +9,7 @@ package com.etest.model;
  *
  * @author jetdario
  */
-public class Curriculum {
+public class Curriculum extends Users {
     
     private int curriculumId;
     private int yearLevel;

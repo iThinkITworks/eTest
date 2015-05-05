@@ -16,6 +16,8 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.ComboBox;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -82,6 +84,8 @@ public class CommonComboBox {
             i = select.addItem(entry.getKey());
             i.getItemProperty("y").setValue(entry.getValue());
         }
+        select.addStyleName("small");
+        select.setImmediate(true);
         return select;
     }
     
@@ -98,6 +102,7 @@ public class CommonComboBox {
             i.getItemProperty("y").setValue(u.getName());
         }
         select.addStyleName("small");
+        select.setImmediate(true);
         return select;
     }
     
@@ -130,6 +135,26 @@ public class CommonComboBox {
         i.getItemProperty("y").setValue("Team Leader");
         i = select.addItem(3);
         i.getItemProperty("y").setValue("Member");
+        select.addStyleName("small");
+        select.setImmediate(true);
+        return select;
+    }
+    
+    public static ComboBox getSchoolYear(String inputPrompt){
+        ComboBox select = new ComboBox();
+        select.setWidth("100%");       
+        select.setInputPrompt(inputPrompt);
+        select.setNullSelectionAllowed(false);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int year = cal.get(Calendar.YEAR);
+        
+        for(int i = 0; i < 6; i++){
+            select.addItem((year-1)+" - "+year);
+            year++;
+        }
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
