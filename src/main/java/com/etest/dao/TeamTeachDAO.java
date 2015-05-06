@@ -8,6 +8,7 @@ package com.etest.dao;
 import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.TeamTeach;
+import com.etest.model.Users;
 import com.etest.utilities.CommonUtilities;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,6 +38,7 @@ public class TeamTeachDAO {
                     + "WHERE TeamTeachStatus = 0 ");
             while(rs.next()){
                 TeamTeach tt = new TeamTeach();
+                tt.setTeamTeachId(CommonUtilities.convertStringToInt(rs.getString("TeamTeachID")));
                 tt.setSchoolYear(rs.getString("SchoolYear"));
                 tt.setNormCourseOffering(CommonUtilities.convertStringToInt(rs.getString("Semester")));
                 tt.setYearLevel(CommonUtilities.convertStringToInt(rs.getString("YearLevel")));
@@ -61,22 +63,25 @@ public class TeamTeachDAO {
         return teamTeachList;
     }
     
-    public static List<String> getAllMembersFromTeam(int teamTeachId){
+    public static List<TeamTeach> getAllMembersFromTeam(int teamTeachId){
         Connection conn = DBConnection.connectToDB();
         Statement stmt = null;
         ResultSet rs = null;
-        List<String> teamMembersList = new ArrayList<String>();
+        List<TeamTeach> teamMembersList = new ArrayList<TeamTeach>();
         
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT "
-                    + "concat_ws(' ', f.Firstname, f.Lastname) AS member " 
-                    + "FROM team_teach tt INNER JOIN faculty f "
-                    + "ON tt.FacultyID = f.FacultyID "
-                    + "WHERE tt.TeamTeachID = "+teamTeachId+" ");
+                    + "concat_ws(' ', f.Firstname, f.Lastname) AS member, "
+                    + "f.FacultyID AS FacultyID " 
+                    + "FROM team_members tm INNER JOIN "
+                    + "faculty f ON f.FacultyID = tm.FacultyID "
+                    + "WHERE tm.TeamTeachID = "+teamTeachId+" ");
             while(rs.next()){
                 TeamTeach tt = new TeamTeach();
-                teamMembersList.add(rs.getString("member"));
+                tt.setFacultyId(CommonUtilities.convertStringToInt(rs.getString("FacultyID")));
+                tt.setName(rs.getString("member"));
+                teamMembersList.add(tt);
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -214,6 +219,193 @@ public class TeamTeachDAO {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
                 Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
             }            
+        }
+        
+        return result;
+    }
+
+    public static int countTeamMembers(int teamTeachId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int teamMembers = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS teamMembers FROM team_members "
+                    + "WHERE TeamTeachID = "+teamTeachId+" ");
+            while(rs.next()){
+                teamMembers = CommonUtilities.convertStringToInt(rs.getString("teamMembers"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return teamMembers;
+    }
+    
+    public static List<Users> getAllFacultyExceptTeamLeader(int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Users> userList = new ArrayList<Users>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM enrolled_faculty_view "
+                    + "WHERE FacultyStatus = 0 "
+                    + "AND FacultyID != "+facultyId+" ");
+            while(rs.next()){
+                Users u = new Users();
+                u.setName(rs.getString("name"));
+                u.setUsername_(rs.getString("LoginName"));
+                u.setFacultyId(CommonUtilities.convertStringToInt(rs.getString("FacultyID")));
+                userList.add(u);
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return userList;
+    }
+    
+    public static int getFacultyIdByTeamTeachId(int teamTeachId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int facultyId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT FacultyID FROM enrolled_semestral_team_view  "
+                    + "WHERE TeamTeachID = "+teamTeachId+" ");
+            while(rs.next()){
+                facultyId = CommonUtilities.convertStringToInt(rs.getString("FacultyID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return facultyId;
+    }
+    
+    public static boolean addTeamMember(int teamTeachId, int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("INSERT INTO team_members SET "
+                    + "TeamTeachID = ?, "
+                    + "FacultyID = ? ");
+            pstmt.setInt(1, teamTeachId);
+            pstmt.setInt(2, facultyId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {            
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        }
+        
+        return result;
+    }
+    
+    public static boolean removeTeamMember(int teamTeachId, int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("DELETE FROM team_members "
+                    + "WHERE TeamTeachID = ? "
+                    + "AND FacultyID = ? ");
+            pstmt.setInt(1, teamTeachId);
+            pstmt.setInt(2, facultyId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {            
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        }
+        
+        return result;
+    }
+
+    public static boolean isFacultyTeamLeader(int teamTeachId, int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS TeamLead FROM enrolled_semestral_team_view "
+                    + "WHERE TeamTeachID = "+teamTeachId+" AND FacultyID = "+facultyId+" ");
+            while(rs.next()){
+                if(rs.getString("TeamLead").equals("1")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         
         return result;

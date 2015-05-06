@@ -5,6 +5,7 @@
  */
 package com.etest.view.systemadministration.datagrid;
 
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.themes.ValoTheme;
@@ -26,7 +27,7 @@ public class SemestralTeamDataTable extends Table {
         addContainerProperty("year level", String.class, null);
         addContainerProperty("subject", String.class, null);
         addContainerProperty("team leader", String.class, null);
-//        addContainerProperty("members", TextArea.class, null);
+        addContainerProperty("members", Button.class, null);
         
     }
     

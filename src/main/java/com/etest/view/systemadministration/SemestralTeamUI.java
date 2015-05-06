@@ -23,7 +23,9 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -40,7 +42,7 @@ public class SemestralTeamUI extends VerticalLayout {
     ComboBox faculty;
     
     Table table = new SemestralTeamDataTable();
-    Grid grid = new SemestralDataGrid();
+    Grid grid = new SemestralDataGrid();    
     
     public SemestralTeamUI() {
         setSizeFull();
@@ -48,8 +50,8 @@ public class SemestralTeamUI extends VerticalLayout {
         setSpacing(true);
                 
         addComponent(buildForms());
-        populateDataGrid();
-//        populateDataTable();
+//        populateDataGrid();
+        populateDataTable();
         addComponent(dataTablePanel());
     }
     
@@ -74,7 +76,7 @@ public class SemestralTeamUI extends VerticalLayout {
         form.addComponent(semester);
                 
         faculty = CommonComboBox.getAllFaculty("Select Faculty..");
-        faculty.setCaption("Team Leader");
+        faculty.setCaption("Team Leader: ");
         faculty.setIcon(FontAwesome.USER);
         form.addComponent(faculty);
         
@@ -94,38 +96,62 @@ public class SemestralTeamUI extends VerticalLayout {
         Panel panel = new Panel();
         panel.setWidth("100%");
                 
-        panel.setContent(grid);        
+        panel.setContent(table);        
         return panel;
     }
     
-    Grid populateDataGrid(){
-        grid.getContainerDataSource().removeAllItems();
-        for(TeamTeach tt : tts.getAllSemestralTeamTeach()){
-            grid.addRow(tt.getSchoolYear(), 
-                CommonVariableMap.getNormCourseOffering(tt.getNormCourseOffering()), 
-                CommonVariableMap.getYearLevel(tt.getYearLevel()), 
-                tt.getSubject(), 
-                tt.getTeamLeader()
-            );
-        }
-        grid.recalculateColumnWidths();
-        
-        return grid;
-    }
+//    Grid populateDataGrid(){
+//        grid.getContainerDataSource().removeAllItems();                
+//        for(TeamTeach tt : tts.getAllSemestralTeamTeach()){
+//            membersBtn = new Button();
+//            membersBtn.setData(tt.getTeamTeachId());
+//            grid.addRow(tt.getSchoolYear(), 
+//                CommonVariableMap.getNormCourseOffering(tt.getNormCourseOffering()), 
+//                CommonVariableMap.getYearLevel(tt.getYearLevel()), 
+//                tt.getSubject(), 
+//                tt.getTeamLeader(), 
+//                membersBtn
+//            );
+//        }
+//        grid.recalculateColumnWidths();
+//        
+//        return grid;
+//    }
     
     void populateDataTable(){
         table.removeAllItems();
         int i = 0;
         for(TeamTeach tt : tts.getAllSemestralTeamTeach()){
-//            System.out.println("test TL: "+tt.getTeamLeader());
+            Button membersBtn = new Button();
+            membersBtn.setWidth("100%");
+            membersBtn.setData(tt.getTeamTeachId());
+            if(tts.countTeamMembers(tt.getTeamTeachId()) < 2){
+                membersBtn.setCaption("Add Members");
+            } else {
+                membersBtn.setCaption("View Members");
+            }
+            
             table.addItem(new Object[]{ 
                 tt.getSchoolYear(), 
                 CommonVariableMap.getNormCourseOffering(tt.getNormCourseOffering()), 
                 CommonVariableMap.getYearLevel(tt.getYearLevel()), 
                 tt.getSubject(), 
-                tt.getTeamLeader()
+                tt.getTeamLeader(), 
+                membersBtn
             }, new Integer(i));
         i++;
+        
+        membersBtn.addStyleName(ValoTheme.BUTTON_LINK);
+            membersBtn.addClickListener(new Button.ClickListener() {
+
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    Window sub = new AddMembersWindow((int)membersBtn.getData());
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
+                    }
+                }
+            });
         }
         table.setPageLength(table.size());        
     }
@@ -149,8 +175,8 @@ public class SemestralTeamUI extends VerticalLayout {
                         
             boolean result = tts.insertNewTeamTeach(tt);
             if(result){
-                populateDataGrid();
-//                populateDataTable();
+//                populateDataGrid();
+                populateDataTable();
             }
         }
     };

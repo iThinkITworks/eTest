@@ -32,4 +32,5 @@ public interface FacultyService {
     public boolean updateFacultyColumnValue(String column, 
             String value, 
             int facultyId);
+    
 }

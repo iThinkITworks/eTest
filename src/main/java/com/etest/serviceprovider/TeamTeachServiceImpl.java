@@ -7,6 +7,7 @@ package com.etest.serviceprovider;
 
 import com.etest.dao.TeamTeachDAO;
 import com.etest.model.TeamTeach;
+import com.etest.model.Users;
 import com.etest.service.TeamTeachService;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TeamTeachServiceImpl implements TeamTeachService {
     }
 
     @Override
-    public List<String> getAllMembersFromTeam(int teamTeachId) {
+    public List<TeamTeach> getAllMembersFromTeam(int teamTeachId) {
         return TeamTeachDAO.getAllMembersFromTeam(teamTeachId);
     }
 
@@ -39,6 +40,42 @@ public class TeamTeachServiceImpl implements TeamTeachService {
     @Override
     public boolean removeTeamTeach(int teamTeachId) {
         return TeamTeachDAO.removeTeamTeachLeader(teamTeachId);
+    }
+
+    @Override
+    public int countTeamMembers(int teamTeachId) {
+        return TeamTeachDAO.countTeamMembers(teamTeachId);
+    }
+
+    @Override
+    public List<Users> getAllFacultyExceptTeamLeader(int facultyId) {
+        return TeamTeachDAO.getAllFacultyExceptTeamLeader(facultyId);
+    }
+
+    @Override
+    public int getFacultyIdByTeamTeachId(int teamTeachId) {
+        return TeamTeachDAO.getFacultyIdByTeamTeachId(teamTeachId);
+    }
+
+    @Override
+    public boolean addTeamMember(int teamTeachId, 
+            int facultyId) {
+        return TeamTeachDAO.addTeamMember(teamTeachId, 
+                facultyId);
+    }
+
+    @Override
+    public boolean removeTeamMember(int teamTeachId, 
+            int facultyId) {
+        return TeamTeachDAO.removeTeamMember(teamTeachId, 
+                facultyId);
+    }
+
+    @Override
+    public boolean isFacultyTeamLeader(int teamTeachId, 
+            int facultyId) {
+        return TeamTeachDAO.isFacultyTeamLeader(teamTeachId, 
+                facultyId);
     }
     
 }

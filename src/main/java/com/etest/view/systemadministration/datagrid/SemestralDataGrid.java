@@ -5,6 +5,7 @@
  */
 package com.etest.view.systemadministration.datagrid;
 
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -16,7 +17,7 @@ public class SemestralDataGrid extends Grid {
 
     public SemestralDataGrid() {
         setSizeFull();
-        setSelectionMode(Grid.SelectionMode.SINGLE);
+        setSelectionMode(SelectionMode.SINGLE);
         addStyleName(ValoTheme.TABLE_SMALL);
         setImmediate(true);
         
@@ -25,6 +26,8 @@ public class SemestralDataGrid extends Grid {
         addColumn("year level", String.class);
         addColumn("subject", String.class);
         addColumn("team leader", String.class);
+        addColumn("members", Button.class);    
+        
     }
     
 }

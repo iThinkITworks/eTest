@@ -7,6 +7,7 @@ package com.etest.common;
 
 import com.etest.dao.CurriculumDAO;
 import com.etest.dao.FacultyDAO;
+import com.etest.dao.TeamTeachDAO;
 import com.etest.model.Users;
 import com.etest.service.CurriculumService;
 import com.etest.service.FacultyService;
@@ -155,6 +156,23 @@ public class CommonComboBox {
             year++;
         }
         
+        select.addStyleName("small");
+        select.setImmediate(true);
+        return select;
+    }
+    
+    public static ComboBox getAllFacultyExceptTeamLeader(String inputPrompt, int facultyId){
+        ComboBox select = new ComboBox();
+        select.setWidth("100%");
+        select.setInputPrompt(inputPrompt);
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        Item i;
+        for(Users u : TeamTeachDAO.getAllFacultyExceptTeamLeader(facultyId)){
+            i = select.addItem(u.getFacultyId());
+            i.getItemProperty("y").setValue(u.getName());
+        }
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
