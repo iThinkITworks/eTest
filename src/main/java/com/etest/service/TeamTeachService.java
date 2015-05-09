@@ -21,7 +21,7 @@ public interface TeamTeachService {
     
     public boolean insertNewTeamTeach(TeamTeach tt);
     
-    public boolean updateTeamTeach(TeamTeach tt);
+    public boolean updateTeamTeach(int currentTLUserId, int newTLUserId);
     
     public boolean removeTeamTeach(int teamTeachId);
     
@@ -39,4 +39,8 @@ public interface TeamTeachService {
     
     public boolean isFacultyTeamLeader(int teamTeachId, 
             int facultyId);
+    
+    public boolean isTeamMemberAlreadyExist(int teamTeachId, 
+            int facultyId);
+    
 }

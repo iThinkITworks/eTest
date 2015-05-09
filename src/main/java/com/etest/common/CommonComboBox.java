@@ -133,8 +133,6 @@ public class CommonComboBox {
         Item i = select.addItem(1);
         i.getItemProperty("y").setValue("Year Level Coordinator");
         i = select.addItem(2);
-        i.getItemProperty("y").setValue("Team Leader");
-        i = select.addItem(3);
         i.getItemProperty("y").setValue("Member");
         select.addStyleName("small");
         select.setImmediate(true);

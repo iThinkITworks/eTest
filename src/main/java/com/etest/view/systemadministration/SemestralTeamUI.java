@@ -20,6 +20,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
@@ -85,7 +86,7 @@ public class SemestralTeamUI extends VerticalLayout {
         saveBtn.setIcon(FontAwesome.SAVE);
         saveBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         saveBtn.addStyleName(ValoTheme.BUTTON_SMALL);
-        saveBtn.addClickListener(buttonClickListener);
+        saveBtn.addClickListener(saveBtnClickListener);
         saveBtn.setImmediate(true);
         form.addComponent(saveBtn);
         
@@ -122,6 +123,9 @@ public class SemestralTeamUI extends VerticalLayout {
         table.removeAllItems();
         int i = 0;
         for(TeamTeach tt : tts.getAllSemestralTeamTeach()){
+            HorizontalLayout hlayout = new HorizontalLayout();
+            hlayout.setWidth("100%");
+            
             Button membersBtn = new Button();
             membersBtn.setWidth("100%");
             membersBtn.setData(tt.getTeamTeachId());
@@ -131,17 +135,25 @@ public class SemestralTeamUI extends VerticalLayout {
                 membersBtn.setCaption("View Members");
             }
             
+            Button removeTLBtn = new Button("Remove TL");
+            removeTLBtn.setWidth("100%");
+            removeTLBtn.setData(tt.getTeamTeachId());
+            
+            hlayout.addComponent(membersBtn);
+            hlayout.addComponent(removeTLBtn);
+            
             table.addItem(new Object[]{ 
                 tt.getSchoolYear(), 
                 CommonVariableMap.getNormCourseOffering(tt.getNormCourseOffering()), 
                 CommonVariableMap.getYearLevel(tt.getYearLevel()), 
                 tt.getSubject(), 
                 tt.getTeamLeader(), 
-                membersBtn
+                hlayout
             }, new Integer(i));
-        i++;
+            i++;
         
-        membersBtn.addStyleName(ValoTheme.BUTTON_LINK);
+            membersBtn.addStyleName(ValoTheme.BUTTON_LINK);
+            membersBtn.addStyleName(ValoTheme.BUTTON_TINY);
             membersBtn.addClickListener(new Button.ClickListener() {
 
                 @Override
@@ -150,13 +162,23 @@ public class SemestralTeamUI extends VerticalLayout {
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
+                    sub.addCloseListener(windowCloseListener);
+                }
+            });
+            
+            removeTLBtn.addStyleName(ValoTheme.BUTTON_LINK);
+            removeTLBtn.addStyleName(ValoTheme.BUTTON_TINY);
+            removeTLBtn.addClickListener((Button.ClickEvent event) -> {
+                boolean result = tts.removeTeamTeach((int) removeTLBtn.getData());
+                if(result){
+                    populateDataTable();
                 }
             });
         }
         table.setPageLength(table.size());        
     }
     
-    Button.ClickListener buttonClickListener = new Button.ClickListener() {
+    Button.ClickListener saveBtnClickListener = new Button.ClickListener() {
 
         @Override
         public void buttonClick(Button.ClickEvent event) {
@@ -175,9 +197,16 @@ public class SemestralTeamUI extends VerticalLayout {
                         
             boolean result = tts.insertNewTeamTeach(tt);
             if(result){
-//                populateDataGrid();
                 populateDataTable();
             }
+        }
+    };
+    
+    Button.ClickListener removeBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     };
     
@@ -185,4 +214,11 @@ public class SemestralTeamUI extends VerticalLayout {
         Notification.show("Required All Fields", Notification.Type.ERROR_MESSAGE);
     }   
     
+    Window.CloseListener windowCloseListener = new Window.CloseListener() {
+
+        @Override
+        public void windowClose(Window.CloseEvent e) {
+            populateDataTable();
+        }
+    };
 }

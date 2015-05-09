@@ -5,9 +5,12 @@
  */
 package com.etest.view.systemadministration.datagrid;
 
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -18,7 +21,7 @@ public class SemestralTeamDataTable extends Table {
 
     public SemestralTeamDataTable() {
         setSizeFull();
-        setSelectable(true);
+        setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
         setImmediate(true);
         
@@ -27,8 +30,11 @@ public class SemestralTeamDataTable extends Table {
         addContainerProperty("year level", String.class, null);
         addContainerProperty("subject", String.class, null);
         addContainerProperty("team leader", String.class, null);
-        addContainerProperty("members", Button.class, null);
+        addContainerProperty("members", HorizontalLayout.class, null);
         
+        setColumnAlignment("members", Align.CENTER);
+        setColumnIcon("members", FontAwesome.USERS);
+        setColumnWidth("members", 200);
     }
     
 }

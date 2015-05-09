@@ -33,8 +33,8 @@ public class TeamTeachServiceImpl implements TeamTeachService {
     }
 
     @Override
-    public boolean updateTeamTeach(TeamTeach tt) {
-        return TeamTeachDAO.updateTeamTeachLeader(tt);
+    public boolean updateTeamTeach(int currentTLUserId, int updateTLUserId) {
+        return TeamTeachDAO.updateTeamTeachLeader(currentTLUserId, updateTLUserId);
     }
 
     @Override
@@ -77,5 +77,11 @@ public class TeamTeachServiceImpl implements TeamTeachService {
         return TeamTeachDAO.isFacultyTeamLeader(teamTeachId, 
                 facultyId);
     }
-    
+
+    @Override
+    public boolean isTeamMemberAlreadyExist(int teamTeachId, 
+            int facultyId) {
+        return TeamTeachDAO.isTeamMemberAlreadyExist(teamTeachId, 
+                facultyId);
+    }    
 }
