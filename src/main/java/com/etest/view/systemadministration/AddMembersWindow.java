@@ -13,11 +13,6 @@ import com.etest.service.UsersService;
 import com.etest.serviceprovider.TeamTeachServiceImpl;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.serviceprovider.facultyServiceImpl;
-import com.etest.utilities.CommonUtilities;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.PropertyFormatter;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -198,15 +193,11 @@ public class AddMembersWindow extends Window {
         removeBtn.setWidth("100%");
         removeBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         removeBtn.addStyleName(ValoTheme.BUTTON_SMALL);
-        removeBtn.addClickListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                boolean result = tts.removeTeamMember(getTeamTeachId(), facultyRowId);
-                if(result){
-                    populateDataTable();
-                    sub.close();
-                }
+        removeBtn.addClickListener((Button.ClickEvent event) -> {
+            boolean result = tts.removeTeamMember(getTeamTeachId(), facultyRowId);
+            if(result){
+                populateDataTable();
+                sub.close();
             }
         });
         vlayout.addComponent(removeBtn);
@@ -229,8 +220,8 @@ public class AddMembersWindow extends Window {
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
         
-        String faculty = fs.getFacultyNameById(facultyRowId);
-        vlayout.addComponent(new Label("Set "+faculty.toUpperCase()+" as Team Leader."));        
+        String name = fs.getFacultyNameById(facultyRowId);
+        vlayout.addComponent(new Label("Set "+name.toUpperCase()+" as Team Leader."));        
         
         Button updateBtn = new Button("UPDATE");
         updateBtn.setWidth("100%");
@@ -243,7 +234,8 @@ public class AddMembersWindow extends Window {
             boolean result = tts.updateTeamTeach(currentTLUserId, updateTLUserId);
             if(result){
                 sub.close();
-//                    populateDataTable();
+                populateDataTable();
+                close();
             }
         });
         vlayout.addComponent(updateBtn);

@@ -170,7 +170,7 @@ public class TeamTeachDAO {
             pstmt.setInt(2, currentTLUserId);
             pstmt.executeUpdate();
             
-            return result;
+            result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
