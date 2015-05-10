@@ -157,7 +157,7 @@ public class TeamTeachDAO {
         return result;
     }
     
-    public static boolean updateTeamTeachLeader(int currentTLUserId, int updateTLUserId){
+    public static boolean updateTeamTeachLeader(int teamTeachId, int userId){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;
         boolean result = false;
@@ -165,9 +165,9 @@ public class TeamTeachDAO {
         try {
             pstmt = conn.prepareStatement("UPDATE team_teach SET "
                     + "UserID = ? "
-                    + "WHERE UserID = ? ");
-            pstmt.setInt(1, updateTLUserId);
-            pstmt.setInt(2, currentTLUserId);
+                    + "WHERE TeamTeachID = ? ");
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, teamTeachId);
             pstmt.executeUpdate();
             
             result = true;
@@ -187,7 +187,7 @@ public class TeamTeachDAO {
         return result;
     }
     
-    public static boolean removeTeamTeachLeader(int teamTeachId){
+    public static boolean removeSemestralTeam(int teamTeachId){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;
         boolean result = false;
@@ -198,7 +198,7 @@ public class TeamTeachDAO {
             pstmt.setInt(1, teamTeachId);
             pstmt.executeUpdate();
             
-            return result;
+            result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);

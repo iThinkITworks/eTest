@@ -130,13 +130,16 @@ public class SemestralTeamUI extends VerticalLayout {
             membersBtn.setWidth("100%");
             membersBtn.setData(tt.getTeamTeachId());
             if(tts.countTeamMembers(tt.getTeamTeachId()) < 2){
-                membersBtn.setCaption("Add Members");
+                membersBtn.setCaption("add");
+                membersBtn.setIcon(FontAwesome.USER);
             } else {
-                membersBtn.setCaption("View Members");
+                membersBtn.setCaption("view");
+                membersBtn.setIcon(FontAwesome.USERS);
             }
             
-            Button removeTLBtn = new Button("Remove TL");
+            Button removeTLBtn = new Button("del");
             removeTLBtn.setWidth("100%");
+            removeTLBtn.setIcon(FontAwesome.ERASER);
             removeTLBtn.setData(tt.getTeamTeachId());
             
             hlayout.addComponent(membersBtn);
@@ -154,71 +157,61 @@ public class SemestralTeamUI extends VerticalLayout {
         
             membersBtn.addStyleName(ValoTheme.BUTTON_LINK);
             membersBtn.addStyleName(ValoTheme.BUTTON_TINY);
-            membersBtn.addClickListener(new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(Button.ClickEvent event) {
-                    Window sub = new AddMembersWindow((int)membersBtn.getData());
-                    if(sub.getParent() == null){
-                        UI.getCurrent().addWindow(sub);
-                    }
-                    sub.addCloseListener(windowCloseListener);
-                }
-            });
+            membersBtn.addClickListener(modifyBtnListener);
             
             removeTLBtn.addStyleName(ValoTheme.BUTTON_LINK);
             removeTLBtn.addStyleName(ValoTheme.BUTTON_TINY);
-            removeTLBtn.addClickListener((Button.ClickEvent event) -> {
-                boolean result = tts.removeTeamTeach((int) removeTLBtn.getData());
-                if(result){
-                    populateDataTable();
-                }
-            });
+            removeTLBtn.addClickListener(modifyBtnListener);
         }
         table.setPageLength(table.size());        
     }
     
-    Button.ClickListener saveBtnClickListener = new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(Button.ClickEvent event) {
-            if(subjects.getValue() == null){ requiredAllFields(); return; }
-            if(schoolYear.getValue() == null ){ requiredAllFields(); return; }
-            if(semester.getValue() == null){ requiredAllFields(); return; }
-            if(faculty.getValue() == null){ requiredAllFields(); return; }
-            
-            UsersService us = new UsersServiceImpl();
-            TeamTeach tt = new TeamTeach();
-            tt.setCurriculumId(CommonUtilities.convertStringToInt(subjects.getValue().toString()));
-            tt.setSchoolYear(schoolYear.getValue().toString());
-            tt.setNormCourseOffering(CommonUtilities.convertStringToInt(semester.getValue().toString()));
-            tt.setUserId(us.getUserIdByFacultyId((int)faculty.getValue()));
-            tt.setFacultyId((int)faculty.getValue());
-                        
-            boolean result = tts.insertNewTeamTeach(tt);
-            if(result){
-                populateDataTable();
-            }
+    Button.ClickListener saveBtnClickListener = (Button.ClickEvent event) -> {
+        if(subjects.getValue() == null){ requiredAllFields(); return; }
+        if(schoolYear.getValue() == null ){ requiredAllFields(); return; }
+        if(semester.getValue() == null){ requiredAllFields(); return; }
+        if(faculty.getValue() == null){ requiredAllFields(); return; }
+        
+        UsersService us = new UsersServiceImpl();
+        TeamTeach tt = new TeamTeach();
+        tt.setCurriculumId(CommonUtilities.convertStringToInt(subjects.getValue().toString()));
+        tt.setSchoolYear(schoolYear.getValue().toString());
+        tt.setNormCourseOffering(CommonUtilities.convertStringToInt(semester.getValue().toString()));
+        tt.setUserId(us.getUserIdByFacultyId((int)faculty.getValue()));
+        tt.setFacultyId((int)faculty.getValue());
+        
+        boolean result = tts.insertNewTeamTeach(tt);
+        if(result){
+            populateDataTable();
         }
     };
     
-    Button.ClickListener removeBtnListener = new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(Button.ClickEvent event) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+    Button.ClickListener modifyBtnListener = (Button.ClickEvent event) -> {
+        Window sub;
+        if(event.getButton().getCaption().equals("del")){
+            sub = new RemoveSemestralTeamWindow((int)event.getButton().getData());
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+            sub.addCloseListener((Window.CloseEvent e) -> {
+                populateDataTable();
+            });
+        } else {
+            sub = new AddMembersWindow((int)event.getButton().getData());
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+            sub.addCloseListener((Window.CloseEvent e) -> {
+                populateDataTable();
+            });
+        }        
     };
     
     void requiredAllFields(){
         Notification.show("Required All Fields", Notification.Type.ERROR_MESSAGE);
     }   
     
-    Window.CloseListener windowCloseListener = new Window.CloseListener() {
-
-        @Override
-        public void windowClose(Window.CloseEvent e) {
-            populateDataTable();
-        }
+    Window.CloseListener windowCloseListener = (Window.CloseEvent e) -> {
+        populateDataTable();
     };
 }

@@ -6,11 +6,8 @@
 package com.etest.view.systemadministration.datagrid;
 
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -33,8 +30,7 @@ public class SemestralTeamDataTable extends Table {
         addContainerProperty("members", HorizontalLayout.class, null);
         
         setColumnAlignment("members", Align.CENTER);
-        setColumnIcon("members", FontAwesome.USERS);
-        setColumnWidth("members", 200);
+        setColumnWidth("members", 150);
     }
     
 }

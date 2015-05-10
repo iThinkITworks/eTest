@@ -21,9 +21,9 @@ public interface TeamTeachService {
     
     public boolean insertNewTeamTeach(TeamTeach tt);
     
-    public boolean updateTeamTeach(int currentTLUserId, int newTLUserId);
+    public boolean updateTeamTeach(int teamTeachId, int userId);
     
-    public boolean removeTeamTeach(int teamTeachId);
+    public boolean removeSemestralTeam(int teamTeachId);
     
     public int countTeamMembers(int teamTeachId);
     

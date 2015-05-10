@@ -229,9 +229,8 @@ public class AddMembersWindow extends Window {
         updateBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         updateBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         updateBtn.addClickListener((Button.ClickEvent event) -> {
-            int currentTLUserId = us.getUserIdByFacultyId(getFacultyId());
-            int updateTLUserId = us.getUserIdByFacultyId(facultyRowId);
-            boolean result = tts.updateTeamTeach(currentTLUserId, updateTLUserId);
+            int userId = us.getUserIdByFacultyId(facultyRowId);
+            boolean result = tts.updateTeamTeach(getTeamTeachId(), userId);
             if(result){
                 sub.close();
                 populateDataTable();

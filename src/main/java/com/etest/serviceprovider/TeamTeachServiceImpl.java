@@ -33,13 +33,13 @@ public class TeamTeachServiceImpl implements TeamTeachService {
     }
 
     @Override
-    public boolean updateTeamTeach(int currentTLUserId, int updateTLUserId) {
-        return TeamTeachDAO.updateTeamTeachLeader(currentTLUserId, updateTLUserId);
+    public boolean updateTeamTeach(int teamTeachId, int userId) {
+        return TeamTeachDAO.updateTeamTeachLeader(teamTeachId, userId);
     }
 
     @Override
-    public boolean removeTeamTeach(int teamTeachId) {
-        return TeamTeachDAO.removeTeamTeachLeader(teamTeachId);
+    public boolean removeSemestralTeam(int teamTeachId) {
+        return TeamTeachDAO.removeSemestralTeam(teamTeachId);
     }
 
     @Override
