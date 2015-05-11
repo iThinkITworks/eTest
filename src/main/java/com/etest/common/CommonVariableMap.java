@@ -7,6 +7,7 @@ package com.etest.common;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -34,5 +35,13 @@ public class CommonVariableMap {
         normCourseOffering.put(2, "Second Semester");
         
         return normCourseOffering.get(key).toString();
+    }
+    
+    public static int getFacultyUserType(Object key){
+        Map userType = new HashMap();
+        userType.put("year level coordinator", 1);
+        userType.put("member", 2);
+        
+        return (int)userType.get(key);
     }
 }

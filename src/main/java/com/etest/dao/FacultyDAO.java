@@ -39,6 +39,8 @@ public class FacultyDAO {
                 Users u = new Users();
                 u.setName(rs.getString("name"));
                 u.setUsername_(rs.getString("LoginName"));
+                u.setUserType(rs.getString("UserType"));
+                u.setPosition(rs.getString("Position"));
                 u.setFacultyId(CommonUtilities.convertStringToInt(rs.getString("FacultyID")));
                 userList.add(u);
             }
@@ -199,10 +201,12 @@ public class FacultyDAO {
             pstmt = conn.prepareStatement("INSERT INTO users SET "
                     + "FacultyID = ?, "
                     + "Username_ = ?, "
-                    + "Password_ = ? ");
+                    + "Password_ = ?, "
+                    + "UserType = ? ");
             pstmt.setInt(1, facultyId);
             pstmt.setString(2, users.getUsername_());
             pstmt.setString(3, users.getPassword_());
+            pstmt.setString(4, users.getUserType());
             pstmt.executeUpdate();
             
             conn.commit();
@@ -241,11 +245,13 @@ public class FacultyDAO {
                         
             pstmt = conn.prepareStatement("UPDATE users SET "
                     + "Username_ = ?, "
-                    + "Password_ = ? "
+                    + "Password_ = ?, "
+                    + "UserType = ? "
                     + "WHERE FacultyID = ? ");            
             pstmt.setString(1, users.getUsername_());
             pstmt.setString(2, users.getPassword_());
             pstmt.setInt(3, users.getFacultyId());
+            pstmt.setString(4, users.getUserType());
             pstmt.executeUpdate();
             
             conn.commit();

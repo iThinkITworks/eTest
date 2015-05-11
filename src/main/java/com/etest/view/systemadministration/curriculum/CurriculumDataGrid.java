@@ -3,31 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration.datagrid;
+package com.etest.view.systemadministration.curriculum;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.renderers.ButtonRenderer;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
  *
  * @author jetdario
  */
-public class SemestralDataGrid extends Grid {
-
-    public SemestralDataGrid() {
+public class CurriculumDataGrid extends Grid {
+    
+    public CurriculumDataGrid() {        
         setSizeFull();
         setSelectionMode(SelectionMode.SINGLE);
         addStyleName(ValoTheme.TABLE_SMALL);
-        setImmediate(true);
         
-        addColumn("school year", String.class);
-        addColumn("semester", String.class);
+        addColumn("ID", Integer.class);
         addColumn("year level", String.class);
         addColumn("subject", String.class);
-        addColumn("team leader", String.class);
-        addColumn("members", Button.class);    
-        
+        addColumn("descriptive title", String.class);
+        addColumn("normal course offering", String.class);        
     }
     
 }

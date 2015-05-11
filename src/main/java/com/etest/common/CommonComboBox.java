@@ -42,6 +42,7 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i = select.addItem(1);
         i.getItemProperty("y").setValue("1st Year");
         i = select.addItem(2);
@@ -52,6 +53,7 @@ public class CommonComboBox {
         i.getItemProperty("y").setValue("4th Year");
         i = select.addItem(5);
         i.getItemProperty("y").setValue("5th Year");
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
@@ -64,10 +66,12 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i = select.addItem(1);
         i.getItemProperty("y").setValue("First Semester");
         i = select.addItem(2);
         i.getItemProperty("y").setValue("Second Semester");
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
@@ -80,11 +84,13 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i;
         for(Map.Entry<Integer, String> entry : CurriculumDAO.getSubjectsFromCurriculum().entrySet()){
             i = select.addItem(entry.getKey());
             i.getItemProperty("y").setValue(entry.getValue());
         }
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
@@ -97,11 +103,13 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i;
         for(Users u : FacultyDAO.getAllFaculty()){
             i = select.addItem(u.getFacultyId());
             i.getItemProperty("y").setValue(u.getName());
         }
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
@@ -114,10 +122,12 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i = select.addItem(1);
         i.getItemProperty("y").setValue("Faculty");
         i = select.addItem(2);
         i.getItemProperty("y").setValue("Dean");
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
@@ -130,10 +140,12 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i = select.addItem(1);
-        i.getItemProperty("y").setValue("Year Level Coordinator");
+        i.getItemProperty("y").setValue("year level coordinator");
         i = select.addItem(2);
-        i.getItemProperty("y").setValue("Member");
+        i.getItemProperty("y").setValue("member");
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;
@@ -166,11 +178,13 @@ public class CommonComboBox {
         select.setNullSelectionAllowed(false);
         select.addContainerProperty("y", String.class, "");
         select.setItemCaptionPropertyId("y");
+        
         Item i;
         for(Users u : TeamTeachDAO.getAllFacultyExceptTeamLeader(facultyId)){
             i = select.addItem(u.getFacultyId());
             i.getItemProperty("y").setValue(u.getName());
         }
+        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration.datagrid;
+package com.etest.view.systemadministration.SemestralTeam;
 
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.HorizontalLayout;

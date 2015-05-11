@@ -13,8 +13,10 @@ import com.etest.service.UsersService;
 import com.etest.serviceprovider.TeamTeachServiceImpl;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.etest.view.systemadministration.datagrid.SemestralDataGrid;
-import com.etest.view.systemadministration.datagrid.SemestralTeamDataTable;
+import com.etest.view.systemadministration.SemestralTeam.AddSemestralTeamMembersWindow;
+import com.etest.view.systemadministration.SemestralTeam.RemoveSemestralTeamWindow;
+import com.etest.view.systemadministration.SemestralTeam.SemestralTeamDataGrid;
+import com.etest.view.systemadministration.SemestralTeam.SemestralTeamDataTable;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -43,7 +45,7 @@ public class SemestralTeamUI extends VerticalLayout {
     ComboBox faculty;
     
     Table table = new SemestralTeamDataTable();
-    Grid grid = new SemestralDataGrid();    
+    Grid grid = new SemestralTeamDataGrid();    
     
     public SemestralTeamUI() {
         setSizeFull();
@@ -197,7 +199,7 @@ public class SemestralTeamUI extends VerticalLayout {
                 populateDataTable();
             });
         } else {
-            sub = new AddMembersWindow((int)event.getButton().getData());
+            sub = new AddSemestralTeamMembersWindow((int)event.getButton().getData());
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }

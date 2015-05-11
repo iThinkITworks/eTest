@@ -13,7 +13,7 @@ import com.etest.service.SyllabusService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.etest.view.systemadministration.datagrid.SyllabusDataGrid;
+import com.etest.view.systemadministration.syllabus.SyllabusDataGrid;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -24,7 +24,9 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -59,8 +61,7 @@ public class SyllabusMainUI extends VerticalLayout {
         setSpacing(true);
         
         addComponent(buildSyllabusForms());
-        populateDataGrid();
-        addComponent(grid);
+        addComponent(dataGridPanel());
         
         enableNewSyllabusEntry.setVisible(false);
     }
@@ -71,22 +72,16 @@ public class SyllabusMainUI extends VerticalLayout {
         form.setSpacing(true);
         
         subjects.setCaption("Subject: ");
-        subjects.setWidth("200px");
+        subjects.setWidth("60%");
         subjects.setIcon(FontAwesome.BOOK);
         subjects.addStyleName(ValoTheme.COMBOBOX_SMALL);
         form.addComponent(subjects);
         
         topicNo.setCaption("Topic No: ");
-        topicNo.setWidth("200px");
+        topicNo.setWidth("60%");
         topicNo.setIcon(FontAwesome.TAG);
         topicNo.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         form.addComponent(topicNo);
-        
-        estimatedTime.setCaption("Estimated Time: ");
-        estimatedTime.setWidth("200px");
-        estimatedTime.setIcon(FontAwesome.TAG);
-        estimatedTime.addStyleName(ValoTheme.TEXTFIELD_SMALL);
-        form.addComponent(estimatedTime);
         
         topic.setCaption("Topic: ");
         topic.setWidth("100%");
@@ -96,8 +91,14 @@ public class SyllabusMainUI extends VerticalLayout {
         topic.addStyleName(ValoTheme.TEXTAREA_SMALL);
         form.addComponent(topic);
         
+        estimatedTime.setCaption("Estimated Time: ");
+        estimatedTime.setWidth("60%");
+        estimatedTime.setIcon(FontAwesome.TAG);
+        estimatedTime.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+        form.addComponent(estimatedTime);
+                
         formBtn.setCaption(BUTTON_SAVE_CAPTION);
-        formBtn.setWidth("100%");
+        formBtn.setWidth("60%");
         formBtn.setIcon(FontAwesome.SAVE);
         formBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         formBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -110,8 +111,19 @@ public class SyllabusMainUI extends VerticalLayout {
         return form;
     }
     
+    Panel dataGridPanel(){
+        Panel panel = new Panel("List of All Syllabus");
+        panel.setWidth("900px");
+        panel.setHeight("500px");
+        
+        populateDataGrid();
+        panel.setContent(grid);
+                
+        return panel;
+    }
+    
     Grid populateDataGrid(){
-        grid.getContainerDataSource().removeAllItems();
+        grid.getContainerDataSource().removeAllItems();        
         for(Syllabus s: ss.getAllSyllabus()){
             grid.addRow(s.getSyllabusId(), 
                     s.getSubject(), 
@@ -122,95 +134,83 @@ public class SyllabusMainUI extends VerticalLayout {
         }
         grid.recalculateColumnWidths();
         
-        grid.addItemClickListener(new ItemClickEvent.ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                Object itemId = event.getItemId();
-                Item item = grid.getContainerDataSource().getItem(itemId);
-                
-                syllabusId = CommonUtilities.convertStringToInt(item.getItemProperty("ID").getValue().toString());
-                
-                s = ss.getSyllabusById(syllabusId);
-                subjects.setValue(s.getCurriculumId());
-                topicNo.setValue(String.valueOf(s.getTopicNo()));
-                estimatedTime.setValue(String.valueOf(s.getEstimatedTime()));
-                topic.setValue(s.getTopic());
-                formBtn.setCaption(BUTTON_UPDATE_CAPTION);
-                enableNewSyllabusEntry.setVisible(true);
-                enableNewSyllabusEntry.setValue(false);
-            }
+        grid.addItemClickListener((ItemClickEvent event) -> {
+            Object itemId = event.getItemId();
+            Item item = grid.getContainerDataSource().getItem(itemId);
+                        
+            syllabusId = CommonUtilities.convertStringToInt(item.getItemProperty("ID").getValue().toString());
+            
+            s = ss.getSyllabusById(syllabusId);
+            subjects.setValue(s.getCurriculumId());
+            topicNo.setValue(String.valueOf(s.getTopicNo()));
+            estimatedTime.setValue(String.valueOf(s.getEstimatedTime()));
+            topic.setValue(s.getTopic());
+            formBtn.setCaption(BUTTON_UPDATE_CAPTION);
+            enableNewSyllabusEntry.setVisible(true);
+            enableNewSyllabusEntry.setValue(false);
         });
         
         return grid;
     }
     
-    Button.ClickListener buttonClickListener = new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(Button.ClickEvent event) {            
-            if(subjects.getValue() == null){ requiredAllFields(); return; }
-            
-            if(topicNo.getValue() == null || 
-                    topicNo.getValue().trim().isEmpty()){ 
-                requiredAllFields(); return; 
-            } else {
-                if(!CommonUtilities.checkInputIfInteger(topicNo.getValue().trim())){ 
-                    Notification.show("Enter a numeric format for Topic No.", Notification.Type.ERROR_MESSAGE);
-                    return;
-                }
-            } 
-            if(estimatedTime.getValue() == null || 
-                    estimatedTime.getValue().trim().isEmpty()){ 
-                requiredAllFields();
-                return;
-            } else {
-                if(!CommonUtilities.checkInputIfFloat(estimatedTime.getValue().trim())){ 
-                    Notification.show("Enter a numeric format for Estimated Time.", Notification.Type.ERROR_MESSAGE);
-                    return;
-                }
-            }
-            
-            
-            if(topic.getValue() == null || 
-                    topic.getValue().trim().isEmpty()){ requiredAllFields(); return; }
-                        
-            s.setCurriculumId((int) subjects.getValue());
-            s.setTopicNo(CommonUtilities.convertStringToInt(topicNo.getValue().trim()));
-            s.setEstimatedTime(CommonUtilities.convertStringToFloat(estimatedTime.getValue().trim()));
-            s.setTopic(topic.getValue().trim());
-            
-            if(event.getButton().getCaption().equals(BUTTON_SAVE_CAPTION)){
-                boolean result = ss.insertNewSyllabus(s);
-                if(result){
-                    populateDataGrid();
-                    clearForms();
-                }
-            } else {
-                s.setSyllabusId(getSyllabusId());
-                boolean result = ss.updateSyllabus(s);
-                if(result){
-                    populateDataGrid();
-                    clearForms();
-                    formBtn.setCaption(BUTTON_SAVE_CAPTION);
-                }
-            }
-            
-            enableNewSyllabusEntry.setVisible(false);
-            enableNewSyllabusEntry.setValue(false);
-        }
-    };
+    Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
+        if(subjects.getValue() == null){ requiredAllFields(); return; }
         
-    CheckBox.ValueChangeListener checkBoxValueListener = new CheckBox.ValueChangeListener() {
-
-        @Override
-        public void valueChange(Property.ValueChangeEvent event) {
-            if((Boolean)event.getProperty().getValue() == true){
-                formBtn.setCaption(BUTTON_SAVE_CAPTION);
-                enableNewSyllabusEntry.setValue(false);
-                enableNewSyllabusEntry.setVisible(false);
+        if(topicNo.getValue() == null ||
+                topicNo.getValue().trim().isEmpty()){
+            requiredAllFields(); return;
+        } else {
+            if(!CommonUtilities.checkInputIfInteger(topicNo.getValue().trim())){
+                Notification.show("Enter a numeric format for Topic No.", Notification.Type.ERROR_MESSAGE);
+                return;
+            }
+        }
+        if(estimatedTime.getValue() == null ||
+                estimatedTime.getValue().trim().isEmpty()){
+            requiredAllFields();
+            return;
+        } else {
+            if(!CommonUtilities.checkInputIfFloat(estimatedTime.getValue().trim())){
+                Notification.show("Enter a numeric format for Estimated Time.", Notification.Type.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
+        
+        if(topic.getValue() == null ||
+                topic.getValue().trim().isEmpty()){ requiredAllFields(); return; }
+        
+        s.setCurriculumId((int) subjects.getValue());
+        s.setTopicNo(CommonUtilities.convertStringToInt(topicNo.getValue().trim()));
+        s.setEstimatedTime(CommonUtilities.convertStringToFloat(estimatedTime.getValue().trim()));
+        s.setTopic(topic.getValue().trim());
+        
+        if(event.getButton().getCaption().equals(BUTTON_SAVE_CAPTION)){
+            boolean result = ss.insertNewSyllabus(s);
+            if(result){
+                populateDataGrid();
                 clearForms();
             }
+        } else {
+            s.setSyllabusId(getSyllabusId());
+            boolean result = ss.updateSyllabus(s);
+            if(result){
+                populateDataGrid();
+                clearForms();
+                formBtn.setCaption(BUTTON_SAVE_CAPTION);
+            }
+        }
+        
+        enableNewSyllabusEntry.setVisible(false);
+        enableNewSyllabusEntry.setValue(false);
+    };
+        
+    CheckBox.ValueChangeListener checkBoxValueListener = (Property.ValueChangeEvent event) -> {
+        if((Boolean)event.getProperty().getValue() == true){
+            formBtn.setCaption(BUTTON_SAVE_CAPTION);
+            enableNewSyllabusEntry.setValue(false);
+            enableNewSyllabusEntry.setVisible(false);
+            clearForms();
         }
     };
     

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration.datagrid;
+package com.etest.view.systemadministration.syllabus;
 
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.themes.ValoTheme;
@@ -15,7 +15,7 @@ import com.vaadin.ui.themes.ValoTheme;
 public class SyllabusDataGrid extends Grid {
 
     public SyllabusDataGrid() {
-        setSizeFull();
+        setWidth("100%");
         setSelectionMode(Grid.SelectionMode.SINGLE);
         addStyleName(ValoTheme.TABLE_SMALL);
         
@@ -25,5 +25,7 @@ public class SyllabusDataGrid extends Grid {
         addColumn("topic no", Integer.class);
         addColumn("topic", String.class);
         addColumn("estimated time", Float.class);
+        
+        setFrozenColumnCount(2);
     }
 }

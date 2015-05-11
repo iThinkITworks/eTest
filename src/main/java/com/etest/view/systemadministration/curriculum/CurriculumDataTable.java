@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration;
+package com.etest.view.systemadministration.curriculum;
 
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -13,20 +12,19 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author jetdario
  */
-public class AddNewMembersTable extends Table {
+public class CurriculumDataTable extends Table {
 
-    public AddNewMembersTable() {
+    public CurriculumDataTable() {
         setWidth("100%");
-        setSelectable(false);
+        setSelectable(true);
         addStyleName(ValoTheme.TABLE_SMALL);
         setImmediate(true);
         
         addContainerProperty("id", Integer.class, null);
-        addContainerProperty("member", String.class, null);
-        addContainerProperty("position", String.class, null);
-        addContainerProperty("modify", HorizontalLayout.class, null);
-        
-        setColumnAlignment("modify", Align.CENTER);
+        addContainerProperty("year level", String.class, null);
+        addContainerProperty("subject", String.class, null);
+        addContainerProperty("descriptive title", String.class, null);
+        addContainerProperty("normal course offering", String.class, null); 
     }
     
 }

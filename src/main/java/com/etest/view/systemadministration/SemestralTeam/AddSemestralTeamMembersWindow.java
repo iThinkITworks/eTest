@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration;
+package com.etest.view.systemadministration.SemestralTeam;
 
 import com.etest.common.CommonComboBox;
 import com.etest.model.TeamTeach;
@@ -30,7 +30,7 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author jetdario
  */
-public class AddMembersWindow extends Window {
+public class AddSemestralTeamMembersWindow extends Window {
 
     TeamTeachService tts = new TeamTeachServiceImpl();
     FacultyService fs = new facultyServiceImpl();
@@ -38,11 +38,11 @@ public class AddMembersWindow extends Window {
     private int teamTeachId;
     private int facultyId;
     
-    Table table = new AddNewMembersTable();
+    Table table = new SemestralTeamMembersTable();
     ComboBox faculty;
     Button addMemberBtn = new Button("ADD");
     
-    public AddMembersWindow(int teamTeachId) {
+    public AddSemestralTeamMembersWindow(int teamTeachId) {
         this.teamTeachId = teamTeachId;
         
         setCaption("ADD TEAM MEMBERS");
