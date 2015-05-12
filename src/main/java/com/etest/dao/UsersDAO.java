@@ -36,6 +36,7 @@ public class UsersDAO {
                     + "AND Password_ = '"+password+"' ");
             while(rs.next()){
                 VaadinSession.getCurrent().setAttribute("username", rs.getString("Username_"));
+                VaadinSession.getCurrent().setAttribute("userId", rs.getString("UserID"));
                 result = true;
             }
         } catch (SQLException ex) {

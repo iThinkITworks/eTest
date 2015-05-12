@@ -35,7 +35,7 @@ public class CurriculumDAO {
         try {
             pstmt = conn.prepareStatement("INSERT INTO curriculum "
                     + "SET YearLevel = ?, "
-                    + "Subject = ?, "
+                    + "CurrSubject = ?, "
                     + "DescriptiveTitle = ?, "
                     + "NormCourseOffering = ?");
             pstmt.setInt(1, curriculum.getYearLevel());
@@ -69,7 +69,7 @@ public class CurriculumDAO {
         try {
             pstmt = conn.prepareStatement("UPDATE curriculum "
                     + "SET YearLevel = ?, "
-                    + "Subject = ?, "
+                    + "CurrSubject = ?, "
                     + "DescriptiveTitle = ?, "
                     + "NormCourseOffering = ? "
                     + "WHERE CurriculumID = ? ");
@@ -111,7 +111,7 @@ public class CurriculumDAO {
                 Curriculum curriculum = new Curriculum();
                 curriculum.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 curriculum.setYearLevel(CommonUtilities.convertStringToInt(rs.getString("YearLevel")));
-                curriculum.setSubject(rs.getString("Subject"));
+                curriculum.setSubject(rs.getString("CurrSubject"));
                 curriculum.setDescriptiveTitle(rs.getString("DescriptiveTitle"));
                 curriculum.setNormCourseOffering(CommonUtilities.convertStringToInt(rs.getString("NormCourseOffering")));
                 curriculumList.add(curriculum);
@@ -176,7 +176,7 @@ public class CurriculumDAO {
             while(rs.next()){                
                 curriculum.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 curriculum.setYearLevel(CommonUtilities.convertStringToInt(rs.getString("YearLevel")));
-                curriculum.setSubject(rs.getString("Subject"));
+                curriculum.setSubject(rs.getString("CurrSubject"));
                 curriculum.setDescriptiveTitle(rs.getString("DescriptiveTitle"));
                 curriculum.setNormCourseOffering(CommonUtilities.convertStringToInt(rs.getString("NormCourseOffering")));
             }
@@ -205,10 +205,10 @@ public class CurriculumDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT CurriculumID, Subject FROM curriculum "
+            rs = stmt.executeQuery("SELECT CurriculumID, CurrSubject FROM curriculum "
                     + "WHERE CurriculumStatus = 0");
             while(rs.next()){
-                subjectListMap.put(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")), rs.getString("Subject"));
+                subjectListMap.put(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")), rs.getString("CurrSubject"));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());

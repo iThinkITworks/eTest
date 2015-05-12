@@ -3,32 +3,33 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration.faculty;
+package com.etest.view.testbank;
 
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
+import java.util.Date;
 
 /**
  *
  * @author jetdario
  */
-public class FacultyDataTable extends Table {
+public class CellCaseDataTable extends Table {
 
-    public FacultyDataTable() {
+    public CellCaseDataTable() {
         setWidth("100%");
         setSelectable(true);
         addStyleName(ValoTheme.TABLE_SMALL);
+        setStyleName("wordwrap-table");
         setImmediate(true);
         
-        addContainerProperty("name", String.class, null);
-        addContainerProperty("login name", String.class, null);
-        addContainerProperty("user type", String.class, null);
+        addContainerProperty("id", Integer.class, null);
+        addContainerProperty("case", String.class, null);
+        addContainerProperty("author", String.class, null);
+        addContainerProperty("date created", Date.class, null);
         addContainerProperty("modify", HorizontalLayout.class, null);
         
-        setColumnAlignment("modify", Align.CENTER);
-        setColumnWidth("modify", 150);
+        setColumnWidth("case", 500);
     }
     
 }

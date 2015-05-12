@@ -39,8 +39,11 @@ public class CommonVariableMap {
     
     public static int getFacultyUserType(Object key){
         Map userType = new HashMap();
-        userType.put("year level coordinator", 1);
-        userType.put("member", 2);
+        userType.put("Dean", 1);
+        userType.put("Year Level Coordinator", 2);
+        userType.put("Team Teach Leader", 3);
+        userType.put("Team Teach Member", 4);
+        userType.put("Faculty Member", 5);
         
         return (int)userType.get(key);
     }

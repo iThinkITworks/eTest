@@ -10,7 +10,6 @@ import com.etest.service.FacultyService;
 import com.etest.serviceprovider.facultyServiceImpl;
 import com.etest.view.systemadministration.faculty.FacultyDataTable;
 import com.etest.view.systemadministration.faculty.FacultyFormWindow;
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
@@ -92,7 +91,6 @@ public class FacultyMainUI extends VerticalLayout {
                 u.getName().toUpperCase(), 
                 u.getUsername_(), 
                 u.getUserType(), 
-                u.getPosition(), 
                 hlayout
             }, new Integer(i));
             i++;

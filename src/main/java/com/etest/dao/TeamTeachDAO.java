@@ -41,7 +41,7 @@ public class TeamTeachDAO {
                 tt.setSchoolYear(rs.getString("SchoolYear"));
                 tt.setNormCourseOffering(CommonUtilities.convertStringToInt(rs.getString("Semester")));
                 tt.setYearLevel(CommonUtilities.convertStringToInt(rs.getString("YearLevel")));
-                tt.setSubject(rs.getString("Subject"));
+                tt.setSubject(rs.getString("CurrSubject"));
                 tt.setTeamLeader(rs.getString("TeamLeader"));
                 teamTeachList.add(tt);
             }

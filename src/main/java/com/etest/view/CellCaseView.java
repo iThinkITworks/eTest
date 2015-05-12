@@ -3,25 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.testbank;
+package com.etest.view;
 
+import com.etest.view.testbank.CellCaseMainUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 /**
  *
  * @author jetdario
  */
-public class CellView extends VerticalLayout implements View {
+public class CellCaseView extends VerticalLayout implements View {
 
-    public CellView() {
-        setSizeFull();
+    public CellCaseView() {
+        setWidth("100%");
         
-        Label h1 = new Label("Create/Modify/Approve Cell View");
-        h1.addStyleName("h1");
-        addComponent(h1);
+        addComponent(new CellCaseMainUI());
     }
 
     @Override

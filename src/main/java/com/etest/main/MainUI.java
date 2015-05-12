@@ -1,5 +1,6 @@
 package com.etest.main;
 
+import com.etest.view.CellCaseView;
 import com.etest.view.SyllabusView;
 import com.etest.view.HousekeepingView;
 import com.etest.view.SemestralTeamView;
@@ -9,7 +10,6 @@ import com.etest.service.UsersService;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
-import com.etest.view.systemadministration.*;
 import com.etest.view.testbank.*;
 import javax.servlet.annotation.WebServlet;
 
@@ -37,7 +37,6 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
@@ -159,7 +158,7 @@ private boolean testMode = false;
         navigator.addView("syllabus", SyllabusView.class);
         navigator.addView("semestral-team", SemestralTeamView.class);
         navigator.addView("housekeeping", HousekeepingView.class);
-        navigator.addView("cells", CellView.class);
+        navigator.addView("cells", CellCaseView.class);
         navigator.addView("run-item-analysis", RunItemAnalysisView.class);
         
 //        navigator.addView("common", CommonParts.class);

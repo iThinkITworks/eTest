@@ -50,7 +50,7 @@ public class FacultyFormWindow extends Window {
         this.buttonCaption = buttonCaption;
         
         setCaption("FACULTY FORM");
-        setWidth("400px");
+        setWidth("420px");
         setResizable(false);
         setModal(true);
         center();

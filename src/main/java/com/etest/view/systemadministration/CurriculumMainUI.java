@@ -103,7 +103,7 @@ public class CurriculumMainUI extends VerticalLayout {
                 c.getSubject(), 
                 c.getDescriptiveTitle(), 
                 CommonVariableMap.getNormCourseOffering(c.getNormCourseOffering())
-            }, new Integer(i));
+            }, i);
             i++;
         }
         table.setPageLength(table.size());

@@ -73,6 +73,7 @@ public class CurriculumFormWindow extends Window {
         newCurriculumn.setIcon(FontAwesome.SAVE);
         newCurriculumn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         newCurriculumn.addStyleName(ValoTheme.BUTTON_SMALL);
+        newCurriculumn.addClickListener(buttonClickListener);
         
         Button updateCurriculumn = new Button("UPDATE");
         updateCurriculumn.setWidth("100%");
@@ -124,6 +125,12 @@ public class CurriculumFormWindow extends Window {
         c.setNormCourseOffering(CommonUtilities.convertStringToInt(normCourseOffering.getValue().toString()));
         c.setCurriculumId(getCurriculumId());
             
+        System.out.println("caption: "+event.getButton().getCaption());
+        System.out.println("year level:"+yearLevel.getValue());
+        System.out.println("subject: "+subjectField.getValue());
+        System.out.println("descriptive: "+descriptiveTitleField.getValue());
+        System.out.println("norm: "+normCourseOffering.getValue());
+        
         switch (event.getButton().getCaption()) {
             case "SAVE":
                 {

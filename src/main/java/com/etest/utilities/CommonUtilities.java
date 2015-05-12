@@ -95,9 +95,33 @@ public class CommonUtilities {
         return dateConvert;
     }
     
+    public static String convertDateFormatWithTime(String date){
+        DateFormat currentDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateConvert = null;
+        try {
+            Date newDate = currentDateFormat.parse(date);
+            dateConvert = newDateFormat.format(newDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(CommonUtilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dateConvert;
+    }
+    
     public static Date parsingDate(String str){
         Date dateToFormat = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            dateToFormat = (Date) formatter.parse(str);
+        } catch (ParseException ex) {
+            Logger.getLogger(CommonUtilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dateToFormat;
+    }
+    
+    public static Date parsingDateWithTime(String str){
+        Date dateToFormat = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
             dateToFormat = (Date) formatter.parse(str);
         } catch (ParseException ex) {

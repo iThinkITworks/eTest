@@ -14,12 +14,9 @@ import com.etest.service.FacultyService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.facultyServiceImpl;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.ComboBox;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -142,9 +139,15 @@ public class CommonComboBox {
         select.setItemCaptionPropertyId("y");
         
         Item i = select.addItem(1);
-        i.getItemProperty("y").setValue("year level coordinator");
+        i.getItemProperty("y").setValue("Dean");
         i = select.addItem(2);
-        i.getItemProperty("y").setValue("member");
+        i.getItemProperty("y").setValue("Year Level Coordinator");
+        i = select.addItem(3);
+        i.getItemProperty("y").setValue("Team Teach Leader");
+        i = select.addItem(4);
+        i.getItemProperty("y").setValue("Team Teach Member");
+        i = select.addItem(5);
+        i.getItemProperty("y").setValue("Faculty Member");
         
         select.addStyleName("small");
         select.setImmediate(true);

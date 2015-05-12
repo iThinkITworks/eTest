@@ -38,7 +38,7 @@ public class SyllabusDAO {
             while(rs.next()){
                 Syllabus s = new Syllabus();
                 s.setSyllabusId(CommonUtilities.convertStringToInt(rs.getString("SyllabusID")));
-                s.setSubject(rs.getString("Subject"));
+                s.setSubject(rs.getString("CurrSubject"));
                 s.setDescriptiveTitle(rs.getString("DescriptiveTitle"));
                 s.setTopicNo(CommonUtilities.convertStringToInt(rs.getString("TopicNo")));
                 s.setTopic(rs.getString("Topic"));
@@ -74,7 +74,7 @@ public class SyllabusDAO {
             rs = stmt.executeQuery("SELECT * FROM enrolled_syllabus_view "
                     + "WHERE SyllabusID = "+syllabusId+" ");
             while(rs.next()){
-                s.setSubject(rs.getString("Subject"));
+                s.setSubject(rs.getString("CurrSubject"));
                 s.setDescriptiveTitle(rs.getString("DescriptiveTitle"));
                 s.setTopicNo(CommonUtilities.convertStringToInt(rs.getString("TopicNo")));
                 s.setTopic(rs.getString("Topic"));
@@ -108,10 +108,10 @@ public class SyllabusDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM enrolled_syllabus_view "
-                    + "WHERE CurriculumID IS "+curriculumId+" ");
+                    + "WHERE CurriculumID = "+curriculumId+" ");
             while(rs.next()){
                 Syllabus s = new Syllabus();
-                s.setSubject(rs.getString("Subject"));
+                s.setSubject(rs.getString("CurrSubject"));
                 s.setDescriptiveTitle(rs.getString("DescriptiveTitle"));
                 s.setTopicNo(CommonUtilities.convertStringToInt(rs.getString("TopicNo")));
                 s.setTopic(rs.getString("Topic"));
@@ -232,5 +232,5 @@ public class SyllabusDAO {
         }
         
         return result;
-    }
+    }    
 }
