@@ -241,6 +241,9 @@
    overflow: hidden;
   }
   
+  .button-container:hover{
+      background-color: #fff;
+  }
   
   // Need to use normal media queries because Responsive doesn't work for overlay elements just yet
   @media screen and (max-width: 480px) {

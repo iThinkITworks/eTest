@@ -50,7 +50,7 @@ public class CellCaseMainUI extends VerticalLayout {
     
     HorizontalLayout getHlayout(){
         HorizontalLayout hlayout = new HorizontalLayout();
-        hlayout.setSpacing(true);
+        hlayout.setSpacing(true);        
         
         subject.setWidth("200px");
         subject.addValueChangeListener((new CurriculumPropertyChangeListener(topic)));
@@ -64,7 +64,7 @@ public class CellCaseMainUI extends VerticalLayout {
             if(event.getProperty().getValue() == null){                
             } else {
                 syllabusId = (int) event.getProperty().getValue();
-                getDataTable();
+                populateDataTable();
             }            
         });
         hlayout.addComponent(topic);
@@ -80,6 +80,9 @@ public class CellCaseMainUI extends VerticalLayout {
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
+            sub.addCloseListener((Window.CloseEvent e) -> {
+                populateDataTable();
+            });
         });
         hlayout.addComponent(createCellBtn);
         hlayout.setComponentAlignment(createCellBtn, Alignment.MIDDLE_LEFT);
@@ -91,23 +94,25 @@ public class CellCaseMainUI extends VerticalLayout {
         Panel panel = new Panel();
         panel.setWidth("900");
         
-        getDataTable();
+        populateDataTable();
         panel.setContent(table);
         return panel;
     }
     
-    Table getDataTable(){
+    Table populateDataTable(){
         table.removeAllItems();
         int i = 0;
         for(CellCase cc: ccs.getCellCaseByTopic(getSyllabusId())){
             HorizontalLayout hlayout = new HorizontalLayout();
-            hlayout.setWidth("100%");
+            hlayout.setSizeFull();
+            hlayout.addStyleName("button-container");
             
             Button edit = new Button();
             edit.setWidth("100%");
             edit.setIcon(FontAwesome.PENCIL);
             edit.addStyleName(ValoTheme.BUTTON_LINK);
             edit.addStyleName(ValoTheme.BUTTON_SMALL);
+            edit.addStyleName(ValoTheme.BUTTON_QUIET);
             hlayout.addComponent(edit);
             
             Button approve = new Button();
@@ -115,14 +120,8 @@ public class CellCaseMainUI extends VerticalLayout {
             approve.setIcon(FontAwesome.THUMBS_DOWN);
             approve.addStyleName(ValoTheme.BUTTON_LINK);
             approve.addStyleName(ValoTheme.BUTTON_SMALL);
+            approve.addStyleName(ValoTheme.BUTTON_QUIET);
             hlayout.addComponent(approve);
-            
-            Button delete = new Button();
-            delete.setWidth("100%");
-            delete.setIcon(FontAwesome.ERASER);
-            delete.addStyleName(ValoTheme.BUTTON_LINK);
-            delete.addStyleName(ValoTheme.BUTTON_SMALL);
-            hlayout.addComponent(delete);
             
             table.addItem(new Object[]{
                 cc.getCellCaseId(), 

@@ -30,6 +30,9 @@ public class CellCaseDataTable extends Table {
         addContainerProperty("modify", HorizontalLayout.class, null);
         
         setColumnWidth("case", 500);
+        setColumnWidth("modify", 120);
+        setColumnAlignment("modify", Align.CENTER);
+        
     }
     
 }
