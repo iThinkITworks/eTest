@@ -31,7 +31,7 @@ public class CurriculumFormWindow extends Window {
     CurriculumService cs = new CurriculumServiceImpl();
     
     ComboBox yearLevel = CommonComboBox.getYearLevelComboBox("Year Level..");
-    TextField subjectField= new CommonTextField("Subject..");
+    TextField subjectField= new CommonTextField("Subject..", null);
     TextArea descriptiveTitleField = new TextArea();
     ComboBox normCourseOffering = CommonComboBox.getNormCourseOfferingComboBox("Normal Course Offering..");
     

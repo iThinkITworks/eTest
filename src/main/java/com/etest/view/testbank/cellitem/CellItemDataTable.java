@@ -3,21 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.testbank;
+package com.etest.view.testbank.cellitem;
 
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.Date;
 
 /**
  *
  * @author jetdario
  */
-public class CellCaseDataTable extends Table {
+public class CellItemDataTable extends Table {
 
-    public CellCaseDataTable() {
+    public CellItemDataTable() {
         setWidth("100%");
         setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
@@ -25,15 +24,10 @@ public class CellCaseDataTable extends Table {
         setImmediate(true);
         
         addContainerProperty("id", Integer.class, null);
-        addContainerProperty("case", Label.class, null);
-        addContainerProperty("author", String.class, null);
-        addContainerProperty("date created", Date.class, null);
+        addContainerProperty("stem", Label.class, null);
         addContainerProperty("modify", VerticalLayout.class, null);
         
-        setColumnWidth("case", 500);
-        setColumnWidth("modify", 130);
-        setColumnAlignment("modify", Align.CENTER);
-        
+        setColumnWidth("id", 80);
     }
     
 }

@@ -13,7 +13,8 @@ import com.vaadin.ui.TextField;
  */
 public class CommonTextField extends TextField {
 
-    public CommonTextField(String inputPrompt) {
+    public CommonTextField(String inputPrompt, String caption) {
+        setCaption(caption);
         setWidth("100%");
         setInputPrompt(inputPrompt);
         addStyleName("small");

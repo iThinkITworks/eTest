@@ -39,8 +39,8 @@ import com.vaadin.ui.themes.ValoTheme;
 public class SyllabusMainUI extends VerticalLayout {
 
     ComboBox subjects = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
-    TextField topicNo = new CommonTextField("Enter Topic No..");
-    TextField estimatedTime = new CommonTextField("Enter Estimated Time..");
+    TextField topicNo = new CommonTextField("Enter Topic No..", null);
+    TextField estimatedTime = new CommonTextField("Enter Estimated Time..", null);
     TextArea topic = new TextArea();
     Button formBtn = new Button();
     CheckBox enableNewSyllabusEntry = new CheckBox("Enter New Syllabus");

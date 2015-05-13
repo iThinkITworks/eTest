@@ -5,6 +5,7 @@
  */
 package com.etest.view.testbank;
 
+import com.etest.view.testbank.cellitem.CellItemWindow;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.model.CellCase;
@@ -95,7 +96,7 @@ public class CellCaseMainUI extends VerticalLayout {
     
     Panel getCellCasePanel(){
         Panel panel = new Panel();
-        panel.setWidth("900");
+        panel.setWidth("900px");
         
         populateDataTable();
         panel.setContent(table);
@@ -106,30 +107,43 @@ public class CellCaseMainUI extends VerticalLayout {
         table.removeAllItems();
         int i = 0;
         for(CellCase cc: ccs.getCellCaseByTopic(getSyllabusId())){
-            HorizontalLayout hlayout = new HorizontalLayout();
-            hlayout.setSizeFull();
-            hlayout.addStyleName("button-container");
+            VerticalLayout v = new VerticalLayout();
+            v.setSizeFull();
+//            v.addStyleName("button-container");
             
-            Button edit = new Button();
+            Button edit = new Button("modify");
             edit.setWidth("100%");
             edit.setData(cc.getCellCaseId());
             edit.setIcon(FontAwesome.PENCIL);
             edit.addStyleName(ValoTheme.BUTTON_LINK);
-            edit.addStyleName(ValoTheme.BUTTON_SMALL);
+            edit.addStyleName(ValoTheme.BUTTON_TINY);
             edit.addStyleName(ValoTheme.BUTTON_QUIET);
             edit.addClickListener(modifyBtnClickListener);
-            hlayout.addComponent(edit);
+            v.addComponent(edit);
+            v.setComponentAlignment(edit, Alignment.MIDDLE_LEFT);
             
-            Button approve = new Button();
+            Button approve = new Button("status");
             approve.setWidth("100%");
             approve.setData(cc.getCellCaseId());            
             approve.addStyleName(ValoTheme.BUTTON_LINK);
-            approve.addStyleName(ValoTheme.BUTTON_SMALL);
+            approve.addStyleName(ValoTheme.BUTTON_TINY);
             approve.addStyleName(ValoTheme.BUTTON_QUIET);
-            hlayout.addComponent(approve);
+            v.addComponent(approve);
+            v.setComponentAlignment(approve, Alignment.MIDDLE_LEFT);
             
             if(cc.getApprovalStatus() == 0){ approve.setIcon(FontAwesome.THUMBS_DOWN); }
             else { approve.setIcon(FontAwesome.THUMBS_UP); } 
+            
+            Button stem = new Button("stems");
+            stem.setWidth("100%");
+            stem.setData(cc.getCellCaseId());   
+            stem.setIcon(FontAwesome.BRIEFCASE);
+            stem.addStyleName(ValoTheme.BUTTON_LINK);
+            stem.addStyleName(ValoTheme.BUTTON_TINY);
+            stem.addStyleName(ValoTheme.BUTTON_QUIET);
+            stem.addClickListener(stemBtnClickListener);
+            v.addComponent(stem);
+            v.setComponentAlignment(stem, Alignment.MIDDLE_LEFT);
             
             Label label = new Label(cc.getCaseTopic(),ContentMode.HTML);
             label.setStyleName("label-padding");
@@ -139,7 +153,7 @@ public class CellCaseMainUI extends VerticalLayout {
                 label, 
                 cc.getUsername_(), 
                 cc.getDateCreated(), 
-                hlayout
+                v
             }, i);
             i++;
         }
@@ -160,5 +174,12 @@ public class CellCaseMainUI extends VerticalLayout {
         sub.addCloseListener((Window.CloseEvent e) -> {
             populateDataTable();
         });
+    };
+    
+    Button.ClickListener stemBtnClickListener = (Button.ClickEvent event) -> {
+        Window sub = new CellItemWindow((int) event.getButton().getData());
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
+        }
     };
 }

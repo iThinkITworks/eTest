@@ -31,5 +31,5 @@ public interface CellCaseService {
     public boolean removeCellCase(int cellCaseId);
     
     public boolean isCellCaseApproved(int cellCaseId);
-    
+        
 }
