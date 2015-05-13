@@ -41,6 +41,7 @@ public class CellCaseDAO {
                 c.setTopic(rs.getString("Topic"));
                 c.setCaseTopic(rs.getString("caseTopic"));
                 c.setUsername_(rs.getString("Author"));
+                c.setApprovalStatus(CommonUtilities.convertStringToInt(rs.getString("ApprovalStatus")));
                 cellCaseList.add(c);
             }
         } catch (SQLException ex) {
@@ -79,6 +80,7 @@ public class CellCaseDAO {
                 c.setCaseTopic(rs.getString("caseTopic"));
                 c.setUsername_(rs.getString("Author"));
                 c.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
+                c.setApprovalStatus(CommonUtilities.convertStringToInt(rs.getString("ApprovalStatus")));
                 cellCaseList.add(c);
             }
         } catch (SQLException ex) {
@@ -113,7 +115,9 @@ public class CellCaseDAO {
                 c.setSubject(rs.getString("CurrSubject"));
                 c.setTopic(rs.getString("Topic"));
                 c.setCaseTopic(rs.getString("caseTopic"));
-                c.setUsername_(rs.getString("Username_"));
+                c.setUsername_(rs.getString("Author"));
+                c.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
+                c.setSyllabusId(CommonUtilities.convertStringToInt(rs.getString("SyllabusID")));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -207,7 +211,7 @@ public class CellCaseDAO {
         boolean result = false;
         
         try {
-            pstmt = conn.prepareStatement("INSERT INTO cell_cases SET "
+            pstmt = conn.prepareStatement("UPDATE cell_cases SET "
                     + "SyllabusID = ?, "
                     + "CaseTopic = ? "
                     + "WHERE CellCaseID = ? ");

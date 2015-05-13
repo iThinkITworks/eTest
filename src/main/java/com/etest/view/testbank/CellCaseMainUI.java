@@ -13,10 +13,13 @@ import com.etest.serviceprovider.CellCaseServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
@@ -76,7 +79,7 @@ public class CellCaseMainUI extends VerticalLayout {
         createCellBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         createCellBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         createCellBtn.addClickListener((Button.ClickEvent event) -> {
-            Window sub = new CreateNewCellWindow();
+            Window sub = new CellCaseWindow(0);
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
@@ -109,23 +112,31 @@ public class CellCaseMainUI extends VerticalLayout {
             
             Button edit = new Button();
             edit.setWidth("100%");
+            edit.setData(cc.getCellCaseId());
             edit.setIcon(FontAwesome.PENCIL);
             edit.addStyleName(ValoTheme.BUTTON_LINK);
             edit.addStyleName(ValoTheme.BUTTON_SMALL);
             edit.addStyleName(ValoTheme.BUTTON_QUIET);
+            edit.addClickListener(modifyBtnClickListener);
             hlayout.addComponent(edit);
             
             Button approve = new Button();
             approve.setWidth("100%");
-            approve.setIcon(FontAwesome.THUMBS_DOWN);
+            approve.setData(cc.getCellCaseId());            
             approve.addStyleName(ValoTheme.BUTTON_LINK);
             approve.addStyleName(ValoTheme.BUTTON_SMALL);
             approve.addStyleName(ValoTheme.BUTTON_QUIET);
             hlayout.addComponent(approve);
             
+            if(cc.getApprovalStatus() == 0){ approve.setIcon(FontAwesome.THUMBS_DOWN); }
+            else { approve.setIcon(FontAwesome.THUMBS_UP); } 
+            
+            Label label = new Label(cc.getCaseTopic(),ContentMode.HTML);
+            label.setStyleName("label-padding");
+            
             table.addItem(new Object[]{
-                cc.getCellCaseId(), 
-                cc.getCaseTopic(), 
+                cc.getCellCaseId(),
+                label, 
                 cc.getUsername_(), 
                 cc.getDateCreated(), 
                 hlayout
@@ -140,4 +151,14 @@ public class CellCaseMainUI extends VerticalLayout {
     int getSyllabusId(){
         return syllabusId;
     }
+    
+    Button.ClickListener modifyBtnClickListener = (Button.ClickEvent event) -> {
+        Window sub = new CellCaseWindow((int) event.getButton().getData());
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
+        }
+        sub.addCloseListener((Window.CloseEvent e) -> {
+            populateDataTable();
+        });
+    };
 }

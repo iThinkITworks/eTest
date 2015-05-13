@@ -245,6 +245,13 @@
       background-color: #fff;
   }
   
+  .label-padding {
+      padding-top: 5px;
+      padding-bottom: 5px; 
+      /* padding-left: 3px; */      
+      /* padding-right: 3px; */
+  }
+  
   // Need to use normal media queries because Responsive doesn't work for overlay elements just yet
   @media screen and (max-width: 480px) {
     .notifications.v-window {

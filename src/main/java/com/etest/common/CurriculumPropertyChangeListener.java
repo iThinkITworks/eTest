@@ -39,7 +39,7 @@ public class CurriculumPropertyChangeListener extends ComboBox implements Proper
     public void valueChange(Property.ValueChangeEvent event) {
         if(event.getProperty().getValue() == null){            
         } else {
-            CommonCascadeComboBox.getSubjectFromCurriculum(topic, (int) event.getProperty().getValue());
+            CommonCascadeComboBox.getSubjectFromCurriculum(getTopic(), (int) event.getProperty().getValue());
         }
         
     }
