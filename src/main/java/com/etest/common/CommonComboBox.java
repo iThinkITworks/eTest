@@ -208,7 +208,6 @@ public class CommonComboBox {
             i.getItemProperty("y").setValue(bt.getBloomsTaxonomy());
         }
         
-        
         select.addStyleName("small");
         select.setImmediate(true);
         return select;

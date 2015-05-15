@@ -5,23 +5,20 @@
  */
 package com.etest.view.testbank;
 
-import com.etest.view.testbank.cellitem.CellItemWindow;
+import com.etest.view.testbank.cellitem.CellCaseItemWindow;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.model.CellCase;
 import com.etest.service.CellCaseService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
-import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbsoluteLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
@@ -177,7 +174,7 @@ public class CellCaseMainUI extends VerticalLayout {
     };
     
     Button.ClickListener stemBtnClickListener = (Button.ClickEvent event) -> {
-        Window sub = new CellItemWindow((int) event.getButton().getData());
+        Window sub = new CellCaseItemWindow((int) event.getButton().getData());
         if(sub.getParent() == null){
             UI.getCurrent().addWindow(sub);
         }

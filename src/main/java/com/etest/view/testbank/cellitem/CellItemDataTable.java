@@ -27,7 +27,7 @@ public class CellItemDataTable extends Table {
         addContainerProperty("stem", Label.class, null);
         addContainerProperty("modify", VerticalLayout.class, null);
         
-        setColumnWidth("id", 80);
+        setColumnWidth("id", 40);
     }
     
 }

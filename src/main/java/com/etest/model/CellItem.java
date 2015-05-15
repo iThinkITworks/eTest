@@ -6,6 +6,7 @@
 package com.etest.model;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  *
@@ -25,6 +26,7 @@ public class CellItem extends CellCase {
     private int difficultIndex;
     private int discriminationIndex;
     private Date dateCreated; 
+    private Map<String, String> itemKeys;
 
     public int getCellItemId() {
         return cellItemId;
@@ -70,6 +72,10 @@ public class CellItem extends CellCase {
         return discriminationIndex;
     }
 
+    public Map<String, String> getItemKeys() {
+        return itemKeys;
+    }
+
     public void setCellItemId(int cellItemId) {
         this.cellItemId = cellItemId;
     }
@@ -112,6 +118,10 @@ public class CellItem extends CellCase {
 
     public void setDiscriminationIndex(int discriminationIndex) {
         this.discriminationIndex = discriminationIndex;
+    }
+
+    public void setItemKeys(Map<String, String> itemKeys) {
+        this.itemKeys = itemKeys;
     }
     
 }

@@ -28,4 +28,30 @@ public interface CellItemService {
     
     public boolean removeCellItem(int cellItemId);
     
+    public boolean addItemKey(int cellItemId, 
+            String itemKey, 
+            String answer);
+    
+    public String getItemKey(int cellItemId, 
+            String answer);
+    
+    public boolean isKeyExist(int cellItemId, 
+            String answer);
+    
+    public int getItemKeyId(int cellItemId, 
+            String answer);
+    
+    public boolean modifyItemOption(int cellItemId, 
+            String optionColumn, 
+            String optionValue, 
+            boolean isOptionAKeyExist, 
+            int itemKeyId);
+    
+    public boolean modifyItemKey(int itemKeyId, 
+            int cellItemId, 
+            String keyValue, 
+            String answer, 
+            boolean isOptionAKeyExist);
+    
+    public boolean removeItemKey(int itemKeyId);
 }
