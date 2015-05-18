@@ -171,6 +171,7 @@ public class CellItemDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("INSERT INTO cell_items SET "
                     + "CellCaseID = ?, "
                     + "BloomsClassID = ?, "
@@ -191,8 +192,36 @@ public class CellItemDAO {
             pstmt.setInt(8, ci.getUserId());
             pstmt.executeUpdate();
             
+            int cellItemId = 0;            
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT last_insert_id() AS id FROM cell_items ");
+            while(rs.next()){
+                cellItemId = CommonUtilities.convertStringToInt(rs.getString("id"));
+            }
+            
+            for (Map.Entry<String, String> entrySet : ci.getItemKeys().entrySet()) {
+                Object key = entrySet.getKey();
+                Object value = entrySet.getValue();
+                
+                pstmt = conn.prepareStatement("INSERT INTO item_keys "
+                        + "SET CellItemID = ?, "
+                        + "ItemKey = ?, "
+                        + "Answer = ? ");
+                pstmt.setInt(1, cellItemId);
+                pstmt.setString(2, key.toString());
+                pstmt.setString(3, value.toString());
+                pstmt.executeUpdate();
+            }
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -214,49 +243,17 @@ public class CellItemDAO {
         boolean result = false;
         
         try {
-            conn.setAutoCommit(false);
-            pstmt = conn.prepareStatement("INSERT INTO cell_items SET "
+            pstmt = conn.prepareStatement("UPDATE cell_items SET "
                     + "BloomsClassID = ?, "
-                    + "Item = ?, "
-                    + "OptionA = ?, "
-                    + "OptionB = ?, "
-                    + "OptionC = ?, "
-                    + "OptionD = ?, "
-                    + "AuthoredBy_UserID = ? "
+                    + "Item = ? " 
                     + "WHERE CellItemID = ? ");
             pstmt.setInt(1, ci.getBloomsClassId());
             pstmt.setString(2, ci.getItem());
-            pstmt.setString(3, ci.getOptionA());
-            pstmt.setString(4, ci.getOptionB());
-            pstmt.setString(5, ci.getOptionC());
-            pstmt.setString(6, ci.getOptionD());
-            pstmt.setInt(7, ci.getUserId());
-            pstmt.setInt(8, ci.getCellItemId());
+            pstmt.setInt(3, ci.getCellItemId());
             pstmt.executeUpdate();
-            
-            for (Map.Entry<String, String> entrySet : ci.getItemKeys().entrySet()) {
-                Object key = entrySet.getKey();
-                Object value = entrySet.getValue();
-                
-                pstmt = conn.prepareStatement("INSERT INTO item_keys "
-                        + "SET ItemKey = ?, "
-                        + "Answer = ? "
-                        + "WHERE cellItemId");                
-                pstmt.setString(1, key.toString());
-                pstmt.setString(2, value.toString());
-                pstmt.setInt(3, ci.getCellItemId());
-                pstmt.executeUpdate();
-            }
-            
-            conn.commit();
+                        
             result = true;
         } catch (SQLException ex) {
-            try {
-                conn.rollback();
-            } catch (SQLException ex1) {
-                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
-                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex1);
-            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

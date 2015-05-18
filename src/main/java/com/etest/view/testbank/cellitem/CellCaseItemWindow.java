@@ -114,9 +114,12 @@ public class CellCaseItemWindow extends Window {
             if(ci.getApproveItemStatus() == 0){ approve.setIcon(FontAwesome.THUMBS_DOWN); }
             else { approve.setIcon(FontAwesome.THUMBS_UP); }
             
+            Label label = new Label(ci.getItem());
+            label.setStyleName("label-padding");
+            
             table.addItem(new Object[]{
                 ci.getCellItemId(), 
-                new Label(ci.getItem()), 
+                label, 
                 v
             }, i);
             i++;
@@ -131,23 +134,31 @@ public class CellCaseItemWindow extends Window {
     }
     
     Button.ClickListener modifyBtnClickListener = (Button.ClickEvent event) -> {
-        if(event.getButton().getCaption().equals("CREATE NEW STEM")){
-            Window sub = new CellItemWindow(getCellCaseId(), 0);
-            if(sub.getParent() == null){
-                UI.getCurrent().addWindow(sub);
-            }
-            sub.addCloseListener((Window.CloseEvent e) -> {
-                populateDataTable();
-            });
-        } else if(event.getButton().getCaption().equals("modify")) {
-            Window sub = new CellItemWindow(getCellCaseId(), (int) event.getButton().getData());
-            if(sub.getParent() == null){
-                UI.getCurrent().addWindow(sub);
-            }
-            sub.addCloseListener((Window.CloseEvent e) -> {
-                populateDataTable();
-            });
+        switch (event.getButton().getCaption()) {
+            case "CREATE NEW STEM":
+                {
+                    Window sub = new CellItemWindow(getCellCaseId(), 0);
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
+                    }       
+                    sub.addCloseListener((Window.CloseEvent e) -> {
+                        populateDataTable();
+                    });     
+                    break;
+                }
+            case "modify":
+            {
+                Window sub = new CellItemWindow(getCellCaseId(), (int) event.getButton().getData());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }       
+                sub.addCloseListener((Window.CloseEvent e) -> {
+                    populateDataTable();
+                });     
+                break;
+                }
         }
         
     };
+      
 }

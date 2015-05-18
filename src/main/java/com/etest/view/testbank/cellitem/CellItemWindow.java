@@ -11,6 +11,7 @@ import com.etest.model.CellItem;
 import com.etest.service.CellItemService;
 import com.etest.serviceprovider.CellItemServiceImpl;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.server.FontAwesome;
@@ -23,9 +24,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -37,17 +39,20 @@ public class CellItemWindow extends Window {
     
     ComboBox bloomsTaxonomy = CommonComboBox.getBloomsTaxonomy("Select a Blooms Class..");
     TextArea stem;
-    TextField keyA = new CommonTextField("Enter a Key for Option A", "Key A");
+    TextField keyA;
     TextField optionA;
-    TextField keyB = new CommonTextField("Enter a Key for Option B", "Key B");
+    TextField keyB;
     TextField optionB;
-    TextField keyC = new CommonTextField("Enter a Key for Option C", "Key C");
+    TextField keyC;
     TextField optionC;
-    TextField keyD = new CommonTextField("Enter a Key for Option D", "Key D");
+    TextField keyD;
     TextField optionD;
     
     private int cellCaseId;
     private int cellItemId;
+    
+    private boolean isStemChanged = false;
+    private boolean isBloomsChanged = false;
         
     public CellItemWindow(int cellCaseId, int cellItemId) {
         this.cellCaseId = cellCaseId;
@@ -74,27 +79,32 @@ public class CellItemWindow extends Window {
         stem = new TextArea("Stem: ");
         stem.setWidth("100%");
         stem.setRows(5);
+        stem.setWordwrap(true);
         form.addComponent(stem);        
         
         optionA = new CommonTextField("add option A", "Option A:");
         form.addComponent(optionA); 
         
-        if(getCellItemId() != 0){ form.addComponent(keyA); }                
+        keyA = new CommonTextField("Enter a Key for Option A", "Key A");
+        form.addComponent(keyA);               
         
         optionB = new CommonTextField("add option B", "Option B:");
         form.addComponent(optionB);
         
-        if(getCellItemId() != 0){ form.addComponent(keyB); }          
+        keyB = new CommonTextField("Enter a Key for Option B", "Key B");
+        form.addComponent(keyB);        
         
         optionC = new CommonTextField("add option C", "Option C:");
         form.addComponent(optionC);
         
-        if(getCellItemId() != 0){ form.addComponent(keyC); }          
+        keyC = new CommonTextField("Enter a Key for Option C", "Key C");
+        form.addComponent(keyC);         
         
         optionD = new CommonTextField("add option D", "Option D:");
         form.addComponent(optionD);  
-        
-        if(getCellItemId() != 0){ form.addComponent(keyD); }   
+                
+        keyD = new CommonTextField("Enter a Key for Option D", "Key D");
+        form.addComponent(keyD); 
         
         HorizontalLayout h = new HorizontalLayout();
         h.setWidth("100%");
@@ -105,18 +115,41 @@ public class CellItemWindow extends Window {
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
         save.addStyleName(ValoTheme.BUTTON_SMALL);
         save.addClickListener(saveBtnClickListener);        
+                
+        Button remove = new Button("REMOVE ITEM?");
+        remove.setWidth("200px");
+        remove.setIcon(FontAwesome.THUMBS_O_UP);
+        remove.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        remove.addStyleName(ValoTheme.BUTTON_SMALL);
+        remove.addClickListener(removeBtnClickListener);
+        
+        Button approve = new Button("APPROVE ITEM?");
+        approve.setWidth("200px");
+        approve.setIcon(FontAwesome.THUMBS_O_UP);
+        approve.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        approve.addStyleName(ValoTheme.BUTTON_SMALL);
+        approve.addClickListener(approveBtnClickListener);
         
         Button edit = new Button("UPDATE");
         edit.setWidth("200px");
         edit.setIcon(FontAwesome.SAVE);
         edit.addStyleName(ValoTheme.BUTTON_PRIMARY);
         edit.addStyleName(ValoTheme.BUTTON_SMALL);
-        edit.addClickListener(saveBtnClickListener);        
-        
+        edit.addClickListener(saveBtnClickListener);
+                
         if(getCellItemId() != 0){
             CellItem ci = cis.getCellItemById(getCellItemId());
             bloomsTaxonomy.setValue(ci.getBloomsClassId());
+            bloomsTaxonomy.addValueChangeListener((Property.ValueChangeEvent event) -> {
+                isBloomsChanged = true;
+            });
+            
             stem.setValue(ci.getItem());
+            stem.addTextChangeListener((FieldEvents.TextChangeEvent event) -> {
+                if(!stem.getValue().trim().equals(event.getText().trim())){
+                    isStemChanged = true;
+                }
+            });
             
             /**
              * OPTION A
@@ -145,7 +178,7 @@ public class CellItemWindow extends Window {
                             (int) keyA.getData());
                     if(result){
                         Notification.show("Option A was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -161,8 +194,7 @@ public class CellItemWindow extends Window {
                         boolean result = cis.removeItemKey((int) keyA.getData());
                         if(result){
                             Notification.show("Key A has been removed!", Notification.Type.TRAY_NOTIFICATION);
-                            close();
-                            return;
+//                            close();
                         }
                     }
                 } else {
@@ -173,7 +205,7 @@ public class CellItemWindow extends Window {
                             isOptionAKeyExist);
                     if(result){
                         Notification.show("Key A was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -205,7 +237,7 @@ public class CellItemWindow extends Window {
                             (int) keyB.getData());
                     if(result){
                         Notification.show("Option B was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -221,8 +253,7 @@ public class CellItemWindow extends Window {
                         boolean result = cis.removeItemKey((int) keyB.getData());
                         if(result){
                             Notification.show("Key B has been removed!", Notification.Type.TRAY_NOTIFICATION);
-                            close();
-                            return;
+//                            close();
                         }
                     }
                 } else {
@@ -233,7 +264,7 @@ public class CellItemWindow extends Window {
                             isOptionBKeyExist);
                     if(result){
                         Notification.show("Key B was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -265,7 +296,7 @@ public class CellItemWindow extends Window {
                             (int) keyC.getData());
                     if(result){
                         Notification.show("Option C was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -281,8 +312,7 @@ public class CellItemWindow extends Window {
                         boolean result = cis.removeItemKey((int) keyC.getData());
                         if(result){
                             Notification.show("Key C has been removed!", Notification.Type.TRAY_NOTIFICATION);
-                            close();
-                            return;
+//                            close();
                         }
                     }
                 } else {
@@ -293,7 +323,7 @@ public class CellItemWindow extends Window {
                             isOptionCKeyExist);
                     if(result){
                         Notification.show("Key C was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -325,7 +355,7 @@ public class CellItemWindow extends Window {
                             (int) keyD.getData());
                     if(result){
                         Notification.show("Option D was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
@@ -341,8 +371,7 @@ public class CellItemWindow extends Window {
                         boolean result = cis.removeItemKey((int) keyD.getData());
                         if(result){
                             Notification.show("Key D has been removed!", Notification.Type.TRAY_NOTIFICATION);
-                            close();
-                            return;
+//                            close();
                         }
                     }
                 } else {
@@ -353,13 +382,19 @@ public class CellItemWindow extends Window {
                             isOptionDKeyExist);
                     if(result){
                         Notification.show("Key D was modified", Notification.Type.TRAY_NOTIFICATION);
-                        close();
+//                        close();
                     }
                 }
             });
+                    
+            h.addComponent(remove);
+            h.setComponentAlignment(remove, Alignment.MIDDLE_RIGHT);
+            
+            h.addComponent(approve);
+            h.setComponentAlignment(approve, Alignment.MIDDLE_RIGHT);
             
             h.addComponent(edit);
-            h.setComponentAlignment(edit, Alignment.MIDDLE_RIGHT);
+            h.setComponentAlignment(edit, Alignment.MIDDLE_RIGHT);            
             form.addComponent(h);
         } else {
             h.addComponent(save);
@@ -379,11 +414,48 @@ public class CellItemWindow extends Window {
     }
         
     Button.ClickListener saveBtnClickListener = (Button.ClickEvent event) -> {
+        if(bloomsTaxonomy.getValue() == null){
+            Notification.show("Bloom Class Required!", Notification.Type.WARNING_MESSAGE);
+            return;
+        }
+        
+        if(stem.getValue() == null || stem.getValue().trim().isEmpty()){
+            Notification.show("Stem is Required!", Notification.Type.WARNING_MESSAGE);
+            return;
+        }
+        
         if(optionA.getValue() == null || optionA.getValue().isEmpty()){ requiredAllOptions(); return; }
         if(optionB.getValue() == null || optionB.getValue().isEmpty()){ requiredAllOptions(); return; }
         if(optionC.getValue() == null || optionC.getValue().isEmpty()){ requiredAllOptions(); return; }
         if(optionD.getValue() == null || optionD.getValue().isEmpty()){ requiredAllOptions(); return; }
                 
+        if(keyA.getValue().trim().isEmpty() && keyB.getValue().trim().isEmpty() && 
+                keyC.getValue().trim().isEmpty() && keyD.getValue().trim().isEmpty()){
+            Notification.show("Provide at least one Key", Notification.Type.ERROR_MESSAGE);
+            return;
+        }
+        
+        Map<String, String> keys = new HashMap<>();
+        if(keyA.getValue().trim().isEmpty()){            
+        } else {
+            keys.put(keyA.getValue().trim(), optionA.getValue().trim());
+        }
+        
+        if(keyA.getValue().trim().isEmpty()){
+        } else {
+            keys.put(keyB.getValue().trim(), optionB.getValue().trim());
+        }
+        
+        if(keyC.getValue().trim().isEmpty()){
+        } else {
+            keys.put(keyC.getValue().trim(), optionC.getValue().trim());
+        }
+        
+        if(keyD.getValue().trim().isEmpty()){
+        } else {
+            keys.put(keyD.getValue().trim(), optionD.getValue().trim());
+        }
+        
 //        List<String> list = new ArrayList<>();
 //        Collections.shuffle(list);
 //        for (String list1 : list) {
@@ -399,6 +471,7 @@ public class CellItemWindow extends Window {
         ci.setOptionC(optionC.getValue().trim());
         ci.setOptionD(optionD.getValue().trim());
         ci.setUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+        ci.setItemKeys(keys);
         ci.setCellItemId(getCellItemId());
         
         if(event.getButton().getCaption().equals("SAVE")){
@@ -406,54 +479,41 @@ public class CellItemWindow extends Window {
             if(result){
                 close();
             }
-        } else {
-//            boolean result = cis.modifyCellItem(ci);
-//            if(result){
-//                close();
-//            }
+        } else {    
+            if(isStemChanged || isBloomsChanged){
+                boolean result = cis.modifyCellItem(ci);
+                if(result){
+                    close();
+                }
+            } else {
+                Notification.show("No changes was made in Item or Bloom's class.. ", Notification.Type.TRAY_NOTIFICATION);
+                close();
+            }
+            
+            
+            
+            
         }
                 
 //        String str = stem.getValue().replace("{key}", keyA.getValue());
 //        System.out.println(str);
     };
+        
+    Button.ClickListener approveBtnClickListener = (Button.ClickEvent event) -> {
+        boolean result = cis.approveCellItem(cellItemId);
+        if(result){
+            close();
+        }
+    };
+    
+    Button.ClickListener removeBtnClickListener = (Button.ClickEvent event) -> {
+        boolean result = cis.removeCellItem(cellItemId);
+        if(result){
+            close();
+        }
+    };
     
     void requiredAllOptions(){
         Notification.show("Fill up all  Options!", Notification.Type.WARNING_MESSAGE);
-    }
-    
-    Window addKeyWindow(String answer){
-        Window sub = new Window();
-        sub.setWidth("800px");
-        
-        VerticalLayout v = new VerticalLayout();
-        v.setWidth("100%");
-        v.setMargin(true);
-        v.setSpacing(true);
-        
-        TextField itemKey = new CommonTextField("Enter a Key..", null);
-        v.addComponent(itemKey);
-        
-        Button saveKey = new Button("ADD KEY");
-        saveKey.setWidth("180px");
-        saveKey.setIcon(FontAwesome.SAVE);
-        saveKey.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        saveKey.addStyleName(ValoTheme.BUTTON_SMALL);
-        saveKey.addClickListener((Button.ClickEvent event) -> {
-            if(itemKey.getValue() == null || 
-                    itemKey.getValue().trim().isEmpty()){
-                Notification.show("Add a KEY!", Notification.Type.ERROR_MESSAGE);
-                return;
-            }
-            
-            boolean result = cis.addItemKey(getCellItemId(), 
-                    itemKey.getValue().trim(), 
-                    answer);
-            if(result){
-                sub.close();
-            }
-        });
-        v.addComponent(saveKey);
-        
-        return sub;
-    }
+    }    
 }
