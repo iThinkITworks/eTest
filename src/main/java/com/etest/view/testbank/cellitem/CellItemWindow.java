@@ -169,7 +169,6 @@ public class CellItemWindow extends Window {
                 if(optionA.getValue() == null || 
                         optionA.getValue().trim().isEmpty()){
                     Notification.show("Option A is Empty!", Notification.Type.WARNING_MESSAGE);
-                    return;
                 } else {
                     boolean result = cis.modifyItemOption(getCellItemId(), 
                             "OptionA", 
@@ -228,7 +227,6 @@ public class CellItemWindow extends Window {
                 if(optionB.getValue() == null || 
                         optionB.getValue().trim().isEmpty()){
                     Notification.show("Option B is Empty!", Notification.Type.WARNING_MESSAGE);
-                    return;
                 } else {
                     boolean result = cis.modifyItemOption(getCellItemId(), 
                             "OptionB", 
@@ -287,7 +285,6 @@ public class CellItemWindow extends Window {
                 if(optionC.getValue() == null || 
                         optionC.getValue().trim().isEmpty()){
                     Notification.show("Option C is Empty!", Notification.Type.WARNING_MESSAGE);
-                    return;
                 } else {
                     boolean result = cis.modifyItemOption(getCellItemId(), 
                             "OptionC", 
@@ -346,7 +343,6 @@ public class CellItemWindow extends Window {
                 if(optionD.getValue() == null || 
                         optionD.getValue().trim().isEmpty()){
                     Notification.show("Option D is Empty!", Notification.Type.WARNING_MESSAGE);
-                    return;
                 } else {
                     boolean result = cis.modifyItemOption(getCellItemId(), 
                             "OptionD", 

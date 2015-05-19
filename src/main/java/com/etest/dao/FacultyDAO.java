@@ -34,7 +34,8 @@ public class FacultyDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM enrolled_faculty_view "
-                    + "WHERE FacultyStatus = 0");
+                    + "WHERE FacultyStatus = 0 "
+                    + "ORDER BY name ASC ");
             while(rs.next()){
                 Users u = new Users();
                 u.setName(rs.getString("name"));

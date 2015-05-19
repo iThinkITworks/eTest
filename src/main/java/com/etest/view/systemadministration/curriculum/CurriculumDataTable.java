@@ -5,6 +5,7 @@
  */
 package com.etest.view.systemadministration.curriculum;
 
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -18,13 +19,19 @@ public class CurriculumDataTable extends Table {
         setWidth("100%");
         setSelectable(true);
         addStyleName(ValoTheme.TABLE_SMALL);
+        addStyleName("wordwrap-table");
+        addStyleName("selected-row");
         setImmediate(true);
         
-        addContainerProperty("id", Integer.class, null);
+//        addContainerProperty("id", Integer.class, null);
         addContainerProperty("year level", String.class, null);
         addContainerProperty("subject", String.class, null);
         addContainerProperty("descriptive title", String.class, null);
-        addContainerProperty("normal course offering", String.class, null); 
+        addContainerProperty("normal course offering", String.class, null);
+        addContainerProperty("modify", HorizontalLayout.class, null);
+        
+        setColumnAlignment("modify", Align.CENTER);
+        setColumnWidth("modify", 130);
     }
     
 }

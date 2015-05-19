@@ -9,16 +9,14 @@ import com.etest.common.CommonVariableMap;
 import com.etest.model.Curriculum;
 import com.etest.service.CurriculumService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
-import com.etest.utilities.CommonUtilities;
 import com.etest.view.systemadministration.curriculum.CurriculumDataGrid;
 import com.etest.view.systemadministration.curriculum.CurriculumDataTable;
 import com.etest.view.systemadministration.curriculum.CurriculumFormWindow;
-import com.vaadin.data.Property;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
@@ -52,20 +50,20 @@ public class CurriculumMainUI extends VerticalLayout {
 //        addComponent(buildForms());
 //        populateDataGrid();
         
-        Button addNewCurriculumBtn = new Button("ADD NEW CURRICULUM");
-        addNewCurriculumBtn.setWidth("220px");
-        addNewCurriculumBtn.setIcon(FontAwesome.OPENID);
-        addNewCurriculumBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        addNewCurriculumBtn.addStyleName(ValoTheme.BUTTON_SMALL);
-        addNewCurriculumBtn.addClickListener(buttonClickListener);
+        Button newBtn = new Button("ADD NEW CURRICULUM");
+        newBtn.setWidth("220px");
+        newBtn.setIcon(FontAwesome.OPENID);
+        newBtn.addStyleName(ValoTheme.BUTTON_LINK);
+        newBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        newBtn.addClickListener(buttonClickListener);
         
-        addComponent(addNewCurriculumBtn);        
+        addComponent(newBtn);        
         addComponent(dataGridPanel());
     }
         
     Panel dataGridPanel(){
         Panel panel = new Panel("List of All Curriculum");
-        panel.setWidth("900px");
+        panel.setWidth("1000px");
         
         populateDataTable();
         panel.setContent(table);
@@ -97,32 +95,56 @@ public class CurriculumMainUI extends VerticalLayout {
         table.removeAllItems();
         int i = 0;
         for(Curriculum c : cs.getAllCurriculum()){
+            HorizontalLayout h = new HorizontalLayout();
+            h.setWidth("100%");
+            
+            Button edit = new Button("edit");
+            edit.setSizeFull();
+            edit.setIcon(FontAwesome.PENCIL);
+            edit.setData(c.getCurriculumId());
+            edit.addStyleName(ValoTheme.BUTTON_LINK);
+            edit.addStyleName(ValoTheme.BUTTON_TINY);
+            edit.addStyleName("button-container");
+            edit.addClickListener(buttonClickListener);
+            h.addComponent(edit);
+            
+            Button delete = new Button("del");
+            delete.setSizeFull();
+            delete.setIcon(FontAwesome.TRASH_O);
+            delete.setData(c.getCurriculumId());
+            delete.addStyleName(ValoTheme.BUTTON_LINK);
+            delete.addStyleName(ValoTheme.BUTTON_TINY);
+            delete.addStyleName("button-container");
+            delete.addClickListener(buttonClickListener);
+            h.addComponent(delete);
+            
             table.addItem(new Object[]{
-                c.getCurriculumId(),
+//                c.getCurriculumId(),
                 CommonVariableMap.getYearLevel(c.getYearLevel()), 
                 c.getSubject(), 
                 c.getDescriptiveTitle(), 
-                CommonVariableMap.getNormCourseOffering(c.getNormCourseOffering())
+                CommonVariableMap.getNormCourseOffering(c.getNormCourseOffering()), 
+                h
             }, i);
             i++;
         }
         table.setPageLength(table.size());
         
-        table.getListeners(ItemClickEvent.class).stream().forEach((listener) -> {
-            table.removeListener(ItemClickEvent.class, listener);
-        });
-        
-        table.addItemClickListener((ItemClickEvent event) -> {
-            Property itemProperty = event.getItem().getItemProperty("id");
-            
-            Window sub = new CurriculumFormWindow(CommonUtilities.convertStringToInt(itemProperty.getValue().toString()));
-            if(sub.getParent() == null){
-                UI.getCurrent().addWindow(sub);
-            }
-            sub.addCloseListener((Window.CloseEvent e) -> {
-                populateDataTable();
-            });
-        });
+//        table.getListeners(ItemClickEvent.class).stream().forEach((listener) -> {
+//            table.removeListener(ItemClickEvent.class, listener);
+//        });
+//        
+//        table.addItemClickListener((ItemClickEvent event) -> {
+//            Property itemProperty = event.getItem().getItemProperty("id");
+//            
+//            Window sub = new CurriculumFormWindow(CommonUtilities.convertStringToInt(itemProperty.getValue().toString()));
+//            if(sub.getParent() == null){
+//                UI.getCurrent().addWindow(sub);
+//            }
+//            sub.addCloseListener((Window.CloseEvent e) -> {
+//                populateDataTable();
+//            });
+//        });
         
         return table;
     }
@@ -138,10 +160,28 @@ public class CurriculumMainUI extends VerticalLayout {
     }
             
     Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
-        Window sub = new CurriculumFormWindow(0);
-        if(sub.getParent() == null){
-            UI.getCurrent().addWindow(sub);
+        Window sub;
+        switch (event.getButton().getCaption()) {
+            case "ADD NEW CURRICULUM":
+                sub = new CurriculumFormWindow(0, "new");
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+                break;
+            case "edit":
+                sub = new CurriculumFormWindow((int) event.getButton().getData(), "edit");
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+                break;
+            default:
+                sub = new CurriculumFormWindow((int) event.getButton().getData(), "del");
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+                break;
         }
+        
         sub.addCloseListener((Window.CloseEvent e) -> {
             populateDataTable();
         });

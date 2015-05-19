@@ -30,7 +30,7 @@ public class SemestralTeamDataTable extends Table {
         addContainerProperty("members", HorizontalLayout.class, null);
         
         setColumnAlignment("members", Align.CENTER);
-        setColumnWidth("members", 150);
+        setColumnWidth("members", 130);
     }
     
 }

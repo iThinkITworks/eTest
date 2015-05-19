@@ -43,8 +43,8 @@ public class FacultyMainUI extends VerticalLayout {
                                 
         Button formBtn = new Button("NEW FACULTY FORM");
         formBtn.setWidth("230px");
-        formBtn.setIcon(FontAwesome.FOLDER_OPEN);
-        formBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        formBtn.setIcon(FontAwesome.OPENID);
+        formBtn.addStyleName(ValoTheme.BUTTON_LINK);
         formBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         formBtn.addClickListener(formBtnClickListener);
         addComponent(formBtn);
@@ -69,23 +69,25 @@ public class FacultyMainUI extends VerticalLayout {
             HorizontalLayout hlayout = new HorizontalLayout();
             hlayout.setWidth("100%");
             
-            Button editBtn = new Button("edit");
-            editBtn.setWidth("100%");
-            editBtn.setData(u.getFacultyId());
-            editBtn.setIcon(FontAwesome.PENCIL);
-            editBtn.addStyleName(ValoTheme.BUTTON_LINK);
-            editBtn.addStyleName(ValoTheme.BUTTON_TINY);
-            editBtn.addClickListener(modifyBtnClickListener);
-            hlayout.addComponent(editBtn);
+            Button edit = new Button("edit");
+            edit.setWidth("100%");
+            edit.setData(u.getFacultyId());
+            edit.setIcon(FontAwesome.PENCIL);
+            edit.addStyleName(ValoTheme.BUTTON_LINK);
+            edit.addStyleName(ValoTheme.BUTTON_TINY);
+            edit.addStyleName("button-container");
+            edit.addClickListener(modifyBtnClickListener);
+            hlayout.addComponent(edit);
             
-            Button deleteBtn = new Button("del");
-            deleteBtn.setWidth("100%");
-            deleteBtn.setData(u.getFacultyId());
-            deleteBtn.setIcon(FontAwesome.ERASER);
-            deleteBtn.addStyleName(ValoTheme.BUTTON_LINK);
-            deleteBtn.addStyleName(ValoTheme.BUTTON_TINY);
-            deleteBtn.addClickListener(modifyBtnClickListener);
-            hlayout.addComponent(deleteBtn);
+            Button delete = new Button("del");
+            delete.setWidth("100%");
+            delete.setData(u.getFacultyId());
+            delete.setIcon(FontAwesome.TRASH_O);
+            delete.addStyleName(ValoTheme.BUTTON_LINK);
+            delete.addStyleName(ValoTheme.BUTTON_TINY);
+            delete.addStyleName("button-container");
+            delete.addClickListener(modifyBtnClickListener);
+            hlayout.addComponent(delete);
             
             table.addItem(new Object[]{
                 u.getName().toUpperCase(), 
@@ -97,9 +99,9 @@ public class FacultyMainUI extends VerticalLayout {
         }       
         table.setPageLength(table.size());
         
-        table.getListeners(ItemClickEvent.class).stream().forEach((listener) -> {
-            table.removeListener(ItemClickEvent.class, listener);
-        });
+//        table.getListeners(ItemClickEvent.class).stream().forEach((listener) -> {
+//            table.removeListener(ItemClickEvent.class, listener);
+//        });
         
 //        table.addItemClickListener((ItemClickEvent event) -> {
 //            Property itemProperty = event.getItem().getItemProperty("name");
@@ -130,20 +132,16 @@ public class FacultyMainUI extends VerticalLayout {
             sub = new FacultyFormWindow((int)event.getButton().getData(), BUTTON_CAPTION_UPDATE);
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
-            }
-            sub.addCloseListener((Window.CloseEvent e) -> {
-                populateDataTable();
-            });
+            }            
         } else {
             sub = new FacultyFormWindow((int)event.getButton().getData(), BUTTON_CAPTION_DELETE);
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
-            }
-            sub.addCloseListener((Window.CloseEvent e) -> {
-                populateDataTable();
-            });
+            }            
         }
-        
+        sub.addCloseListener((Window.CloseEvent e) -> {
+            populateDataTable();
+        });
     };
     
     int getFacultyId(){

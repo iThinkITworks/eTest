@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration.faculty;
+package com.etest.view.systemadministration.syllabus;
 
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -14,22 +14,26 @@ import com.vaadin.ui.themes.ValoTheme;
  *
  * @author jetdario
  */
-public class FacultyDataTable extends Table {
+public class SyllabusDataTable extends Table {
 
-    public FacultyDataTable() {
+    public SyllabusDataTable() {
         setWidth("100%");
         setSelectable(true);
         addStyleName(ValoTheme.TABLE_SMALL);
         addStyleName("wordwrap-table");
         setImmediate(true);
         
-        addContainerProperty("name", String.class, null);
-        addContainerProperty("login name", String.class, null);
-        addContainerProperty("user type", String.class, null);
+        addContainerProperty("subject", String.class, null);
+        addContainerProperty("descriptive title", Label.class, null);
+        addContainerProperty("topic no", Integer.class, null);
+        addContainerProperty("topic", Label.class, null);
+        addContainerProperty("time", Float.class, null);
         addContainerProperty("modify", HorizontalLayout.class, null);
         
         setColumnAlignment("modify", Align.CENTER);
         setColumnWidth("modify", 130);
+        setColumnWidth("descriptive title", 300);
+        setColumnWidth("time", 80);
     }
     
 }

@@ -35,10 +35,13 @@ public class CurriculumFormWindow extends Window {
     TextArea descriptiveTitleField = new TextArea();
     ComboBox normCourseOffering = CommonComboBox.getNormCourseOfferingComboBox("Normal Course Offering..");
     
-    int curriculumId;
+    private int curriculumId;
+    private String buttonCaption;
     
-    public CurriculumFormWindow(int curriculumId) {
+    public CurriculumFormWindow(int curriculumId, 
+            String buttonCaption) {        
         this.curriculumId = curriculumId;
+        this.buttonCaption = buttonCaption;
         
         setCaption("Curriculum");
         setWidth("350px");
@@ -68,41 +71,47 @@ public class CurriculumFormWindow extends Window {
         descriptiveTitleField.setInputPrompt("Descriptive Title..");        
         form.addComponent(descriptiveTitleField);    
                         
-        Button newCurriculumn = new Button("SAVE");
-        newCurriculumn.setWidth("100%");
-        newCurriculumn.setIcon(FontAwesome.SAVE);
-        newCurriculumn.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        newCurriculumn.addStyleName(ValoTheme.BUTTON_SMALL);
-        newCurriculumn.addClickListener(buttonClickListener);
+        Button save = new Button("SAVE");
+        save.setWidth("100%");
+        save.setIcon(FontAwesome.SAVE);
+        save.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        save.addStyleName(ValoTheme.BUTTON_SMALL);
+        save.addClickListener(buttonClickListener);
         
-        Button updateCurriculumn = new Button("UPDATE");
-        updateCurriculumn.setWidth("100%");
-        updateCurriculumn.setIcon(FontAwesome.ADJUST);
-        updateCurriculumn.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        updateCurriculumn.addStyleName(ValoTheme.BUTTON_SMALL);
-        updateCurriculumn.addClickListener(buttonClickListener);        
+        Button update = new Button("UPDATE");
+        update.setWidth("100%");
+        update.setIcon(FontAwesome.ADJUST);
+        update.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        update.addStyleName(ValoTheme.BUTTON_SMALL);
+        update.addClickListener(buttonClickListener);        
         
-        Button deleteCurriculumn = new Button("DELETE");
-        deleteCurriculumn.setWidth("100%");
-        deleteCurriculumn.setIcon(FontAwesome.ERASER);
-        deleteCurriculumn.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        deleteCurriculumn.addStyleName(ValoTheme.BUTTON_SMALL);
-        deleteCurriculumn.addClickListener(buttonClickListener);        
+        Button delete = new Button("DELETE");
+        delete.setWidth("100%");
+        delete.setIcon(FontAwesome.ERASER);
+        delete.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        delete.addStyleName(ValoTheme.BUTTON_SMALL);
+        delete.addClickListener(buttonClickListener);        
         
         HorizontalLayout hlayout = new HorizontalLayout();
         hlayout.setWidth("100%");
         hlayout.setSpacing(true);
                 
         if(getCurriculumId() != 0){
-            hlayout.addComponent(updateCurriculumn);
-            hlayout.addComponent(deleteCurriculumn);
+            hlayout.addComponent(update);
+            hlayout.addComponent(delete);
             Curriculum c = cs.getCurriculumById(getCurriculumId());
             yearLevel.setValue(c.getYearLevel());
             subjectField.setValue(c.getSubject());
             normCourseOffering.setValue(c.getNormCourseOffering());
             descriptiveTitleField.setValue(c.getDescriptiveTitle());
+            
+            if(getButtonCaption().equals("edit")){
+                delete.setVisible(false);
+            } else {
+                update.setVisible(false);
+            }
         } else {
-            hlayout.addComponent(newCurriculumn);
+            hlayout.addComponent(save);
         }        
         
         form.addComponent(hlayout);
@@ -125,11 +134,11 @@ public class CurriculumFormWindow extends Window {
         c.setNormCourseOffering(CommonUtilities.convertStringToInt(normCourseOffering.getValue().toString()));
         c.setCurriculumId(getCurriculumId());
             
-        System.out.println("caption: "+event.getButton().getCaption());
-        System.out.println("year level:"+yearLevel.getValue());
-        System.out.println("subject: "+subjectField.getValue());
-        System.out.println("descriptive: "+descriptiveTitleField.getValue());
-        System.out.println("norm: "+normCourseOffering.getValue());
+//        System.out.println("caption: "+event.getButton().getCaption());
+//        System.out.println("year level:"+yearLevel.getValue());
+//        System.out.println("subject: "+subjectField.getValue());
+//        System.out.println("descriptive: "+descriptiveTitleField.getValue());
+//        System.out.println("norm: "+normCourseOffering.getValue());
         
         switch (event.getButton().getCaption()) {
             case "SAVE":
@@ -159,6 +168,10 @@ public class CurriculumFormWindow extends Window {
     
     int getCurriculumId(){
         return curriculumId;
+    }
+    
+    String getButtonCaption(){
+        return buttonCaption;
     }
     
     void requiredAllFields(){

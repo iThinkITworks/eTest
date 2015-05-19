@@ -7,9 +7,11 @@ package com.etest.view.systemadministration.SemestralTeam;
 
 import com.etest.service.TeamTeachService;
 import com.etest.serviceprovider.TeamTeachServiceImpl;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  *
@@ -34,6 +36,9 @@ public class RemoveSemestralTeamWindow extends Window {
         
         Button removeBtn = new Button("REMOVE SEMESTRAL TEAM?");
         removeBtn.setWidth("100%");
+        removeBtn.setIcon(FontAwesome.TRASH_O);
+        removeBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        removeBtn.addStyleName(ValoTheme.BUTTON_SMALL);
         removeBtn.addClickListener((Button.ClickEvent event) -> {
             boolean result = tts.removeSemestralTeam(getTeamTeachId());
             if(result){

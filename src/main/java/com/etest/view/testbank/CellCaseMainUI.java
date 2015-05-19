@@ -12,6 +12,7 @@ import com.etest.model.CellCase;
 import com.etest.service.CellCaseService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
 import com.vaadin.data.Property;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
@@ -93,7 +94,7 @@ public class CellCaseMainUI extends VerticalLayout {
     
     Panel getCellCasePanel(){
         Panel panel = new Panel();
-        panel.setWidth("900px");
+        panel.setWidth("1000px");
         
         populateDataTable();
         panel.setContent(table);
@@ -105,26 +106,27 @@ public class CellCaseMainUI extends VerticalLayout {
         int i = 0;
         for(CellCase cc: ccs.getCellCaseByTopic(getSyllabusId())){
             VerticalLayout v = new VerticalLayout();
-            v.setSizeFull();
-//            v.addStyleName("button-container");
+            v.setWidth("100%");
             
             Button edit = new Button("modify");
-            edit.setWidth("100%");
+            edit.setSizeFull();
             edit.setData(cc.getCellCaseId());
             edit.setIcon(FontAwesome.PENCIL);
             edit.addStyleName(ValoTheme.BUTTON_LINK);
             edit.addStyleName(ValoTheme.BUTTON_TINY);
             edit.addStyleName(ValoTheme.BUTTON_QUIET);
+            edit.addStyleName("button-container");
             edit.addClickListener(modifyBtnClickListener);
             v.addComponent(edit);
             v.setComponentAlignment(edit, Alignment.MIDDLE_LEFT);
             
             Button approve = new Button("status");
-            approve.setWidth("100%");
+            approve.setSizeFull();
             approve.setData(cc.getCellCaseId());            
             approve.addStyleName(ValoTheme.BUTTON_LINK);
             approve.addStyleName(ValoTheme.BUTTON_TINY);
             approve.addStyleName(ValoTheme.BUTTON_QUIET);
+            approve.addStyleName("button-container");
             v.addComponent(approve);
             v.setComponentAlignment(approve, Alignment.MIDDLE_LEFT);
             
@@ -132,12 +134,13 @@ public class CellCaseMainUI extends VerticalLayout {
             else { approve.setIcon(FontAwesome.THUMBS_UP); } 
             
             Button stem = new Button("stems");
-            stem.setWidth("100%");
+            stem.setSizeFull();
             stem.setData(cc.getCellCaseId());   
             stem.setIcon(FontAwesome.BRIEFCASE);
             stem.addStyleName(ValoTheme.BUTTON_LINK);
             stem.addStyleName(ValoTheme.BUTTON_TINY);
             stem.addStyleName(ValoTheme.BUTTON_QUIET);
+            stem.addStyleName("button-container");
             stem.addClickListener(stemBtnClickListener);
             v.addComponent(stem);
             v.setComponentAlignment(stem, Alignment.MIDDLE_LEFT);
@@ -146,7 +149,7 @@ public class CellCaseMainUI extends VerticalLayout {
             label.setStyleName("label-padding");
             
             table.addItem(new Object[]{
-                cc.getCellCaseId(),
+//                cc.getCellCaseId(),
                 label, 
                 cc.getUsername_(), 
                 cc.getDateCreated(), 
@@ -155,7 +158,7 @@ public class CellCaseMainUI extends VerticalLayout {
             i++;
         }
         table.setPageLength(table.size());
-        
+                
         return table;
     }
     

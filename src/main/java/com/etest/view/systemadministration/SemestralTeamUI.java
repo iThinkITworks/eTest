@@ -102,25 +102,7 @@ public class SemestralTeamUI extends VerticalLayout {
         panel.setContent(table);        
         return panel;
     }
-    
-//    Grid populateDataGrid(){
-//        grid.getContainerDataSource().removeAllItems();                
-//        for(TeamTeach tt : tts.getAllSemestralTeamTeach()){
-//            membersBtn = new Button();
-//            membersBtn.setData(tt.getTeamTeachId());
-//            grid.addRow(tt.getSchoolYear(), 
-//                CommonVariableMap.getNormCourseOffering(tt.getNormCourseOffering()), 
-//                CommonVariableMap.getYearLevel(tt.getYearLevel()), 
-//                tt.getSubject(), 
-//                tt.getTeamLeader(), 
-//                membersBtn
-//            );
-//        }
-//        grid.recalculateColumnWidths();
-//        
-//        return grid;
-//    }
-    
+     
     void populateDataTable(){
         table.removeAllItems();
         int i = 0;
@@ -141,7 +123,7 @@ public class SemestralTeamUI extends VerticalLayout {
             
             Button removeTLBtn = new Button("del");
             removeTLBtn.setWidth("100%");
-            removeTLBtn.setIcon(FontAwesome.ERASER);
+            removeTLBtn.setIcon(FontAwesome.TRASH_O);
             removeTLBtn.setData(tt.getTeamTeachId());
             
             hlayout.addComponent(membersBtn);

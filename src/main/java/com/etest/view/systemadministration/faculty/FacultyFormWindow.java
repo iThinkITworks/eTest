@@ -55,8 +55,6 @@ public class FacultyFormWindow extends Window {
         setModal(true);
         center();
         
-        System.out.println("caption: "+getButtonCaption());
-        
         setContent(buildForms());
         getContent().setHeightUndefined();
     }
