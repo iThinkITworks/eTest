@@ -363,6 +363,36 @@ public class CellItemDAO {
         return result;
     }
     
+    public static List<String> getAllItemKey(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<String> keyList = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT ItemKey FROM item_keys "
+                    + "WHERE CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                keyList.add(rs.getString("ItemKey"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return keyList;
+    }
+    
     public static String getItemKey(int cellItemId, 
             String answer){
         Connection conn = DBConnection.connectToDB();
@@ -560,6 +590,42 @@ public class CellItemDAO {
         } finally {
             try {
                 pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public static boolean isAnswerCorrect(int cellItemId, 
+            String key, 
+            String answer){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS result FROM item_keys "
+                    + "WHERE CellItemID = "+cellItemId+" "
+                    + "AND ItemKey = '"+key+"' "
+                    + "AND Answer = '"+answer+"' ");
+            while(rs.next()){
+                if(rs.getString("result").equals("1")){
+                 result = true;   
+                }
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());

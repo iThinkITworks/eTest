@@ -136,7 +136,7 @@ public class SemestralTeamUI extends VerticalLayout {
                 tt.getSubject(), 
                 tt.getTeamLeader(), 
                 hlayout
-            }, new Integer(i));
+            }, i);
             i++;
         
             membersBtn.addStyleName(ValoTheme.BUTTON_LINK);

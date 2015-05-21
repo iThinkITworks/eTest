@@ -28,6 +28,8 @@ public interface CellItemService {
     
     public boolean removeCellItem(int cellItemId);
     
+    public List<String> getAllItemKey(int cellItemId);
+    
     public boolean addItemKey(int cellItemId, 
             String itemKey, 
             String answer);
@@ -54,4 +56,8 @@ public interface CellItemService {
             boolean isOptionAKeyExist);
     
     public boolean removeItemKey(int itemKeyId);
+    
+    public boolean isAnswerCorrect(int cellItemId, 
+            String key, 
+            String answer);
 }

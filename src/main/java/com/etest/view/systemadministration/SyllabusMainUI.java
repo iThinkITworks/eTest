@@ -5,35 +5,22 @@
  */
 package com.etest.view.systemadministration;
 
-import com.etest.common.CommonComboBox;
-import com.etest.common.CommonTextField;
 import com.etest.model.Syllabus;
 import com.etest.service.CurriculumService;
 import com.etest.service.SyllabusService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
-import com.etest.utilities.CommonUtilities;
 import com.etest.view.systemadministration.syllabus.SyllabusDataGrid;
 import com.etest.view.systemadministration.syllabus.SyllabusDataTable;
 import com.etest.view.systemadministration.syllabus.SyllabusFormWindow;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;

@@ -111,6 +111,17 @@ public class CellCaseItemWindow extends Window {
             v.addComponent(approve);
             v.setComponentAlignment(approve, Alignment.MIDDLE_LEFT);
             
+            Button view = new Button("view");
+            view.setWidth("100%");
+            view.setData(ci.getCellItemId());  
+            view.setIcon(FontAwesome.PLAY_CIRCLE);
+            view.addStyleName(ValoTheme.BUTTON_LINK);
+            view.addStyleName(ValoTheme.BUTTON_TINY);
+            view.addStyleName(ValoTheme.BUTTON_QUIET);
+            view.addClickListener(modifyBtnClickListener);
+            v.addComponent(view);
+            v.setComponentAlignment(view, Alignment.MIDDLE_LEFT);
+            
             if(ci.getApproveItemStatus() == 0){ approve.setIcon(FontAwesome.THUMBS_DOWN); }
             else { approve.setIcon(FontAwesome.THUMBS_UP); }
             
@@ -118,7 +129,7 @@ public class CellCaseItemWindow extends Window {
             label.setStyleName("label-padding");
             
             table.addItem(new Object[]{
-                ci.getCellItemId(), 
+//                ci.getCellItemId(), 
                 label, 
                 v
             }, i);
@@ -156,7 +167,14 @@ public class CellCaseItemWindow extends Window {
                     populateDataTable();
                 });     
                 break;
+            }
+            
+            default:{
+                Window sub = new TQWindow((int) event.getButton().getData());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
                 }
+            }
         }
         
     };

@@ -110,5 +110,19 @@ public class CellItemServiceImpl implements CellItemService {
     public boolean removeItemKey(int itemKeyId) {
         return CellItemDAO.removeItemKey(itemKeyId);
     }
+
+    @Override
+    public List<String> getAllItemKey(int cellItemId) {
+        return CellItemDAO.getAllItemKey(cellItemId);
+    }
+
+    @Override
+    public boolean isAnswerCorrect(int cellItemId, 
+            String key, 
+            String answer) {
+        return CellItemDAO.isAnswerCorrect(cellItemId, 
+                key, 
+                answer);
+    }
     
 }
