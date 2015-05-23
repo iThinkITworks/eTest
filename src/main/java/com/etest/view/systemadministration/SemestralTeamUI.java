@@ -63,8 +63,8 @@ public class SemestralTeamUI extends VerticalLayout {
         form.setWidth("400px");
         form.setSpacing(true);
         
-        subjects = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
-        subjects.setCaption("Semester: ");
+        subjects = CommonComboBox.getSubjectFromCurriculum("Subject..");
+        subjects.setCaption("Curriculum: ");
         subjects.setIcon(FontAwesome.SEARCH);
         form.addComponent(subjects);
         
