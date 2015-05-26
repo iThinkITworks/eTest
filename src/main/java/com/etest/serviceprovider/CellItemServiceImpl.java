@@ -7,6 +7,7 @@ package com.etest.serviceprovider;
 
 import com.etest.dao.CellItemDAO;
 import com.etest.model.CellItem;
+import com.etest.model.ItemKeys;
 import com.etest.service.CellItemService;
 import java.util.List;
 
@@ -98,12 +99,12 @@ public class CellItemServiceImpl implements CellItemService {
             int cellItemId, 
             String keyValue, 
             String answer, 
-            boolean isOptionAKeyExist) {
+            boolean isOptionKeyExist) {
         return CellItemDAO.modifyItemKey(itemKeyId, 
             cellItemId, 
             keyValue, 
             answer, 
-            isOptionAKeyExist);
+            isOptionKeyExist);
     }
 
     @Override
@@ -123,6 +124,11 @@ public class CellItemServiceImpl implements CellItemService {
         return CellItemDAO.isAnswerCorrect(cellItemId, 
                 key, 
                 answer);
+    }
+
+    @Override
+    public List<ItemKeys> getItemKeysByCellItemId(int cellItemId) {
+        return CellItemDAO.getItemKeysByCellItemId(cellItemId);
     }
     
 }

@@ -6,8 +6,10 @@
 package com.etest.view.testbank.cellitem;
 
 import com.etest.model.CellItem;
+import com.etest.model.ItemKeys;
 import com.etest.service.CellItemService;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
 import com.vaadin.server.FontAwesome;
@@ -21,6 +23,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.OptionGroup;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.List;
@@ -42,6 +47,8 @@ public class TQWindow extends Window {
     Button prev;
     Button next;
     Label label = new Label();
+    
+    Table table = new ItemKeyTable();
     
     public TQWindow(int cellItemId) {
         this.cellItemId = cellItemId;
@@ -66,32 +73,34 @@ public class TQWindow extends Window {
         keyIndexSize = keyList.size();
         stem = ci.getItem().replace("{key}", keyList.get(getKeyIndex()));
                 
-        Panel panel = new Panel();
-        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
+//        Panel panel = new Panel();
+//        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
         
         label.setValue("<b>STEM</b>: "+getStem());
         label.setContentMode(ContentMode.HTML);
-        panel.setContent(label);label.setValue("<b>STEM</b>: "+getStem());
+//        panel.setContent(label);label.setValue("<b>STEM</b>: "+getStem());
         form.addComponent(label);
         
-        HorizontalLayout h = new HorizontalLayout();
-        h.setWidth("100%");
+        HorizontalLayout h1 = new HorizontalLayout();
+        h1.setWidth("100%");
         
         OptionGroup options = new OptionGroup();
         options.addItems(ci.getOptionA(), ci.getOptionB(), ci.getOptionC(), ci.getOptionD());
         options.addValueChangeListener((Property.ValueChangeEvent event) -> {    
-            boolean result = cis.isAnswerCorrect(getCellItemId(), getItemKey(),event.getProperty().getValue().toString());
+            boolean result = cis.isAnswerCorrect(getCellItemId(), 
+                    getItemKey(), 
+                    CommonUtilities.escapeSingleQuote(event.getProperty().getValue()));
             if(result){
                 Notification.show("Correct Answer!", Notification.Type.TRAY_NOTIFICATION);
             } else {
                 Notification.show("Wrong Answer", Notification.Type.TRAY_NOTIFICATION);
             }
         });
-        h.addComponent(options);
-        h.setComponentAlignment(options, Alignment.MIDDLE_CENTER);
-        form.addComponent(h);
+        h1.addComponent(options);
+        h1.setComponentAlignment(options, Alignment.MIDDLE_CENTER);
+        form.addComponent(h1);
         
-        GridLayout g = new GridLayout(2, 1);
+        GridLayout g = new GridLayout(2, 2);
         g.setWidth("100%");
         
         prev = new Button();
@@ -117,20 +126,61 @@ public class TQWindow extends Window {
             next.setEnabled(false);
         }
         
+        populateDataTable();
+        g.addComponent(table, 0, 1, 1, 1);
+        g.setComponentAlignment(table, Alignment.MIDDLE_CENTER);
         form.addComponent(g);
+        
+        
         
         return form;
     }
     
-    Panel getStemPanel(){
+//    Panel getStemPanel(){
+//        Panel panel = new Panel();
+//        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
+//        panel.setWidth("400px");
+//        
+//        label.setValue("<b>STEM</b>: "+getStem());
+//        label.setContentMode(ContentMode.HTML);
+//        panel.setContent(label);
+//        
+//        return panel;
+//    }
+    
+    Panel getDataTablePanel(){
         Panel panel = new Panel();
         panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
         
-        label.setValue("<b>STEM</b>: "+getStem());
-        label.setContentMode(ContentMode.HTML);
-        panel.setContent(label);
+        populateDataTable();
+        panel.setContent(table);
         
         return panel;
+    }
+    
+    Table populateDataTable(){
+        table.removeAllItems();
+        int i = 0;
+        for(ItemKeys key : cis.getItemKeysByCellItemId(getCellItemId())){
+            Button delete = new Button("remove");
+            delete.setWidth("100%");
+            delete.setData(key.getItemKeyId());
+            delete.setIcon(FontAwesome.TRASH_O);
+            delete.addStyleName(ValoTheme.BUTTON_LINK);
+            delete.addStyleName(ValoTheme.BUTTON_TINY);
+            delete.addStyleName(ValoTheme.BUTTON_QUIET);
+            delete.addClickListener(removeBtnClickListener);
+            
+            table.addItem(new Object[]{
+                key.getItemKey(), 
+                key.getAnswer(), 
+                delete
+            }, i);
+            i++;
+        }
+        table.setPageLength(table.size());
+        
+        return table;
     }
     
     int getCellItemId(){
@@ -186,4 +236,43 @@ public class TQWindow extends Window {
         
         label.setValue("<b>STEM</b>: "+getStem());
     };
+    
+    Button.ClickListener removeBtnClickListener = (Button.ClickEvent event) -> {
+        Window sub = removeKeyWindow((int) event.getButton().getData());
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
+        }
+        sub.addCloseListener((Window.CloseEvent e) -> {
+            populateDataTable();
+        });
+    };
+    
+    Window removeKeyWindow(int itemKeyId){
+        Window sub = new Window("REMOVE KEY");
+        sub.setWidth("300px");
+        sub.setModal(true);
+        sub.center();
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        
+        Button remove = new Button("CONFIRM REMOVE KEY?");
+        remove.setWidth("100%");
+        remove.setIcon(FontAwesome.TRASH_O);
+        remove.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        remove.addStyleName(ValoTheme.BUTTON_SMALL);
+        remove.addClickListener((Button.ClickEvent event) -> {
+            boolean result = cis.removeItemKey(itemKeyId);
+            if(result){
+                sub.close();
+            }
+        });
+        v.addComponent(remove);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
 }

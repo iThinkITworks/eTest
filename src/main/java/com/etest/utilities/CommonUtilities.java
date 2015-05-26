@@ -147,4 +147,7 @@ public class CommonUtilities {
         }
     }
     
+    public static String escapeSingleQuote(Object object){
+        return object.toString().replace("'", "\\'");
+    }
 }

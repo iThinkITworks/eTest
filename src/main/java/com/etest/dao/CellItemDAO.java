@@ -8,6 +8,7 @@ package com.etest.dao;
 import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.CellItem;
+import com.etest.model.ItemKeys;
 import com.etest.utilities.CommonUtilities;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -393,6 +394,40 @@ public class CellItemDAO {
         return keyList;
     }
     
+    public static List<ItemKeys> getItemKeysByCellItemId(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<ItemKeys> keyList = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM item_keys "
+                    + "WHERE CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                ItemKeys k = new ItemKeys();
+                k.setItemKeyId(CommonUtilities.convertStringToInt(rs.getString("ItemKeyID")));
+                k.setItemKey(rs.getString("ItemKey"));
+                k.setAnswer(rs.getString("Answer"));
+                keyList.add(k);
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return keyList;
+    }
+    
     public static String getItemKey(int cellItemId, 
             String answer){
         Connection conn = DBConnection.connectToDB();
@@ -404,7 +439,8 @@ public class CellItemDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT ItemKey FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" "
-                    + "AND Answer = '"+answer+"' ");
+                    + "AND Answer = '"+answer+"' "
+                    + "ORDER BY ItemKeyID DESC LIMIT 1");
             while(rs.next()){
                 key = rs.getString("ItemKey");
             }
@@ -534,13 +570,13 @@ public class CellItemDAO {
             int cellItemId, 
             String keyValue, 
             String answer, 
-            boolean isOptionAKeyExist){
+            boolean isOptionKeyExist){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;
         boolean result = false;
         
         try {
-            if(isOptionAKeyExist){
+            if(isOptionKeyExist){
                 pstmt = conn.prepareStatement("UPDATE item_keys SET "
                         + "ItemKey = '"+keyValue+"' "
                         + "WHERE ItemKeyID = "+itemKeyId+" ");
@@ -613,10 +649,11 @@ public class CellItemDAO {
             rs = stmt.executeQuery("SELECT COUNT(*) AS result FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" "
                     + "AND ItemKey = '"+key+"' "
-                    + "AND Answer = '"+answer+"' ");
+                    + "AND Answer = '"+answer+"' "
+                    + "ORDER BY ItemKeyID DESC LIMIT 1");
             while(rs.next()){
                 if(rs.getString("result").equals("1")){
-                 result = true;   
+                    result = true;   
                 }
             }
         } catch (SQLException ex) {

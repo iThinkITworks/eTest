@@ -5,7 +5,6 @@
  */
 package com.etest.connection;
 
-import com.vaadin.ui.Notification;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

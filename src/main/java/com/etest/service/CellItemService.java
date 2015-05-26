@@ -6,6 +6,7 @@
 package com.etest.service;
 
 import com.etest.model.CellItem;
+import com.etest.model.ItemKeys;
 import java.util.List;
 
 /**
@@ -53,11 +54,13 @@ public interface CellItemService {
             int cellItemId, 
             String keyValue, 
             String answer, 
-            boolean isOptionAKeyExist);
+            boolean isOptionKeyExist);
     
     public boolean removeItemKey(int itemKeyId);
     
     public boolean isAnswerCorrect(int cellItemId, 
             String key, 
             String answer);
+    
+    public List<ItemKeys> getItemKeysByCellItemId(int cellItemId);
 }
