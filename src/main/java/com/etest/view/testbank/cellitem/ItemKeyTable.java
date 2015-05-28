@@ -19,7 +19,7 @@ import java.util.Date;
 public class ItemKeyTable extends Table {
 
     public ItemKeyTable() {
-        setWidth("400px");
+        setWidth("100%");
         setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
         setStyleName("wordwrap-table");

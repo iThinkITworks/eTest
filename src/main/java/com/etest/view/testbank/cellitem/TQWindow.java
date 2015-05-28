@@ -102,10 +102,11 @@ public class TQWindow extends Window {
         
         GridLayout g = new GridLayout(2, 2);
         g.setWidth("100%");
+        g.setSpacing(true);
         
         prev = new Button();
         prev.setWidth("50px");
-        prev.setIcon(FontAwesome.TOGGLE_LEFT);
+        prev.setIcon(FontAwesome.ANGLE_DOUBLE_LEFT);
         prev.addStyleName(ValoTheme.BUTTON_PRIMARY);
         prev.addStyleName(ValoTheme.BUTTON_SMALL);
         prev.addClickListener(prevBtnClickListener);
@@ -114,7 +115,7 @@ public class TQWindow extends Window {
         
         next = new Button();
         next.setWidth("50px");
-        next.setIcon(FontAwesome.TOGGLE_RIGHT);
+        next.setIcon(FontAwesome.ANGLE_DOUBLE_RIGHT);
         next.addStyleName(ValoTheme.BUTTON_PRIMARY);
         next.addStyleName(ValoTheme.BUTTON_SMALL);
         next.addClickListener(nextBtnClickListener);
@@ -266,6 +267,7 @@ public class TQWindow extends Window {
             boolean result = cis.removeItemKey(itemKeyId);
             if(result){
                 sub.close();
+                close();
             }
         });
         v.addComponent(remove);
