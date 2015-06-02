@@ -232,5 +232,35 @@ public class SyllabusDAO {
         }
         
         return result;
-    }    
+    }
+    
+    public static double getEstimatedTime(int syllabusId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double estimatedTime = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM enrolled_syllabus_view "
+                    + "WHERE SyllabusID = "+syllabusId+" ");
+            while(rs.next()){
+                estimatedTime = CommonUtilities.convertStringToFloat(rs.getString("EstimatedTime"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(SyllabusDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(SyllabusDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return estimatedTime;
+    }
 }

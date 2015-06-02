@@ -10,6 +10,7 @@ import com.etest.service.UsersService;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
+import com.etest.view.TQCoverageView;
 import com.etest.view.testbank.*;
 import javax.servlet.annotation.WebServlet;
 
@@ -160,6 +161,7 @@ private boolean testMode = false;
         navigator.addView("housekeeping", HousekeepingView.class);
         navigator.addView("cells", CellCaseView.class);
         navigator.addView("run-item-analysis", RunItemAnalysisView.class);
+        navigator.addView("tq-coverage", TQCoverageView.class);
         
 //        navigator.addView("common", CommonParts.class);
 //        navigator.addView("labels", Labels.class);
@@ -281,6 +283,7 @@ private boolean testMode = false;
         menuItems.put("housekeeping", "Housekeeping");
         menuItems.put("cells", "Create/Modify/Approve Cells");
         menuItems.put("run-item-analysis", "Run Item Analysis");
+        menuItems.put("tq-coverage", "TQ Coverage");
         
 //        menuItems.put("common", "Dashboard");
 //        menuItems.put("labels", "Labels");
@@ -401,11 +404,8 @@ private boolean testMode = false;
 //                menuItemsLayout.addComponent(label);
 //            }
             
-            final Button b = new Button(item.getValue(), new Button.ClickListener() {
-                @Override
-                public void buttonClick(final ClickEvent event) {
-                    navigator.navigateTo(item.getKey());
-                }
+            final Button b = new Button(item.getValue(), (final ClickEvent event) -> {
+                navigator.navigateTo(item.getKey());
             });
             
 //            if (count == 2) {

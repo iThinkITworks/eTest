@@ -26,4 +26,5 @@ public interface SyllabusService {
     
     public boolean removeSyllabus(int syllabusId);
     
+    public double getEstimatedTime(int syllabusId);
 }

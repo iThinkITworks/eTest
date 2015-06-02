@@ -241,25 +241,42 @@
    overflow: hidden;
   }
   
-    .button-container:hover{
-        background-color: #fff;
-    }
-    
-    .button-background {
-        background-color: #fff;
-    }
+  .wordwrap-grid .v-grid-cell {
+      white-space: normal;
+      overflow: hidden;
+  }
   
-    .label-padding {
-        padding-top: 5px;
-        padding-bottom: 5px; 
-        /* padding-left: 3px; */      
-        /* padding-right: 3px; */
-    }
+  .button-container:hover{
+    background-color: #fff;
+  }
+    
+  .button-background {
+    background-color: #fff;
+  }
+  
+  .label-padding {
+    padding-top: 5px;
+    padding-bottom: 5px; 
+    /* padding-left: 3px; */      
+    /* padding-right: 3px; */
+  }
       
-    .selected-row .v-table tr.v-selected.v-selected {
-        background-color: #000;
-        color: #fff;
-    }
+  .selected-row .v-table tr.v-selected.v-selected {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .align-right {
+    text-align: right;
+  }
+  
+  .align-center {
+    text-align: center;
+  }
+  
+  .grid-row-font-size {
+      font-size: 10px;
+  }
   
   // Need to use normal media queries because Responsive doesn't work for overlay elements just yet
   @media screen and (max-width: 480px) {

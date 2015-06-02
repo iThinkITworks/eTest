@@ -170,7 +170,7 @@ public class CellCaseItemWindow extends Window {
             }
             
             default:{
-                Window sub = new TQWindow((int) event.getButton().getData());
+                Window sub = new ViewStemWindow((int) event.getButton().getData());
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }

@@ -34,7 +34,7 @@ import java.util.List;
  *
  * @author jetdario
  */
-public class TQWindow extends Window {
+public class ViewStemWindow extends Window {
 
     CellItemService cis = new CellItemServiceImpl();
     private int cellItemId;
@@ -50,7 +50,7 @@ public class TQWindow extends Window {
     
     Table table = new ItemKeyTable();
     
-    public TQWindow(int cellItemId) {
+    public ViewStemWindow(int cellItemId) {
         this.cellItemId = cellItemId;
         
         setCaption("TEST QUESTIONAIRE");

@@ -45,5 +45,10 @@ public class SyllabusServiceImpl implements SyllabusService {
     public boolean removeSyllabus(int syllabusId) {
         return SyllabusDAO.removeSyllabus(syllabusId);
     }
+
+    @Override
+    public double getEstimatedTime(int syllabusId) {
+        return SyllabusDAO.getEstimatedTime(syllabusId);
+    }
     
 }
