@@ -6,16 +6,13 @@
 package com.etest.view.tq;
 
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.renderers.ClickableRenderer;
-import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 
 /**
  *
  * @author jetdario
  */
 public class TQCoverageDataGrid extends Grid {
-
+    
     public TQCoverageDataGrid() {
         setWidth("100%");
         setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -59,13 +56,7 @@ public class TQCoverageDataGrid extends Grid {
         
         getColumn("Topic").setWidth(500);
         getColumn("Hrs Spent").setWidth(100);
-        getColumn("Proportion(%)").setWidth(120);
-        
-        getColumn("remove")
-                .setRenderer(new DeleteButtonValueRenderer((ClickableRenderer.RendererClickEvent event) -> {
-                    Notification.show("Delete "+event.getItemId(), Notification.Type.HUMANIZED_MESSAGE);
-                    getContainerDataSource().removeItem(event.getItemId());
-        })).setWidth(100);
+        getColumn("Proportion(%)").setWidth(120);                
         
         HeaderRow mainHeader = getDefaultHeaderRow();
         mainHeader.getCell("Re-U(TB)").setText("U");
@@ -161,6 +152,5 @@ public class TQCoverageDataGrid extends Grid {
             }
 //            return null;
         });
-    }
-    
+    }    
 }

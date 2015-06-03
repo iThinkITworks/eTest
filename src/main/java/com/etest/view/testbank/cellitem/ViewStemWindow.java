@@ -8,7 +8,9 @@ package com.etest.view.testbank.cellitem;
 import com.etest.model.CellItem;
 import com.etest.model.ItemKeys;
 import com.etest.service.CellItemService;
+import com.etest.service.ItemKeyService;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Container;
 import com.vaadin.data.Property;
@@ -37,6 +39,7 @@ import java.util.List;
 public class ViewStemWindow extends Window {
 
     CellItemService cis = new CellItemServiceImpl();
+    ItemKeyService k = new ItemKeyServiceImpl();
     private int cellItemId;
     private int keyIndex = 0;
     private int keyIndexSize = 0;
@@ -69,7 +72,7 @@ public class ViewStemWindow extends Window {
         form.setSpacing(true);
     
         CellItem ci = cis.getCellItemById(getCellItemId());        
-        keyList = cis.getAllItemKey(getCellItemId());
+        keyList = k.getAllItemKey(getCellItemId());
         keyIndexSize = keyList.size();
         stem = ci.getItem().replace("{key}", keyList.get(getKeyIndex()));
                 
@@ -87,7 +90,7 @@ public class ViewStemWindow extends Window {
         OptionGroup options = new OptionGroup();
         options.addItems(ci.getOptionA(), ci.getOptionB(), ci.getOptionC(), ci.getOptionD());
         options.addValueChangeListener((Property.ValueChangeEvent event) -> {    
-            boolean result = cis.isAnswerCorrect(getCellItemId(), 
+            boolean result = k.isAnswerCorrect(getCellItemId(), 
                     getItemKey(), 
                     CommonUtilities.escapeSingleQuote(event.getProperty().getValue()));
             if(result){
@@ -162,7 +165,7 @@ public class ViewStemWindow extends Window {
     Table populateDataTable(){
         table.removeAllItems();
         int i = 0;
-        for(ItemKeys key : cis.getItemKeysByCellItemId(getCellItemId())){
+        for(ItemKeys key : k.getItemKeysByCellItemId(getCellItemId())){
             Button delete = new Button("remove");
             delete.setWidth("100%");
             delete.setData(key.getItemKeyId());
@@ -206,7 +209,7 @@ public class ViewStemWindow extends Window {
     
     String getStem(){
         CellItem ci = cis.getCellItemById(getCellItemId());
-        keyList = cis.getAllItemKey(getCellItemId());
+        keyList = k.getAllItemKey(getCellItemId());
         itemKey = keyList.get(getKeyIndex());
         stem = ci.getItem().replace("{key}", getItemKey());
         return stem;
@@ -264,7 +267,7 @@ public class ViewStemWindow extends Window {
         remove.addStyleName(ValoTheme.BUTTON_PRIMARY);
         remove.addStyleName(ValoTheme.BUTTON_SMALL);
         remove.addClickListener((Button.ClickEvent event) -> {
-            boolean result = cis.removeItemKey(itemKeyId);
+            boolean result = k.removeItemKey(itemKeyId);
             if(result){
                 sub.close();
                 close();

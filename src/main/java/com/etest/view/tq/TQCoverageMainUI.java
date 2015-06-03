@@ -20,12 +20,18 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.FooterRow;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 
 /**
  *
@@ -39,6 +45,7 @@ public class TQCoverageMainUI extends VerticalLayout {
     ComboBox subject = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
     TextField totalItems = new CommonTextField("Enter No of Items..", null);
     ComboBox topic = new ComboBox();
+    FooterRow footer;
     
     private int syllabusId;
     private String topicStr;
@@ -51,6 +58,8 @@ public class TQCoverageMainUI extends VerticalLayout {
         addComponent(buildTQCoverageForms());
         addComponent(grid);
         
+        footer = grid.appendFooterRow();
+        
         grid.addItemClickListener((ItemClickEvent event) -> {
             Object itemId = event.getItemId();
             Item item = grid.getContainerDataSource().getItem(itemId);
@@ -60,9 +69,19 @@ public class TQCoverageMainUI extends VerticalLayout {
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }
-            }
-        });
+                sub.addCloseListener((Window.CloseEvent e) -> {
+                    calculateFooter();
+//                    System.out.println("itemId: "+calculateFooter());
+                });
+            }            
+        });    
         
+        grid.getColumn("remove")
+                .setRenderer(new DeleteButtonValueRenderer((ClickableRenderer.RendererClickEvent event) -> {
+                    Notification.show("Delete "+event.getItemId(), Notification.Type.HUMANIZED_MESSAGE);
+                    grid.getContainerDataSource().removeItem(event.getItemId());
+                    calculateFooter();
+        })).setWidth(100);
     }
     
     Component buildTQCoverageForms(){
@@ -109,7 +128,19 @@ public class TQCoverageMainUI extends VerticalLayout {
     }
     
     void calculateFooter(){
-//        double avg =    
+        double avg = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+//            System.out.println("value: "+item.getItemProperty("Hrs Spent").getValue());
+            avg = avg + Double.parseDouble(item.getItemProperty("Hrs Spent").getValue().toString());
+        }
+        
+        footer.getCell("Hrs Spent").setText(String.valueOf(avg));
+        
+//        return avg;
     }
     
     Window getTopicWindow(Item item){

@@ -50,85 +50,10 @@ public class CellItemServiceImpl implements CellItemService {
     @Override
     public boolean removeCellItem(int cellItemId) {
         return CellItemDAO.removeCellItem(cellItemId);
-    }
+    }    
 
     @Override
-    public boolean addItemKey(int cellItemId, 
-            String itemKey, 
-            String answer) {
-        return CellItemDAO.addItemKey(cellItemId, 
-                itemKey, 
-                answer);
+    public int getTotalCellItemByTopic(int bloomsClassId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    @Override
-    public String getItemKey(int cellItemId, 
-            String answer) {
-        return CellItemDAO.getItemKey(cellItemId, 
-                answer);
-    }
-
-    @Override
-    public boolean isKeyExist(int cellItemId, String answer) {
-        return CellItemDAO.isKeyExist(cellItemId, 
-                answer);
-    }
-
-    @Override
-    public int getItemKeyId(int cellItemId, 
-            String answer) {
-        return CellItemDAO.getItemKeyId(cellItemId, 
-                answer);
-    }
-
-    @Override
-    public boolean modifyItemOption(int cellItemId, 
-            String optionColumn, 
-            String optionValue, 
-            boolean isOptionAKeyExist, 
-            int itemKeyId) {
-        return CellItemDAO.modifyItemOption(cellItemId, 
-                optionColumn, 
-                optionValue, 
-                isOptionAKeyExist, 
-                itemKeyId);
-    }
-
-    @Override
-    public boolean modifyItemKey(int itemKeyId, 
-            int cellItemId, 
-            String keyValue, 
-            String answer, 
-            boolean isOptionKeyExist) {
-        return CellItemDAO.modifyItemKey(itemKeyId, 
-            cellItemId, 
-            keyValue, 
-            answer, 
-            isOptionKeyExist);
-    }
-
-    @Override
-    public boolean removeItemKey(int itemKeyId) {
-        return CellItemDAO.removeItemKey(itemKeyId);
-    }
-
-    @Override
-    public List<String> getAllItemKey(int cellItemId) {
-        return CellItemDAO.getAllItemKey(cellItemId);
-    }
-
-    @Override
-    public boolean isAnswerCorrect(int cellItemId, 
-            String key, 
-            String answer) {
-        return CellItemDAO.isAnswerCorrect(cellItemId, 
-                key, 
-                answer);
-    }
-
-    @Override
-    public List<ItemKeys> getItemKeysByCellItemId(int cellItemId) {
-        return CellItemDAO.getItemKeysByCellItemId(cellItemId);
-    }
-    
 }

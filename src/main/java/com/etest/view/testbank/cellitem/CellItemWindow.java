@@ -9,7 +9,9 @@ import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.model.CellItem;
 import com.etest.service.CellItemService;
+import com.etest.service.ItemKeyService;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
@@ -36,6 +38,7 @@ import java.util.Map;
 public class CellItemWindow extends Window {
 
     CellItemService cis = new CellItemServiceImpl();
+    ItemKeyService k = new ItemKeyServiceImpl();
     
     ComboBox bloomsTaxonomy = CommonComboBox.getBloomsTaxonomy("Select a Blooms Class..");
     TextArea stem;
@@ -155,11 +158,11 @@ public class CellItemWindow extends Window {
              * OPTION A
              */
             optionA.setValue(ci.getOptionA());
-            boolean isOptionAKeyExist = cis.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionA()));
+            boolean isOptionAKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionA()));
             if(isOptionAKeyExist){
-                keyA.setValue(cis.getItemKey(getCellItemId(), ci.getOptionA()));                
+                keyA.setValue(k.getItemKey(getCellItemId(), ci.getOptionA()));                
             } 
-            keyA.setData(cis.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionA())));
+            keyA.setData(k.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionA())));
             
             optionA.getListeners(TextChangeEvent.class).stream().forEach((listener) -> {
                 optionA.removeListener(TextChangeEvent.class, listener);
@@ -170,7 +173,7 @@ public class CellItemWindow extends Window {
                         optionA.getValue().trim().isEmpty()){
                     Notification.show("Option A is Empty!", Notification.Type.WARNING_MESSAGE);
                 } else {
-                    boolean result = cis.modifyItemOption(getCellItemId(), 
+                    boolean result = k.modifyItemOption(getCellItemId(), 
                             "OptionA", 
                             event.getText().trim(), 
                             isOptionAKeyExist, 
@@ -190,14 +193,14 @@ public class CellItemWindow extends Window {
                 if(event.getText() == null || 
                         event.getText().trim().isEmpty()){
                     if(isOptionAKeyExist){
-                        boolean result = cis.removeItemKey((int) keyA.getData());
+                        boolean result = k.removeItemKey((int) keyA.getData());
                         if(result){
                             Notification.show("Key A has been removed!", Notification.Type.TRAY_NOTIFICATION);
 //                            close();
                         }
                     }
                 } else {
-                    boolean result = cis.modifyItemKey((int) keyA.getData(), 
+                    boolean result = k.modifyItemKey((int) keyA.getData(), 
                             getCellItemId(),                             
                             event.getText().trim(), 
                             optionA.getValue().trim(), 
@@ -213,11 +216,11 @@ public class CellItemWindow extends Window {
              * OPTION B
              */
             optionB.setValue(ci.getOptionB()); 
-            boolean isOptionBKeyExist = cis.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionB()));
-            if(cis.isKeyExist(getCellItemId(), ci.getOptionB())){
-                keyB.setValue(cis.getItemKey(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionB())));                
+            boolean isOptionBKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionB()));
+            if(k.isKeyExist(getCellItemId(), ci.getOptionB())){
+                keyB.setValue(k.getItemKey(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionB())));                
             }
-            keyB.setData(cis.getItemKeyId(getCellItemId(), ci.getOptionB()));
+            keyB.setData(k.getItemKeyId(getCellItemId(), ci.getOptionB()));
             
             optionB.getListeners(TextChangeEvent.class).stream().forEach((listener) -> {
                 optionB.removeListener(TextChangeEvent.class, listener);
@@ -228,7 +231,7 @@ public class CellItemWindow extends Window {
                         optionB.getValue().trim().isEmpty()){
                     Notification.show("Option B is Empty!", Notification.Type.WARNING_MESSAGE);
                 } else {
-                    boolean result = cis.modifyItemOption(getCellItemId(), 
+                    boolean result = k.modifyItemOption(getCellItemId(), 
                             "OptionB", 
                             event.getText().trim(), 
                             isOptionBKeyExist, 
@@ -248,14 +251,14 @@ public class CellItemWindow extends Window {
                 if(event.getText() == null || 
                         event.getText().trim().isEmpty()){
                     if(isOptionBKeyExist){
-                        boolean result = cis.removeItemKey((int) keyB.getData());
+                        boolean result = k.removeItemKey((int) keyB.getData());
                         if(result){
                             Notification.show("Key B has been removed!", Notification.Type.TRAY_NOTIFICATION);
 //                            close();
                         }
                     }
                 } else {
-                    boolean result = cis.modifyItemKey((int) keyB.getData(), 
+                    boolean result = k.modifyItemKey((int) keyB.getData(), 
                             getCellItemId(),                             
                             event.getText().trim(), 
                             optionB.getValue().trim(), 
@@ -271,11 +274,11 @@ public class CellItemWindow extends Window {
              * OPTION C
              */
             optionC.setValue(ci.getOptionC());   
-            boolean isOptionCKeyExist = cis.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionC()));
-            if(cis.isKeyExist(getCellItemId(), ci.getOptionC())){
-                keyC.setValue(cis.getItemKey(getCellItemId(), ci.getOptionC()));                
+            boolean isOptionCKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionC()));
+            if(k.isKeyExist(getCellItemId(), ci.getOptionC())){
+                keyC.setValue(k.getItemKey(getCellItemId(), ci.getOptionC()));                
             }
-            keyC.setData(cis.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionC())));
+            keyC.setData(k.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionC())));
             
             optionC.getListeners(TextChangeEvent.class).stream().forEach((listener) -> {
                 optionC.removeListener(TextChangeEvent.class, listener);
@@ -286,7 +289,7 @@ public class CellItemWindow extends Window {
                         optionC.getValue().trim().isEmpty()){
                     Notification.show("Option C is Empty!", Notification.Type.WARNING_MESSAGE);
                 } else {
-                    boolean result = cis.modifyItemOption(getCellItemId(), 
+                    boolean result = k.modifyItemOption(getCellItemId(), 
                             "OptionC", 
                             event.getText().trim(), 
                             isOptionCKeyExist, 
@@ -306,14 +309,14 @@ public class CellItemWindow extends Window {
                 if(event.getText() == null || 
                         event.getText().trim().isEmpty()){
                     if(isOptionCKeyExist){
-                        boolean result = cis.removeItemKey((int) keyC.getData());
+                        boolean result = k.removeItemKey((int) keyC.getData());
                         if(result){
                             Notification.show("Key C has been removed!", Notification.Type.TRAY_NOTIFICATION);
 //                            close();
                         }
                     }
                 } else {
-                    boolean result = cis.modifyItemKey((int) keyC.getData(), 
+                    boolean result = k.modifyItemKey((int) keyC.getData(), 
                             getCellItemId(),                             
                             event.getText().trim(), 
                             optionC.getValue().trim(), 
@@ -329,11 +332,11 @@ public class CellItemWindow extends Window {
              * OPTION D
              */
             optionD.setValue(ci.getOptionD());
-            boolean isOptionDKeyExist = cis.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionD()));
-            if(cis.isKeyExist(getCellItemId(), ci.getOptionD())){
-                keyD.setValue(cis.getItemKey(getCellItemId(), ci.getOptionD()));                
+            boolean isOptionDKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionD()));
+            if(k.isKeyExist(getCellItemId(), ci.getOptionD())){
+                keyD.setValue(k.getItemKey(getCellItemId(), ci.getOptionD()));                
             }
-            keyD.setData(cis.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionD())));
+            keyD.setData(k.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionD())));
             
             optionD.getListeners(TextChangeEvent.class).stream().forEach((listener) -> {
                 optionD.removeListener(TextChangeEvent.class, listener);
@@ -344,7 +347,7 @@ public class CellItemWindow extends Window {
                         optionD.getValue().trim().isEmpty()){
                     Notification.show("Option D is Empty!", Notification.Type.WARNING_MESSAGE);
                 } else {
-                    boolean result = cis.modifyItemOption(getCellItemId(), 
+                    boolean result = k.modifyItemOption(getCellItemId(), 
                             "OptionD", 
                             event.getText().trim(), 
                             isOptionDKeyExist, 
@@ -364,14 +367,14 @@ public class CellItemWindow extends Window {
                 if(event.getText() == null || 
                         event.getText().trim().isEmpty()){
                     if(isOptionDKeyExist){
-                        boolean result = cis.removeItemKey((int) keyD.getData());
+                        boolean result = k.removeItemKey((int) keyD.getData());
                         if(result){
                             Notification.show("Key D has been removed!", Notification.Type.TRAY_NOTIFICATION);
 //                            close();
                         }
                     }
                 } else {
-                    boolean result = cis.modifyItemKey((int) keyD.getData(), 
+                    boolean result = k.modifyItemKey((int) keyD.getData(), 
                             getCellItemId(),                             
                             event.getText().trim(), 
                             optionD.getValue().trim(), 
