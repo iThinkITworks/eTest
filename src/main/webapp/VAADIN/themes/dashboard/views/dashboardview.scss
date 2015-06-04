@@ -241,7 +241,7 @@
    overflow: hidden;
   }
   
-  .wordwrap-grid .v-grid-cell {
+  .wordwrap-grid {
       white-space: normal;
       overflow: hidden;
   }
@@ -269,13 +269,14 @@
   .align-right {
     text-align: right;
   }
-  
+    
   .align-center {
     text-align: center;
+    font-size: 12px;
   }
   
   .grid-row-font-size {
-      font-size: 10px;
+      font-size: 12px;
   }
   
   // Need to use normal media queries because Responsive doesn't work for overlay elements just yet

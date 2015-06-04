@@ -15,10 +15,8 @@ public class TQCoverageDataGrid extends Grid {
     
     public TQCoverageDataGrid() {
         setWidth("100%");
-        setSelectionMode(Grid.SelectionMode.SINGLE);
+        setSelectionMode(Grid.SelectionMode.NONE);
         setImmediate(true);
-        setStyleName("wordwrap-grid");
-        addStyleName("grid-row-font-size");
         setFooterVisible(true);
         
         addColumn("Topic", String.class);
@@ -49,7 +47,7 @@ public class TQCoverageDataGrid extends Grid {
         addColumn("Cr-U(Pick)", Integer.class);
         addColumn("Cr-A(Pick)", Integer.class);
         addColumn("Running Total", Integer.class);
-        addColumn("Max Items", Integer.class);
+        addColumn("Max Items", Double.class);
         addColumn("remove", String.class);
                 
         setFrozenColumnCount(1);
@@ -94,6 +92,9 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Re-A(Pick)"));
         re_pick.setHtml("Pick");
         
+        HeaderRow topHeader = prependHeaderRow();
+        topHeader.join("Re-U(TB)", "Re-A(TB)", "Re-U(Pick)", "Re-A(Pick)").setHtml("Remember");
+        
         HeaderCell un_tb = groupingHeader.join(
                 groupingHeader.getCell("Un-U(TB)"), 
                 groupingHeader.getCell("Un-A(TB)"));
@@ -103,15 +104,20 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Un-A(Pick)"));
         un_pick.setHtml("Pick");
         
+//        HeaderRow understand = prependHeaderRow();
+        topHeader.join("Un-U(TB)", "Un-A(TB)", "Un-U(Pick)", "Un-A(Pick)").setHtml("Understand");
+        
         HeaderCell ap_tb = groupingHeader.join(
                 groupingHeader.getCell("Ap-U(TB)"), 
                 groupingHeader.getCell("Ap-A(TB)"));
-        ap_tb.setHtml("in TB");
-        
+        ap_tb.setHtml("in TB");        
         HeaderCell ap_pick = groupingHeader.join(
                 groupingHeader.getCell("Ap-U(Pick)"), 
                 groupingHeader.getCell("Ap-A(Pick)"));
         ap_pick.setHtml("Pick");
+        
+//        HeaderRow apply = prependHeaderRow();
+        topHeader.join("Ap-U(TB)", "Ap-A(TB)", "Ap-U(Pick)", "Ap-A(Pick)").setHtml("Apply");
         
         HeaderCell an_tb = groupingHeader.join(
                 groupingHeader.getCell("An-U(TB)"), 
@@ -122,6 +128,9 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("An-A(Pick)"));
         an_pick.setHtml("Pick");
         
+//        HeaderRow analyze = prependHeaderRow();
+        topHeader.join("An-U(TB)", "An-A(TB)", "An-U(Pick)", "An-A(Pick)").setHtml("Analyze");
+        
         HeaderCell ev_tb = groupingHeader.join(
                 groupingHeader.getCell("Ev-U(TB)"), 
                 groupingHeader.getCell("Ev-A(TB)"));
@@ -130,6 +139,9 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Ev-U(Pick)"), 
                 groupingHeader.getCell("Ev-A(Pick)"));
         ev_pick.setHtml("Pick");
+        
+//        HeaderRow evaluate = prependHeaderRow();
+        topHeader.join("Ev-U(TB)", "Ev-A(TB)", "Ev-U(Pick)", "Ev-A(Pick)").setHtml("Evaluate");
         
         HeaderCell cr_tb = groupingHeader.join(
                 groupingHeader.getCell("Cr-U(TB)"), 
@@ -140,6 +152,9 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Cr-A(Pick)"));
         cr_pick.setHtml("Pick");
         
+//        HeaderRow create = prependHeaderRow();
+        topHeader.join("Cr-U(TB)", "Cr-A(TB)", "Cr-U(Pick)", "Cr-A(Pick)").setHtml("Create");
+        
         mainHeader.setStyleName("boldheader");
         groupingHeader.setStyleName("boldheader");
         
@@ -148,9 +163,10 @@ public class TQCoverageDataGrid extends Grid {
                     !cellReference.getPropertyId().toString().equals("Topic")){
                 return "align-center";
             } else {
-                return null;
+                return "grid-row-font-size";
             }
 //            return null;
         });
+        
     }    
 }

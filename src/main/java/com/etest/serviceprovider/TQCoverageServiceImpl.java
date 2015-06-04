@@ -1,0 +1,98 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.etest.serviceprovider;
+
+import com.etest.dao.TQCoverageDAO;
+import com.etest.service.TQCoverageService;
+import com.etest.utilities.CommonUtilities;
+import com.vaadin.data.Item;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.TextField;
+import java.util.Collection;
+import java.util.Iterator;
+
+/**
+ *
+ * @author jetdario
+ */
+public class TQCoverageServiceImpl implements TQCoverageService {
+
+    @Override
+    public double calculateTotalHourSpent(Grid grid) {
+        double avg = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            avg = avg + Double.parseDouble(item.getItemProperty("Hrs Spent").getValue().toString());
+        }
+                
+        return avg;
+    }
+
+    @Override
+    public void calculateProportion(Grid grid) {
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            item.getItemProperty("Proportion(%)").setValue(
+                    CommonUtilities.roundOffToWholeNumber((CommonUtilities.convertStringToDouble(
+                            item.getItemProperty("Hrs Spent").getValue().toString()) / calculateTotalHourSpent(grid))*100)                    
+            );
+        }  
+    }
+
+    @Override
+    public void calculateMaxItems(Grid grid, TextField totalItems) {
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            item.getItemProperty("Max Items").setValue(
+                    CommonUtilities.roundOffToWholeNumber((CommonUtilities.convertStringToDouble(
+                            item.getItemProperty("Proportion(%)").getValue().toString()) / 100) * 
+                            CommonUtilities.convertStringToDouble(totalItems.getValue().trim())
+                    )                    
+            );
+        }
+    }
+
+    @Override
+    public double calculateTotalProportion(Grid grid) {
+        double proportion = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            proportion = proportion + Double.parseDouble(item.getItemProperty("Proportion(%)").getValue().toString());
+        }
+                
+        return (proportion > 100 ? 100 : proportion);
+    }
+
+    @Override
+    public double calculateTotalMaxItems(Grid grid) {
+        double maxItems = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            maxItems = maxItems + Double.parseDouble(item.getItemProperty("Max Items").getValue().toString());
+        }
+                
+        return maxItems;
+    }
+
+    @Override
+    public int getBloomsClassId(String bloomsClass) {
+        return TQCoverageDAO.getBloomsClassId(bloomsClass);
+    }
+    
+}

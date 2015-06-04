@@ -6,6 +6,7 @@
 package com.etest.utilities;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -149,5 +150,10 @@ public class CommonUtilities {
     
     public static String escapeSingleQuote(Object object){
         return object.toString().replace("'", "\\'");
+    }
+    
+    public static double roundOffToWholeNumber(double value){
+        DecimalFormat df = new DecimalFormat("##0");
+        return new Double(df.format(value));
     }
 }

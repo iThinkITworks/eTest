@@ -9,7 +9,9 @@ import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.service.SyllabusService;
+import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.SyllabusServiceImpl;
+import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -28,9 +30,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 
 /**
@@ -40,6 +39,7 @@ import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 public class TQCoverageMainUI extends VerticalLayout {
 
     SyllabusService ss = new SyllabusServiceImpl();
+    TQCoverageService tq = new TQCoverageServiceImpl();
     
     Grid grid = new TQCoverageDataGrid();
     ComboBox subject = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
@@ -50,10 +50,15 @@ public class TQCoverageMainUI extends VerticalLayout {
     private int syllabusId;
     private String topicStr;
     
+    public enum BloomsClass {
+        Remember, Understand, Apply, Analyze, Evaluate, Create
+    }
+    
+    BloomsClass BloomsClassType;
+    
     public TQCoverageMainUI() {
         setSizeFull();
-        setMargin(true);
-//        setSpacing(true);        
+        setMargin(true);      
                            
         addComponent(buildTQCoverageForms());
         addComponent(grid);
@@ -64,30 +69,35 @@ public class TQCoverageMainUI extends VerticalLayout {
             Object itemId = event.getItemId();
             Item item = grid.getContainerDataSource().getItem(itemId);
             
+//            System.out.println("blooms class id: "+tq.getBloomsClassId(BloomsClassType.Analyze.toString()));
+            
             if(event.getPropertyId().toString().equals("Topic")){
                 Window sub = getTopicWindow(item);
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }
-                sub.addCloseListener((Window.CloseEvent e) -> {
-                    calculateFooter();
-//                    System.out.println("itemId: "+calculateFooter());
-                });
             }            
         });    
         
         grid.getColumn("remove")
                 .setRenderer(new DeleteButtonValueRenderer((ClickableRenderer.RendererClickEvent event) -> {
-                    Notification.show("Delete "+event.getItemId(), Notification.Type.HUMANIZED_MESSAGE);
                     grid.getContainerDataSource().removeItem(event.getItemId());
-                    calculateFooter();
-        })).setWidth(100);
+                    footer.getCell("Hrs Spent").setText(String.valueOf(tq.calculateTotalHourSpent(grid)));
+                    tq.calculateProportion(grid);
+                    tq.calculateMaxItems(grid, totalItems);
+                    footer.getCell("Proportion(%)").setText(String.valueOf(tq.calculateTotalProportion(grid)));
+                    footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid)));
+        })).setWidth(100);     
+        
+        footer.getCell("Topic").setText("Total");
+        footer.setStyleName("align-center");
     }
+    
+    
     
     Component buildTQCoverageForms(){
         FormLayout form = new FormLayout();
         form.setWidth("500px");
-//        form.setMargin(true);
         
         subject.setCaption("Subject: ");
         subject.setWidth("100%");
@@ -127,28 +137,12 @@ public class TQCoverageMainUI extends VerticalLayout {
         return form;
     }
     
-    void calculateFooter(){
-        double avg = 0;
-        
-        Collection c = grid.getContainerDataSource().getItemIds();
-        Iterator iterator = c.iterator();
-        while(iterator.hasNext()){
-            Item item = grid.getContainerDataSource().getItem(iterator.next());
-//            System.out.println("value: "+item.getItemProperty("Hrs Spent").getValue());
-            avg = avg + Double.parseDouble(item.getItemProperty("Hrs Spent").getValue().toString());
-        }
-        
-        footer.getCell("Hrs Spent").setText(String.valueOf(avg));
-        
-//        return avg;
-    }
-    
     Window getTopicWindow(Item item){
         Window sub = new Window("TOPIC: ");
         sub.setWidth("500px");
         sub.setModal(true);
         sub.center();
-        sub.setClosable(false);
+//        sub.setClosable(false);
         sub.setResizable(false);
         
         VerticalLayout v = new VerticalLayout();
@@ -163,7 +157,7 @@ public class TQCoverageMainUI extends VerticalLayout {
             if(event.getProperty().getValue() == null){                
             } else {
                 syllabusId = (int) event.getProperty().getValue();
-                topicStr = topic.getItem(topic.getValue()).toString();
+                topicStr = topic.getItem(topic.getValue()).toString();                
             }            
         });
         v.addComponent(topic);
@@ -176,6 +170,12 @@ public class TQCoverageMainUI extends VerticalLayout {
         button.addClickListener((Button.ClickEvent event) -> {
             item.getItemProperty("Topic").setValue(topic.getItem(topic.getValue()).toString());
             item.getItemProperty("Hrs Spent").setValue(ss.getEstimatedTime(getSyllabusId()));
+            
+            footer.getCell("Hrs Spent").setText(String.valueOf(tq.calculateTotalHourSpent(grid)));
+            tq.calculateProportion(grid);
+            tq.calculateMaxItems(grid, totalItems);
+            footer.getCell("Proportion(%)").setText(String.valueOf(tq.calculateTotalProportion(grid)));
+            footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid)));
             sub.close();
         });
         v.addComponent(button);
