@@ -112,7 +112,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         form.setWidth("500px");
         
         examTitle.setCaption("Exam Title: ");
-        examTitle.setWidth("50%");
+        examTitle.setWidth("100%");
         examTitle.setIcon(FontAwesome.TAG);
         examTitle.addStyleName(ValoTheme.TEXTFIELD_SMALL);
         form.addComponent(examTitle);
