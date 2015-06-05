@@ -5,14 +5,22 @@
  */
 package com.etest.serviceprovider;
 
+import com.etest.common.BloomsClassTaxonomy;
+import com.etest.common.BloomsClassTaxonomy.BloomsClass;
 import com.etest.dao.TQCoverageDAO;
+import com.etest.model.CellCase;
+import com.etest.model.CellItem;
+import com.etest.service.CellCaseService;
+import com.etest.service.CellItemService;
 import com.etest.service.TQCoverageService;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -93,6 +101,5 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     @Override
     public int getBloomsClassId(String bloomsClass) {
         return TQCoverageDAO.getBloomsClassId(bloomsClass);
-    }
-    
+    }    
 }

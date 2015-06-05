@@ -330,4 +330,75 @@ public class CellItemDAO {
         return result;
     }
         
+    public static int getTotalUnanalyzeItem(int syllabusId, 
+            int bloomsClassId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS u FROM cell_items ci "
+                    + "INNER JOIN cell_cases c ON c.CellCaseID = ci.CellCaseID "
+                    + "INNER JOIN syllabus s ON s.SyllabusID = c.SyllabusID "
+                    + "WHERE ci.CellItemStatus = 0 "
+                    + "AND s.SyllabusID = "+syllabusId+" "
+                    + "AND ci.BloomsClassID = "+bloomsClassId+" "
+                    + "AND ci.DiscriminationIndex = 0 ");
+            while(rs.next()){                
+                total = CommonUtilities.convertStringToInt(rs.getString("u"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public static int getTotalAnalyzeItem(int syllabusId, 
+            int bloomsClassId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS a FROM cell_items ci "
+                    + "INNER JOIN cell_cases c ON c.CellCaseID = ci.CellCaseID "
+                    + "INNER JOIN syllabus s ON s.SyllabusID = c.SyllabusID "
+                    + "WHERE ci.CellItemStatus = 0 "
+                    + "AND s.SyllabusID = "+syllabusId+" "
+                    + "AND ci.BloomsClassID = "+bloomsClassId+" "
+                    + "AND ci.DiscriminationIndex = 1 ");
+            while(rs.next()){                
+                total = CommonUtilities.convertStringToInt(rs.getString("a"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
 }

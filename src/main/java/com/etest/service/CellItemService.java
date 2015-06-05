@@ -30,4 +30,10 @@ public interface CellItemService {
     public boolean removeCellItem(int cellItemId);
     
     public int getTotalCellItemByTopic(int bloomsClassId);
+    
+    public int getTotalUnanalyzeItem(int syllabusId, 
+            int bloomsClassId);
+    
+    public int getTotalAnalyzeItem(int syllabusId, 
+            int bloomsClassId);
 }

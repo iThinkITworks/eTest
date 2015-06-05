@@ -56,4 +56,18 @@ public class CellItemServiceImpl implements CellItemService {
     public int getTotalCellItemByTopic(int bloomsClassId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public int getTotalUnanalyzeItem(int syllabusId, 
+            int bloomsClassId) {
+        return CellItemDAO.getTotalUnanalyzeItem(syllabusId, 
+                bloomsClassId);
+    }
+
+    @Override
+    public int getTotalAnalyzeItem(int syllabusId, 
+            int bloomsClassId) {
+        return CellItemDAO.getTotalAnalyzeItem(syllabusId, 
+                bloomsClassId);
+    }
 }

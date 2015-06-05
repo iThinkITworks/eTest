@@ -5,11 +5,15 @@
  */
 package com.etest.view.tq;
 
+import com.etest.common.BloomsClassTaxonomy;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;
+import com.etest.model.CellCase;
+import com.etest.service.CellItemService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
+import com.etest.serviceprovider.CellItemServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.vaadin.data.Item;
@@ -30,16 +34,18 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import java.util.List;
 import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 
 /**
  *
  * @author jetdario
  */
-public class TQCoverageMainUI extends VerticalLayout {
+public class TQCoverageMainUI extends BloomsClassTaxonomy {
 
     SyllabusService ss = new SyllabusServiceImpl();
     TQCoverageService tq = new TQCoverageServiceImpl();
+    CellItemService cis = new CellItemServiceImpl();
     
     Grid grid = new TQCoverageDataGrid();
     ComboBox subject = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
@@ -49,12 +55,13 @@ public class TQCoverageMainUI extends VerticalLayout {
     
     private int syllabusId;
     private String topicStr;
+    private int bloomsClassId;
     
-    public enum BloomsClass {
-        Remember, Understand, Apply, Analyze, Evaluate, Create
-    }
+//    public enum BloomsClass {
+//        Remember, Understand, Apply, Analyze, Evaluate, Create
+//    }
     
-    BloomsClass BloomsClassType;
+//    BloomsClass BloomsClassType;
     
     public TQCoverageMainUI() {
         setSizeFull();
@@ -68,8 +75,6 @@ public class TQCoverageMainUI extends VerticalLayout {
         grid.addItemClickListener((ItemClickEvent event) -> {
             Object itemId = event.getItemId();
             Item item = grid.getContainerDataSource().getItem(itemId);
-            
-//            System.out.println("blooms class id: "+tq.getBloomsClassId(BloomsClassType.Analyze.toString()));
             
             if(event.getPropertyId().toString().equals("Topic")){
                 Window sub = getTopicWindow(item);
@@ -170,6 +175,18 @@ public class TQCoverageMainUI extends VerticalLayout {
         button.addClickListener((Button.ClickEvent event) -> {
             item.getItemProperty("Topic").setValue(topic.getItem(topic.getValue()).toString());
             item.getItemProperty("Hrs Spent").setValue(ss.getEstimatedTime(getSyllabusId()));
+            item.getItemProperty("Re-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Remember.toString())));
+            item.getItemProperty("Re-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Remember.toString())));
+            item.getItemProperty("Un-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Understand.toString())));
+            item.getItemProperty("Un-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Understand.toString())));
+            item.getItemProperty("Ap-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Apply.toString())));
+            item.getItemProperty("Ap-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Apply.toString())));
+            item.getItemProperty("An-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Analyze.toString())));
+            item.getItemProperty("An-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Analyze.toString())));
+            item.getItemProperty("Ev-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Evaluate.toString())));
+            item.getItemProperty("Ev-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Evaluate.toString())));
+            item.getItemProperty("Cr-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Create.toString())));
+            item.getItemProperty("Cr-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Create.toString())));
             
             footer.getCell("Hrs Spent").setText(String.valueOf(tq.calculateTotalHourSpent(grid)));
             tq.calculateProportion(grid);
@@ -193,5 +210,9 @@ public class TQCoverageMainUI extends VerticalLayout {
     
     String getTopicStr(){
         return topicStr;
+    }
+    
+    int getBloomsClassId(){
+        return bloomsClassId;
     }
 }

@@ -5,6 +5,8 @@
  */
 package com.etest.service;
 
+import com.etest.common.BloomsClassTaxonomy;
+import com.etest.common.BloomsClassTaxonomy.BloomsClass;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 
@@ -24,5 +26,5 @@ public interface TQCoverageService {
     
     public double calculateTotalMaxItems(Grid grid);
     
-    public int getBloomsClassId(String bloomsClass);
+    public int getBloomsClassId(String bloomsClass);    
 }
