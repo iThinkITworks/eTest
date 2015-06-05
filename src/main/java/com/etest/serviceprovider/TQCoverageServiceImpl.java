@@ -36,7 +36,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            avg = avg + Double.parseDouble(item.getItemProperty("Hrs Spent").getValue().toString());
+            avg = avg + CommonUtilities.convertStringToDouble(item.getItemProperty("Hrs Spent").getValue().toString());
         }
                 
         return avg;
@@ -78,7 +78,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            proportion = proportion + Double.parseDouble(item.getItemProperty("Proportion(%)").getValue().toString());
+            proportion = proportion + CommonUtilities.convertStringToDouble(item.getItemProperty("Proportion(%)").getValue().toString());
         }
                 
         return (proportion > 100 ? 100 : proportion);
@@ -92,7 +92,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            maxItems = maxItems + Double.parseDouble(item.getItemProperty("Max Items").getValue().toString());
+            maxItems = maxItems + CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString());
         }
                 
         return maxItems;
@@ -102,4 +102,18 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     public int getBloomsClassId(String bloomsClass) {
         return TQCoverageDAO.getBloomsClassId(bloomsClass);
     }    
+
+    @Override
+    public int getTotalForBloomsClassColumn(Grid grid, String propertyId) {
+        int total = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            total = total + CommonUtilities.convertStringToInt(item.getItemProperty(propertyId).getValue().toString());
+        }
+                
+        return total;
+    }
 }

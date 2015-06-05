@@ -26,5 +26,7 @@ public interface TQCoverageService {
     
     public double calculateTotalMaxItems(Grid grid);
     
-    public int getBloomsClassId(String bloomsClass);    
+    public int getBloomsClassId(String bloomsClass);
+    
+    public int getTotalForBloomsClassColumn(Grid grid, String propertyId); 
 }

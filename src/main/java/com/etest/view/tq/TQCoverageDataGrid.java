@@ -54,7 +54,31 @@ public class TQCoverageDataGrid extends Grid {
         
         getColumn("Topic").setWidth(500);
         getColumn("Hrs Spent").setWidth(100);
-        getColumn("Proportion(%)").setWidth(120);                
+        getColumn("Proportion(%)").setWidth(120);   
+        getColumn("Re-U(TB)").setWidth(60);
+        getColumn("Re-A(TB)").setWidth(60);
+        getColumn("Re-U(Pick)").setWidth(60);
+        getColumn("Re-A(Pick)").setWidth(60);
+        getColumn("Un-U(TB)").setWidth(60);
+        getColumn("Un-A(TB)").setWidth(60);
+        getColumn("Un-U(Pick)").setWidth(60);
+        getColumn("Un-A(Pick)").setWidth(60);
+        getColumn("Ap-U(TB)").setWidth(60);
+        getColumn("Ap-A(TB)").setWidth(60);
+        getColumn("Ap-U(Pick)").setWidth(60);
+        getColumn("Ap-A(Pick)").setWidth(60);
+        getColumn("An-U(TB)").setWidth(60);
+        getColumn("An-A(TB)").setWidth(60);
+        getColumn("An-U(Pick)").setWidth(60);
+        getColumn("An-A(Pick)").setWidth(60);
+        getColumn("Ev-U(TB)").setWidth(60);
+        getColumn("Ev-A(TB)").setWidth(60);
+        getColumn("Ev-U(Pick)").setWidth(60);
+        getColumn("Ev-A(Pick)").setWidth(60);
+        getColumn("Cr-U(TB)").setWidth(60);
+        getColumn("Cr-A(TB)").setWidth(60);
+        getColumn("Cr-U(Pick)").setWidth(60);
+        getColumn("Cr-A(Pick)").setWidth(60);
         
         HeaderRow mainHeader = getDefaultHeaderRow();
         mainHeader.getCell("Re-U(TB)").setText("U");
@@ -165,7 +189,6 @@ public class TQCoverageDataGrid extends Grid {
             } else {
                 return "grid-row-font-size";
             }
-//            return null;
         });
         
     }    
