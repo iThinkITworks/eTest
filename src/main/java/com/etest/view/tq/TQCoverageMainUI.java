@@ -9,6 +9,7 @@ import com.etest.common.BloomsClassTaxonomy;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;
+import com.etest.global.ShowErrorNotification;
 import com.etest.service.CellItemService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
@@ -27,6 +28,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -88,6 +90,16 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
+                    sub.addCloseListener((Window.CloseEvent e) -> {
+                        if(tq.calculateTotalPickItemsPerTopic(grid, itemId) > 
+                                CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString())){
+//                            tq.revertAllInputItemsToZero(grid, itemId);
+                            ShowErrorNotification.error("Runnint Total is greater than Max Items");
+                        } else {
+                            item.getItemProperty("Running Total").setValue(tq.calculateTotalPickItemsPerTopic(grid, itemId));
+                            footer.getCell("Running Total").setText(String.valueOf(tq.calculateRunningTotal(grid)));
+                        }
+                    });
                 }
             } 
         });    
@@ -116,9 +128,14 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         
         footer.getCell("Topic").setText("Total");        
         footer.setStyleName("align-center");
-    }
-    
-    
+        
+        Button generateTQ = new GenerateTQCoverage(grid, CommonUtilities.convertStringToInt(totalItems.getValue().trim()));
+        generateTQ.setWidth("300px");
+        
+        addComponent(new Label("\n"));
+        addComponent(generateTQ);
+        setComponentAlignment(generateTQ, Alignment.MIDDLE_RIGHT);
+    }    
     
     Component buildTQCoverageForms(){
         FormLayout form = new FormLayout();
@@ -230,10 +247,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
             footer.getCell("Ev-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-U(TB)")));
             footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
             footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
-            footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));
-            
-            System.out.println("total max items: "+footer.getCell("Max Items").getText());
-            
+            footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));            
             sub.close();
         });
         v.addComponent(button);
@@ -291,7 +305,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
                 item.getItemProperty(CommonUtilities.replaceStringTBToPick(propertyId)).setValue(CommonUtilities.convertStringToInt(field.getValue())); 
                 footer.getCell(CommonUtilities.replaceStringTBToPick(propertyId)).setText(String.valueOf(
                         tq.calculateTotalPickItems(grid, CommonUtilities.replaceStringTBToPick(propertyId))
-                ));
+                ));                
             }
             sub.close();
         });

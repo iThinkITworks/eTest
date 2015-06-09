@@ -97,8 +97,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
             Item item = grid.getContainerDataSource().getItem(iterator.next());
             
             if(item.getItemProperty("Max Items").getValue() != null){
-                maxItems = maxItems + CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString());
-        
+                maxItems = maxItems + CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString());        
             }
         }    
         return maxItems;
@@ -164,5 +163,59 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         }
                 
         return total;
+    }
+
+    @Override
+    public int calculateTotalPickItemsPerTopic(Grid grid, Object itemId) {
+        String propertyId = null;
+        int runningTotal = 0;
+        
+        Item item = grid.getContainerDataSource().getItem(itemId);
+        Collection c = item.getItemPropertyIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            propertyId = iterator.next().toString();
+            if(propertyId.contains("Pick")){
+                if(item.getItemProperty(propertyId).getValue() != null){
+                    runningTotal = runningTotal + (int)item.getItemProperty(propertyId).getValue();
+                }       
+            }
+        }
+        return runningTotal;
+    }
+
+    @Override
+    public void revertAllInputItemsToZero(Grid grid, Object itemId) {
+        String propertyId = null;
+        int runningTotal = 0;
+        
+        Item item = grid.getContainerDataSource().getItem(itemId);
+        Collection c = item.getItemPropertyIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            propertyId = iterator.next().toString();
+            if(propertyId.contains("Pick")){
+                if(item.getItemProperty(propertyId).getValue() != null){
+                    item.getItemProperty(propertyId).setValue(0);
+                }       
+            }
+        }
+        item.getItemProperty("Running Total").setValue(0);
+    }
+
+    @Override
+    public int calculateRunningTotal(Grid grid) {
+        int runningTotal = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            if(item.getItemProperty("Running Total").getValue() != null){
+                runningTotal = runningTotal + CommonUtilities.convertStringToInt(item.getItemProperty("Running Total").getValue().toString());
+            }
+        }
+                
+        return runningTotal;
     }
 }

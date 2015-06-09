@@ -5,23 +5,11 @@
  */
 package com.etest.view.tq;
 
-import com.etest.common.CommonTextField;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
-import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Alignment;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Notification;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
 
 /**
  *

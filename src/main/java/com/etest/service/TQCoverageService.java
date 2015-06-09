@@ -36,4 +36,10 @@ public interface TQCoverageService {
     public boolean isGreaterThanInTB(Item item, String propertyIdInTB, String propertyIdPick);
     
     public int calculateTotalPickItems(Grid grid, String propertyId);
+    
+    public int calculateTotalPickItemsPerTopic(Grid grid, Object itemId);
+    
+    public void revertAllInputItemsToZero(Grid grid, Object itemId);
+    
+    public int calculateRunningTotal(Grid grid);
 }

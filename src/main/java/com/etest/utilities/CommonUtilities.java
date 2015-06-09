@@ -7,6 +7,7 @@ package com.etest.utilities;
 
 import com.etest.global.ShowErrorNotification;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.PopupView.Content;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -23,8 +24,14 @@ public class CommonUtilities {
     
     public static int convertStringToInt(String str){
         int val = 0;
-        if(str != null || !str.isEmpty()){
-            val = Integer.parseInt(str);
+        try{
+            if(str != null || !str.isEmpty()){
+                val = Integer.parseInt(str);
+            }
+        } catch (Exception e){
+            Label label = new Label("cant convert input to String \n"+e.toString());
+            ShowErrorNotification.error(label.getValue());
+            e.getMessage();
         }
         
         return val;
