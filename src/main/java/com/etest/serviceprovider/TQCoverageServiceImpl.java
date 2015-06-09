@@ -5,22 +5,14 @@
  */
 package com.etest.serviceprovider;
 
-import com.etest.common.BloomsClassTaxonomy;
-import com.etest.common.BloomsClassTaxonomy.BloomsClass;
 import com.etest.dao.TQCoverageDAO;
-import com.etest.model.CellCase;
-import com.etest.model.CellItem;
-import com.etest.service.CellCaseService;
-import com.etest.service.CellItemService;
 import com.etest.service.TQCoverageService;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  *
@@ -36,7 +28,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            avg = avg + CommonUtilities.convertStringToDouble(item.getItemProperty("Hrs Spent").getValue().toString());
+            if(item.getItemProperty("Hrs Spent").getValue() != null){
+                avg = avg + CommonUtilities.convertStringToDouble(item.getItemProperty("Hrs Spent").getValue().toString());
+            }
         }
                 
         return avg;
@@ -48,10 +42,13 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            item.getItemProperty("Proportion(%)").setValue(
-                    CommonUtilities.roundOffToWholeNumber((CommonUtilities.convertStringToDouble(
-                            item.getItemProperty("Hrs Spent").getValue().toString()) / calculateTotalHourSpent(grid))*100)                    
-            );
+            
+            if(item.getItemProperty("Hrs Spent").getValue() != null){
+                item.getItemProperty("Proportion(%)").setValue(
+                        CommonUtilities.roundOffToWholeNumber((CommonUtilities.convertStringToDouble(
+                                item.getItemProperty("Hrs Spent").getValue().toString()) / calculateTotalHourSpent(grid))*100)                    
+                );
+            }
         }  
     }
 
@@ -61,12 +58,15 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            item.getItemProperty("Max Items").setValue(
-                    CommonUtilities.roundOffToWholeNumber((CommonUtilities.convertStringToDouble(
-                            item.getItemProperty("Proportion(%)").getValue().toString()) / 100) * 
-                            CommonUtilities.convertStringToDouble(totalItems.getValue().trim())
-                    )                    
-            );
+            
+            if(item.getItemProperty("Proportion(%)").getValue() != null){
+                item.getItemProperty("Max Items").setValue(
+                        CommonUtilities.roundOffToWholeNumber((CommonUtilities.convertStringToDouble(
+                                item.getItemProperty("Proportion(%)").getValue().toString()) / 100) * 
+                                CommonUtilities.convertStringToDouble(totalItems.getValue().trim())
+                        )                    
+                );
+            }
         }
     }
 
@@ -78,7 +78,10 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            proportion = proportion + CommonUtilities.convertStringToDouble(item.getItemProperty("Proportion(%)").getValue().toString());
+            
+            if(item.getItemProperty("Proportion(%)").getValue() != null){
+                proportion = proportion + CommonUtilities.convertStringToDouble(item.getItemProperty("Proportion(%)").getValue().toString());
+            }
         }
                 
         return (proportion > 100 ? 100 : proportion);
@@ -92,9 +95,12 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            maxItems = maxItems + CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString());
-        }
-                
+            
+            if(item.getItemProperty("Max Items").getValue() != null){
+                maxItems = maxItems + CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString());
+        
+            }
+        }    
         return maxItems;
     }
 
@@ -111,7 +117,50 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
             Item item = grid.getContainerDataSource().getItem(iterator.next());
-            total = total + CommonUtilities.convertStringToInt(item.getItemProperty(propertyId).getValue().toString());
+            
+            if(item.getItemProperty(propertyId).getValue() != null){
+                total = total + CommonUtilities.convertStringToInt(item.getItemProperty(propertyId).getValue().toString());
+            }
+        }
+                
+        return total;
+    }
+
+    @Override
+    public boolean isValueInTBNotZero(Item item, 
+            String propertyId) {
+        boolean result = false;
+        if(item.getItemProperty(propertyId).getValue() != null){
+            if(CommonUtilities.convertStringToInt(item.getItemProperty(propertyId).getValue().toString()) != 0){
+                result = true;
+            }
+        }
+        
+        return result;
+    }
+
+    @Override
+    public boolean isGreaterThanInTB(Item item, String propertyIdInTB, String inputValue) {
+        boolean result = false;
+        if(CommonUtilities.convertStringToInt(inputValue) > 
+                CommonUtilities.convertStringToInt(item.getItemProperty(propertyIdInTB).getValue().toString())){
+            result = true;
+        }
+        
+        return result;
+    }
+
+    @Override
+    public int calculateTotalPickItems(Grid grid, String propertyId) {
+        int total = 0;
+        
+        Collection c = grid.getContainerDataSource().getItemIds();
+        Iterator iterator = c.iterator();
+        while(iterator.hasNext()){
+            Item item = grid.getContainerDataSource().getItem(iterator.next());
+            if(item.getItemProperty(propertyId).getValue() != null){
+                total = total + CommonUtilities.convertStringToInt(item.getItemProperty(propertyId).getValue().toString());
+            }
         }
                 
         return total;

@@ -9,13 +9,13 @@ import com.etest.common.BloomsClassTaxonomy;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;
-import com.etest.model.CellCase;
 import com.etest.service.CellItemService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CellItemServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
+import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -34,7 +34,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.List;
 import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 
 /**
@@ -76,7 +75,21 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }
-            }            
+            }        
+            
+            Window sub;
+            if(event.getPropertyId().toString().contains("Pick")){
+                boolean isValueInTBNotZero = tq.isValueInTBNotZero(item, CommonUtilities.replaceStringPickToTB(event.getPropertyId()));
+                if(!isValueInTBNotZero){
+                    Notification.show("There are no Items in Test Bank!", Notification.Type.ERROR_MESSAGE);
+                    return;
+                } else {                 
+                    sub = getPickWindow(item, CommonUtilities.replaceStringPickToTB(event.getPropertyId()));
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
+                    }
+                }
+            } 
         });    
         
         grid.getColumn("remove")
@@ -218,6 +231,9 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
             footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
             footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
             footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));
+            
+            System.out.println("total max items: "+footer.getCell("Max Items").getText());
+            
             sub.close();
         });
         v.addComponent(button);
@@ -239,5 +255,52 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
     
     int getBloomsClassId(){
         return bloomsClassId;
+    }
+    
+    Window getPickWindow(Item item, String propertyId){
+        Window sub = new Window("Field Value: ");
+        sub.setWidth("150px");
+        sub.setModal(true);
+        sub.center();        
+        sub.setResizable(false);
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);
+        
+        TextField field = new CommonTextField("Enter Value..", "Enter a Value: ");
+        v.addComponent(field);
+        
+        Button button = new Button("CLOSE");
+        button.setWidth("100%");
+        button.setIcon(FontAwesome.TASKS);
+        button.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener((Button.ClickEvent event) -> {  
+            boolean isNumeric = CommonUtilities.isNumeric(field.getValue().trim());
+            if(!isNumeric){
+                return;
+            }
+            
+            boolean isGreaterThanInTB = tq.isGreaterThanInTB(item, propertyId, field.getValue().trim());
+            if(isGreaterThanInTB){
+                Notification.show("Not allowed to exceed in total Items in Test Bank!", Notification.Type.ERROR_MESSAGE);
+                return;
+            } else {
+                item.getItemProperty(CommonUtilities.replaceStringTBToPick(propertyId)).setValue(CommonUtilities.convertStringToInt(field.getValue())); 
+                footer.getCell(CommonUtilities.replaceStringTBToPick(propertyId)).setText(String.valueOf(
+                        tq.calculateTotalPickItems(grid, CommonUtilities.replaceStringTBToPick(propertyId))
+                ));
+            }
+            sub.close();
+        });
+        v.addComponent(button);
+        v.setComponentAlignment(button, Alignment.BOTTOM_CENTER);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
     }
 }

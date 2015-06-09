@@ -5,6 +5,8 @@
  */
 package com.etest.utilities;
 
+import com.etest.global.ShowErrorNotification;
+import com.vaadin.ui.Label;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -144,6 +146,8 @@ public class CommonUtilities {
             Integer.parseInt(str);
             return true;
         } catch (Exception e) {
+            Label label = new Label("Enter a Numeric Format \n" + e.toString());
+            ShowErrorNotification.error(label.getValue());
             return false;
         }
     }
@@ -155,5 +159,24 @@ public class CommonUtilities {
     public static double roundOffToWholeNumber(double value){
         DecimalFormat df = new DecimalFormat("##0");
         return new Double(df.format(value));
+    }
+    
+    public static String replaceStringTBToPick(Object object){
+        return object.toString().replace("TB", "Pick");
+    }
+    
+    public static String replaceStringPickToTB(Object object){
+        return object.toString().replace("Pick", "TB");
+    }
+    
+    public static boolean isValueInteger(Object object){
+        try{
+            Integer.parseInt(object.toString());
+            return true;
+        } catch (Exception e) {            
+            Label label = new Label("Enter an Integer Value \n" + e.toString());
+            ShowErrorNotification.error(label.getValue());
+            return false;
+        }
     }
 }

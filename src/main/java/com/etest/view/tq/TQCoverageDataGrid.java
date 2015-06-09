@@ -5,13 +5,31 @@
  */
 package com.etest.view.tq;
 
+import com.etest.common.CommonTextField;
+import com.etest.service.TQCoverageService;
+import com.etest.serviceprovider.TQCoverageServiceImpl;
+import com.etest.utilities.CommonUtilities;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.event.ItemClickEvent;
+import com.vaadin.server.FontAwesome;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
 /**
  *
  * @author jetdario
  */
-public class TQCoverageDataGrid extends Grid {
+public class TQCoverageDataGrid extends Grid implements ItemClickEvent.ItemClickListener {
+    
+    TQCoverageService tq = new TQCoverageServiceImpl();
     
     public TQCoverageDataGrid() {
         setWidth("100%");
@@ -128,7 +146,6 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Un-A(Pick)"));
         un_pick.setHtml("Pick");
         
-//        HeaderRow understand = prependHeaderRow();
         topHeader.join("Un-U(TB)", "Un-A(TB)", "Un-U(Pick)", "Un-A(Pick)").setHtml("Understand");
         
         HeaderCell ap_tb = groupingHeader.join(
@@ -140,7 +157,6 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Ap-A(Pick)"));
         ap_pick.setHtml("Pick");
         
-//        HeaderRow apply = prependHeaderRow();
         topHeader.join("Ap-U(TB)", "Ap-A(TB)", "Ap-U(Pick)", "Ap-A(Pick)").setHtml("Apply");
         
         HeaderCell an_tb = groupingHeader.join(
@@ -152,7 +168,6 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("An-A(Pick)"));
         an_pick.setHtml("Pick");
         
-//        HeaderRow analyze = prependHeaderRow();
         topHeader.join("An-U(TB)", "An-A(TB)", "An-U(Pick)", "An-A(Pick)").setHtml("Analyze");
         
         HeaderCell ev_tb = groupingHeader.join(
@@ -164,7 +179,6 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Ev-A(Pick)"));
         ev_pick.setHtml("Pick");
         
-//        HeaderRow evaluate = prependHeaderRow();
         topHeader.join("Ev-U(TB)", "Ev-A(TB)", "Ev-U(Pick)", "Ev-A(Pick)").setHtml("Evaluate");
         
         HeaderCell cr_tb = groupingHeader.join(
@@ -176,7 +190,6 @@ public class TQCoverageDataGrid extends Grid {
                 groupingHeader.getCell("Cr-A(Pick)"));
         cr_pick.setHtml("Pick");
         
-//        HeaderRow create = prependHeaderRow();
         topHeader.join("Cr-U(TB)", "Cr-A(TB)", "Cr-U(Pick)", "Cr-A(Pick)").setHtml("Create");
         
         mainHeader.setStyleName("boldheader");
@@ -191,5 +204,15 @@ public class TQCoverageDataGrid extends Grid {
             }
         });
         
+        addItemClickListener(this);
     }    
+
+    @Override
+    public void itemClick(ItemClickEvent event) {
+        Object itemId = event.getItemId();
+        Item item = getContainerDataSource().getItem(itemId);
+               
+    }
+    
+    
 }

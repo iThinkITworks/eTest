@@ -5,13 +5,11 @@
  */
 package com.etest.connection;
 
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Window;
-import java.util.logging.Logger;
 
 /**
  *

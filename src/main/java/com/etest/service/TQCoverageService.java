@@ -7,6 +7,7 @@ package com.etest.service;
 
 import com.etest.common.BloomsClassTaxonomy;
 import com.etest.common.BloomsClassTaxonomy.BloomsClass;
+import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 
@@ -29,4 +30,10 @@ public interface TQCoverageService {
     public int getBloomsClassId(String bloomsClass);
     
     public int getTotalForBloomsClassColumn(Grid grid, String propertyId); 
+    
+    public boolean isValueInTBNotZero(Item item, String propertyId);
+    
+    public boolean isGreaterThanInTB(Item item, String propertyIdInTB, String propertyIdPick);
+    
+    public int calculateTotalPickItems(Grid grid, String propertyId);
 }
