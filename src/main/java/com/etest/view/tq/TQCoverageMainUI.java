@@ -25,6 +25,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
@@ -58,6 +59,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
     private int syllabusId;
     private String topicStr;
     private int bloomsClassId;
+    private int totalTestItems;
     
     public TQCoverageMainUI() {
         setSizeFull();
@@ -93,7 +95,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
                     sub.addCloseListener((Window.CloseEvent e) -> {
                         if(tq.calculateTotalPickItemsPerTopic(grid, itemId) > 
                                 CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString())){
-//                            tq.revertAllInputItemsToZero(grid, itemId);
+                            item.getItemProperty(event.getPropertyId()).setValue(0);
                             ShowErrorNotification.error("Runnint Total is greater than Max Items");
                         } else {
                             item.getItemProperty("Running Total").setValue(tq.calculateTotalPickItemsPerTopic(grid, itemId));
@@ -102,6 +104,14 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
                     });
                 }
             } 
+            
+            if(event.getPropertyId().toString().equals("Max Items")){
+                double value = (double)item.getItemProperty("Max Items").getValue();
+                sub = getMaxItemsWindow(item, value);
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }                
+            }
         });    
         
         grid.getColumn("remove")
@@ -124,12 +134,16 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
                     footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
                     footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
                     footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));
+                    footer.getCell("Running Total").setText(String.valueOf(tq.calculateRunningTotal(grid)));
         })).setWidth(100);     
         
         footer.getCell("Topic").setText("Total");        
         footer.setStyleName("align-center");
         
-        Button generateTQ = new GenerateTQCoverage(grid, CommonUtilities.convertStringToInt(totalItems.getValue().trim()));
+        System.out.println("test items: "+getTotalTestItems());
+        Button generateTQ = new GenerateTQCoverage(grid, 
+                getTotalTestItems(), 
+                footer);
         generateTQ.setWidth("300px");
         
         addComponent(new Label("\n"));
@@ -156,8 +170,10 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         
         totalItems.setCaption("No. of Test Items: ");
         totalItems.setWidth("50%");
+        totalItems.setValue("0");
         totalItems.setIcon(FontAwesome.TAG);
         totalItems.addStyleName(ValoTheme.TEXTFIELD_SMALL);
+        totalItems.addValueChangeListener(fieldValueListener);
         form.addComponent(totalItems);
         
         Button button = new Button("ADD ROW");
@@ -271,7 +287,8 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         return bloomsClassId;
     }
     
-    Window getPickWindow(Item item, String propertyId){
+    Window getPickWindow(Item item, 
+            String propertyId){
         Window sub = new Window("Field Value: ");
         sub.setWidth("150px");
         sub.setModal(true);
@@ -316,5 +333,64 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         sub.getContent().setHeightUndefined();
         
         return sub;
+    }
+    
+    Window getMaxItemsWindow(Item item, 
+            double previousValue){
+        Window sub = new Window("Field Value: ");
+        sub.setWidth("150px");
+        sub.setModal(true);
+        sub.center();        
+        sub.setResizable(false);
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);
+        
+        TextField field = new CommonTextField("Enter Value..", "Enter a Value: ");
+        v.addComponent(field);
+        
+        Button button = new Button("CLOSE");
+        button.setWidth("100%");
+        button.setIcon(FontAwesome.TASKS);
+        button.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener((Button.ClickEvent event) -> {  
+            boolean isNumeric = CommonUtilities.isNumeric(field.getValue().trim());
+            if(!isNumeric){
+                return;
+            }
+            
+            item.getItemProperty("Max Items").setValue(CommonUtilities.convertStringToDouble(field.getValue()));
+            if(tq.calculateTotalMaxItems(grid) == CommonUtilities.convertStringToDouble(totalItems.getValue().trim())){
+                footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid)));
+            } else {
+                item.getItemProperty("Max Items").setValue(previousValue);
+                footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid)));
+                ShowErrorNotification.warning("Total Max Items should be equal to Total Test Items");
+                return;
+            }
+            
+            sub.close();
+        });
+        v.addComponent(button);
+        v.setComponentAlignment(button, Alignment.BOTTOM_CENTER);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
+    
+    Property.ValueChangeListener fieldValueListener = (Property.ValueChangeEvent e) -> {
+        boolean isNumeric = CommonUtilities.isNumeric(e.getProperty().getValue().toString());
+        if(isNumeric){
+            totalTestItems = CommonUtilities.convertStringToInt(e.getProperty().getValue().toString());
+        }
+    };
+    
+    int getTotalTestItems(){
+        return totalTestItems;
     }
 }

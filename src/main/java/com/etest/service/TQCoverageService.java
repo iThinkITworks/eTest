@@ -42,4 +42,8 @@ public interface TQCoverageService {
     public void revertAllInputItemsToZero(Grid grid, Object itemId);
     
     public int calculateRunningTotal(Grid grid);
+    
+    public boolean isMaxItemsCompareToInputItems(double maxItems, int inputItems);
+    
+    public boolean isValueOfRunningTotal(Item item, String propertyId);
 }

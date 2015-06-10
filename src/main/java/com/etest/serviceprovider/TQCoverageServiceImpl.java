@@ -100,7 +100,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
                 maxItems = maxItems + CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString());        
             }
         }    
-        return maxItems;
+        return CommonUtilities.roundOffToWholeNumber(maxItems);
     }
 
     @Override
@@ -217,5 +217,22 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         }
                 
         return runningTotal;
+    }
+
+    @Override
+    public boolean isMaxItemsCompareToInputItems(double maxItems, int inputItems) {
+        if(maxItems > inputItems){
+            return false;
+        } else if (maxItems < inputItems){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public boolean isValueOfRunningTotal(Item item, String propertyId) {
+        return item.getItemProperty(propertyId).getValue() != null || 
+                item.getItemProperty(propertyId).getValue().equals("0");
     }
 }

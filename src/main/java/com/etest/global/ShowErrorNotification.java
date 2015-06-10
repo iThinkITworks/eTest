@@ -20,4 +20,11 @@ public class ShowErrorNotification {
         Notification.show(error, Notification.Type.ERROR_MESSAGE);
     }
     
+    public static void warning(String warning){
+        Notification.show(warning, Notification.Type.WARNING_MESSAGE);
+    }
+    
+    public static void tray(String tray){
+        Notification.show(tray, Notification.Type.TRAY_NOTIFICATION);
+    }
 }
