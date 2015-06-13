@@ -25,7 +25,6 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Grid.FooterRow;
@@ -140,11 +139,9 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         footer.getCell("Topic").setText("Total");        
         footer.setStyleName("align-center");
         
-        System.out.println("test items: "+getTotalTestItems());
-        Button generateTQ = new GenerateTQCoverage(grid, 
-                getTotalTestItems(), 
-                footer);
+        Button generateTQ = new Button("Generate TQ");
         generateTQ.setWidth("300px");
+        generateTQ.addClickListener(buttonClickListener);
         
         addComponent(new Label("\n"));
         addComponent(generateTQ);
@@ -387,6 +384,31 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         boolean isNumeric = CommonUtilities.isNumeric(e.getProperty().getValue().toString());
         if(isNumeric){
             totalTestItems = CommonUtilities.convertStringToInt(e.getProperty().getValue().toString());
+        }
+    };
+    
+    Button.ClickListener buttonClickListener = (Button.ClickEvent e) -> {
+        boolean isMaxItemsCompareToInputItems = tq.isMaxItemsCompareToInputItems(
+                CommonUtilities.convertStringToDouble(footer.getCell("Max Items").getText()), 
+                getTotalTestItems());
+        if(!isMaxItemsCompareToInputItems){
+            ShowErrorNotification.error("Max Items should be equal to Total Input Items!");
+            return;
+        }
+        
+        boolean isRunningTotalGreaterThanMaxItemsTotal = tq.isRunningTotalGreaterThanMaxItemsTotal(
+                CommonUtilities.convertStringToInt(footer.getCell("Running Total").getText()), 
+                CommonUtilities.convertStringToDouble(footer.getCell("Max Items").getText()));
+        if(isRunningTotalGreaterThanMaxItemsTotal){
+            ShowErrorNotification.error("Running Total and Max Items are not equal!");
+            return;
+        }
+        
+        Window sub = new TQCoverageWindow(grid, 
+                (int) subject.getValue(), 
+                getTotalTestItems());
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
         }
     };
     

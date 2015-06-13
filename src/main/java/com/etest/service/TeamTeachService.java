@@ -19,6 +19,8 @@ public interface TeamTeachService {
     
     public List<TeamTeach> getAllMembersFromTeam(int teamTeachId);
     
+    public int getTeamTeachIdByUserId(int userId);
+    
     public boolean insertNewTeamTeach(TeamTeach tt);
     
     public boolean updateTeamTeach(int teamTeachId, int userId);

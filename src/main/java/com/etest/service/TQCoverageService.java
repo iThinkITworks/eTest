@@ -5,8 +5,6 @@
  */
 package com.etest.service;
 
-import com.etest.common.BloomsClassTaxonomy;
-import com.etest.common.BloomsClassTaxonomy.BloomsClass;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
@@ -46,4 +44,6 @@ public interface TQCoverageService {
     public boolean isMaxItemsCompareToInputItems(double maxItems, int inputItems);
     
     public boolean isValueOfRunningTotal(Item item, String propertyId);
+    
+    public boolean isRunningTotalGreaterThanMaxItemsTotal(int runningTotal, double maxItemsTotal);
 }

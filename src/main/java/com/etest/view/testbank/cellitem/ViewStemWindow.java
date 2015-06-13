@@ -76,12 +76,8 @@ public class ViewStemWindow extends Window {
         keyIndexSize = keyList.size();
         stem = ci.getItem().replace("{key}", keyList.get(getKeyIndex()));
                 
-//        Panel panel = new Panel();
-//        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
-        
         label.setValue("<b>STEM</b>: "+getStem());
         label.setContentMode(ContentMode.HTML);
-//        panel.setContent(label);label.setValue("<b>STEM</b>: "+getStem());
         form.addComponent(label);
         
         HorizontalLayout h1 = new HorizontalLayout();
@@ -134,23 +130,9 @@ public class ViewStemWindow extends Window {
         g.addComponent(table, 0, 1, 1, 1);
         g.setComponentAlignment(table, Alignment.MIDDLE_CENTER);
         form.addComponent(g);
-        
-        
-        
+                
         return form;
     }
-    
-//    Panel getStemPanel(){
-//        Panel panel = new Panel();
-//        panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
-//        panel.setWidth("400px");
-//        
-//        label.setValue("<b>STEM</b>: "+getStem());
-//        label.setContentMode(ContentMode.HTML);
-//        panel.setContent(label);
-//        
-//        return panel;
-//    }
     
     Panel getDataTablePanel(){
         Panel panel = new Panel();

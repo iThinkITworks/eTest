@@ -28,6 +28,11 @@ public class TeamTeachServiceImpl implements TeamTeachService {
     }
 
     @Override
+    public int getTeamTeachIdByUserId(int userId){
+        return TeamTeachDAO.getTeamTeachIdByUserId(userId);
+    }
+    
+    @Override
     public boolean insertNewTeamTeach(TeamTeach tt) {
         return TeamTeachDAO.insertNewTeamTeachLeader(tt);
     }

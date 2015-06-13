@@ -27,6 +27,11 @@ public class SyllabusServiceImpl implements SyllabusService {
     }
 
     @Override
+    public int getSyllabusIdByTopic(String topic){
+        return SyllabusDAO.getSyllabusIdByTopic(topic);
+    }
+    
+    @Override
     public List<Syllabus> getSyllabusByCurriculum(int curriculumId) {
         return SyllabusDAO.getSyllabusByCurriculum(curriculumId);
     }

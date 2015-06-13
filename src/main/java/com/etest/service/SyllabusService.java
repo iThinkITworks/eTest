@@ -18,6 +18,8 @@ public interface SyllabusService {
     
     public Syllabus getSyllabusById(int syllabusId);
     
+    public int getSyllabusIdByTopic(String topic);
+    
     public List<Syllabus> getSyllabusByCurriculum(int curriculumId);
     
     public boolean insertNewSyllabus(Syllabus s);

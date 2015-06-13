@@ -235,4 +235,14 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         return item.getItemProperty(propertyId).getValue() != null || 
                 item.getItemProperty(propertyId).getValue().equals("0");
     }
+
+    @Override
+    public boolean isRunningTotalGreaterThanMaxItemsTotal(int runningTotal, double maxItemsTotal) {
+        if(runningTotal > maxItemsTotal || 
+                runningTotal < maxItemsTotal){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

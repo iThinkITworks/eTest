@@ -99,6 +99,36 @@ public class TeamTeachDAO {
         return teamMembersList;
     }
     
+    public static int getTeamTeachIdByUserId(int userId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int teamTeachId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT TeamTeachID FROM enrolled_semestral_team_view  "
+                    + "WHERE UserID = "+userId+" ");
+            while(rs.next()){
+                teamTeachId = CommonUtilities.convertStringToInt(rs.getString("TeamTeachID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return teamTeachId;
+    }
+    
     public static boolean insertNewTeamTeachLeader(TeamTeach tt){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;

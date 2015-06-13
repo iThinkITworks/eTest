@@ -98,6 +98,36 @@ public class SyllabusDAO {
         return s;
     }
     
+    public static int getSyllabusIdByTopic(String topic){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int syllabusId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT SyllabusID FROM enrolled_syllabus_view "
+                    + "WHERE Topic = '"+topic+"' ");
+            while(rs.next()){
+                syllabusId = CommonUtilities.convertStringToInt(rs.getString("SyllabusID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(SyllabusDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(SyllabusDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return syllabusId;
+    }
+    
     public static List<Syllabus> getSyllabusByCurriculum(int curriculumId){
         Connection conn = DBConnection.connectToDB();
         Statement stmt = null;
