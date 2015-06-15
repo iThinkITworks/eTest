@@ -6,6 +6,8 @@
 package com.etest.serviceprovider;
 
 import com.etest.dao.TQCoverageDAO;
+import com.etest.model.CellItem;
+import com.etest.model.ItemKeys;
 import com.etest.service.TQCoverageService;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
@@ -13,6 +15,7 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -244,5 +247,10 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public List<CellItem> getItemIdByDiscriminationIndex(Grid grid) {
+        return TQCoverageDAO.getItemIdByDiscriminationIndex(grid);
     }
 }

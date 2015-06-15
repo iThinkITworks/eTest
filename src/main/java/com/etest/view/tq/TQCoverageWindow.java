@@ -5,24 +5,32 @@
  */
 package com.etest.view.tq;
 
+import com.etest.global.ShowErrorNotification;
+import com.etest.model.CellItem;
+import com.etest.service.CellCaseService;
+import com.etest.service.CellItemService;
+import com.etest.service.ItemKeyService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
 import com.etest.service.TeamTeachService;
+import com.etest.serviceprovider.CellCaseServiceImpl;
+import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.serviceprovider.TeamTeachServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.vaadin.data.Item;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.FooterRow;
+import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -33,15 +41,19 @@ public class TQCoverageWindow extends Window {
     SyllabusService ss = new SyllabusServiceImpl();
     TeamTeachService tts = new TeamTeachServiceImpl();
     TQCoverageService tq = new TQCoverageServiceImpl();
+    CellCaseService ccs = new CellCaseServiceImpl();
+    CellItemService cis = new CellItemServiceImpl();
+    ItemKeyService k = new ItemKeyServiceImpl();
     
     Grid grid = new Grid();
-    Label caseTopic = new Label();
-    Label stem = new Label();
+//    Label caseTopic = new Label();
+//    Label stem = new Label();
     
     private int curriculumId;
     private int syllabusId;
     private int teamTeachId;
     private int totalTestItems;
+    List<Integer> CellItemIdList = new ArrayList<>();
     
     public TQCoverageWindow(Grid grid, 
             int curriculumId, 
@@ -52,6 +64,7 @@ public class TQCoverageWindow extends Window {
         
         setCaption("TEST COVERAGE");
         setWidth("800px");
+        setHeight("100%");
         setModal(true);
         center();        
         
@@ -64,7 +77,7 @@ public class TQCoverageWindow extends Window {
         System.out.println("total test items: "+getTotalTestItems());
         
         setContent(buildForms());
-        getContent().setHeightUndefined();
+//        getContent().setHeightUndefined();
     }
 
     FormLayout buildForms(){
@@ -73,28 +86,38 @@ public class TQCoverageWindow extends Window {
         form.setMargin(true);
         form.setSpacing(true);
         
-        Collection c = getTQCoverageGrid().getContainerDataSource().getItemIds();
-        Iterator iterator = c.iterator();
-        while (iterator.hasNext()) {
-            Item item = getTQCoverageGrid().getContainerDataSource().getItem(iterator.next());
-            Collection x = item.getItemPropertyIds();
-            Iterator it = x.iterator();
-            Object propertyId;
-            while (it.hasNext()) {
-                propertyId = it.next();
-                if(propertyId.toString().contains("Pick")){
-                    System.out.println("propertyId: "+item.getItemProperty(propertyId).getValue());
-                }                
-            }            
-        }
-        
-        caseTopic.setValue("<i>"+""+"</i>");
-        caseTopic.setContentMode(ContentMode.HTML);
-        form.addComponent(caseTopic);
-        
-        stem.setValue(" ");
-        stem.setContentMode(ContentMode.HTML);
-        form.addComponent(stem);
+        List<CellItem> cellItemIdList = tq.getItemIdByDiscriminationIndex(grid);
+        int i = 1;        
+        for(CellItem ci : cellItemIdList){   
+            
+            Label caseTopic = new Label();
+            caseTopic.setValue(ccs.getCellCaseById(ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()).getCaseTopic());
+            caseTopic.setContentMode(ContentMode.HTML);                        
+            form.addComponent(caseTopic);
+
+            List<String> keyList = k.getAllItemKey(ci.getCellItemId());
+            if(keyList.isEmpty()){
+                System.out.println("case: "+ccs.getCellCaseById(ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()).getCaseTopic());
+                ShowErrorNotification.error("No Item Key was found for STEM: \n"
+                        +cis.getCellItemById(ci.getCellItemId()).getItem());
+                return null;
+            }
+            Label stem = new Label();            
+            stem.setValue(i+". "+cis.getCellItemById(ci.getCellItemId()).getItem().replace("{key}", keyList.get(0)));
+            stem.setContentMode(ContentMode.HTML);
+            form.addComponent(stem);
+            
+            GridLayout glayout = new GridLayout(2, 2);
+            glayout.setWidth("100%");
+            
+            glayout.addComponent(new Label("A) "+cis.getCellItemById(ci.getCellItemId()).getOptionA(), ContentMode.HTML), 0, 0);
+            glayout.addComponent(new Label("C) "+cis.getCellItemById(ci.getCellItemId()).getOptionC(), ContentMode.HTML), 0, 1);
+            glayout.addComponent(new Label("B) "+cis.getCellItemById(ci.getCellItemId()).getOptionB(), ContentMode.HTML), 1, 0);
+            glayout.addComponent(new Label("D) "+ cis.getCellItemById(ci.getCellItemId()).getOptionD(), ContentMode.HTML), 1, 1);
+            form.addComponent(glayout);
+            
+            i++;
+        }            
         
         HorizontalLayout h1 = new HorizontalLayout();
         h1.setWidth("100%");

@@ -5,6 +5,7 @@
  */
 package com.etest.view.testbank.cellitem;
 
+import com.etest.global.ShowErrorNotification;
 import com.etest.model.CellItem;
 import com.etest.model.ItemKeys;
 import com.etest.service.CellItemService;
@@ -58,11 +59,11 @@ public class ViewStemWindow extends Window {
         
         setCaption("TEST QUESTIONAIRE");
         setWidth("800px");
+        setHeight("100%");
         setModal(true);
         center();        
         
         setContent(buildForms());
-        getContent().setHeightUndefined();
     }
     
     FormLayout buildForms(){
@@ -74,6 +75,11 @@ public class ViewStemWindow extends Window {
         CellItem ci = cis.getCellItemById(getCellItemId());        
         keyList = k.getAllItemKey(getCellItemId());
         keyIndexSize = keyList.size();
+        if(keyList.isEmpty()){
+            ShowErrorNotification.error("No Item Key was found for STEM: \n"
+                    +ci.getItem());
+            return null;
+        }
         stem = ci.getItem().replace("{key}", keyList.get(getKeyIndex()));
                 
         label.setValue("<b>STEM</b>: "+getStem());

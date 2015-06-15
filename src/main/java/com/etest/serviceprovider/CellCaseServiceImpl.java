@@ -60,5 +60,10 @@ public class CellCaseServiceImpl implements CellCaseService {
     public boolean isCellCaseApproved(int cellCaseId) {
         return CellCaseDAO.isCellCaseApproved(cellCaseId);
     }
+
+    @Override
+    public CellCase getCellCaseIdByCellItemId(int cellItemId) {
+        return CellCaseDAO.getCellCaseIdByCellItemId(cellItemId);
+    }
     
 }

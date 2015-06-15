@@ -328,4 +328,35 @@ public class CellCaseDAO {
         
         return result;
     }
+    
+    public static CellCase getCellCaseIdByCellItemId(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        CellCase c = new CellCase();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT DISTINCT CellCaseID FROM generate_tq_coverage_view "
+                    + "WHERE CellItemID = "+cellItemId+" "
+                    + "AND CellItemStatus = 0 ");
+            while(rs.next()){
+                c.setCellCaseId(CommonUtilities.convertStringToInt(rs.getString("CellCaseID")));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return c;
+    }
 }
