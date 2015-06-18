@@ -46,8 +46,6 @@ public class TQCoverageWindow extends Window {
     ItemKeyService k = new ItemKeyServiceImpl();
     
     Grid grid = new Grid();
-//    Label caseTopic = new Label();
-//    Label stem = new Label();
     
     private int curriculumId;
     private int syllabusId;
@@ -121,7 +119,6 @@ public class TQCoverageWindow extends Window {
         
         HorizontalLayout h1 = new HorizontalLayout();
         h1.setWidth("100%");
-        
         
         return form;
     }

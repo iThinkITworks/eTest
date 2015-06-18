@@ -10,6 +10,7 @@ import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.global.ShowErrorNotification;
+import com.etest.pdfgenerator.TQViewer;
 import com.etest.service.CellItemService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
@@ -116,23 +117,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         grid.getColumn("remove")
                 .setRenderer(new DeleteButtonValueRenderer((ClickableRenderer.RendererClickEvent event) -> {
                     grid.getContainerDataSource().removeItem(event.getItemId());
-                    footer.getCell("Hrs Spent").setText(String.valueOf(tq.calculateTotalHourSpent(grid)));
-                    tq.calculateProportion(grid);
-                    tq.calculateMaxItems(grid, totalItems);
-                    footer.getCell("Proportion(%)").setText(String.valueOf(tq.calculateTotalProportion(grid)));
-                    footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid))); 
-                    footer.getCell("Re-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Re-U(TB)")));
-                    footer.getCell("Re-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Re-A(TB)")));
-                    footer.getCell("Un-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Un-U(TB)")));
-                    footer.getCell("Un-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Un-A(TB)")));
-                    footer.getCell("Ap-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ap-U(TB)")));
-                    footer.getCell("Ap-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ap-A(TB)")));
-                    footer.getCell("An-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "An-U(TB)")));
-                    footer.getCell("An-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "An-A(TB)")));
-                    footer.getCell("Ev-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-U(TB)")));
-                    footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
-                    footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
-                    footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));
+                    populateGridFooter();
                     footer.getCell("Running Total").setText(String.valueOf(tq.calculateRunningTotal(grid)));
         })).setWidth(100);     
         
@@ -229,38 +214,8 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         button.addStyleName(ValoTheme.BUTTON_PRIMARY);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener((Button.ClickEvent event) -> {
-            item.getItemProperty("Topic").setValue(topic.getItem(topic.getValue()).toString());
-            item.getItemProperty("Hrs Spent").setValue(ss.getEstimatedTime(getSyllabusId()));
-            item.getItemProperty("Re-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Remember.toString())));
-            item.getItemProperty("Re-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Remember.toString())));
-            item.getItemProperty("Un-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Understand.toString())));
-            item.getItemProperty("Un-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Understand.toString())));
-            item.getItemProperty("Ap-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Apply.toString())));
-            item.getItemProperty("Ap-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Apply.toString())));
-            item.getItemProperty("An-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Analyze.toString())));
-            item.getItemProperty("An-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Analyze.toString())));
-            item.getItemProperty("Ev-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Evaluate.toString())));
-            item.getItemProperty("Ev-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Evaluate.toString())));
-            item.getItemProperty("Cr-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Create.toString())));
-            item.getItemProperty("Cr-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(bloomsClass.Create.toString())));            
-            
-            footer.getCell("Hrs Spent").setText(String.valueOf(tq.calculateTotalHourSpent(grid)));
-            tq.calculateProportion(grid);
-            tq.calculateMaxItems(grid, totalItems);
-            footer.getCell("Proportion(%)").setText(String.valueOf(tq.calculateTotalProportion(grid)));
-            footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid)));
-            footer.getCell("Re-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Re-U(TB)")));
-            footer.getCell("Re-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Re-A(TB)")));
-            footer.getCell("Un-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Un-U(TB)")));
-            footer.getCell("Un-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Un-A(TB)")));
-            footer.getCell("Ap-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ap-U(TB)")));
-            footer.getCell("Ap-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ap-A(TB)")));
-            footer.getCell("An-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "An-U(TB)")));
-            footer.getCell("An-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "An-A(TB)")));
-            footer.getCell("Ev-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-U(TB)")));
-            footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
-            footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
-            footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));            
+            populateGridRow(item);
+            populateGridFooter();                        
             sub.close();
         });
         v.addComponent(button);
@@ -403,16 +358,60 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
             ShowErrorNotification.error("Running Total and Max Items are not equal!");
             return;
         }
-        
-        Window sub = new TQCoverageWindow(grid, 
+
+        Window pdf = new TQViewer(grid, 
                 (int) subject.getValue(), 
                 getTotalTestItems());
-        if(sub.getParent() == null){
-            UI.getCurrent().addWindow(sub);
+        if(pdf.getParent() == null){
+            UI.getCurrent().addWindow(pdf);
         }
+        
+//        Window sub = new TQCoverageWindow(grid, 
+//                (int) subject.getValue(), 
+//                getTotalTestItems());
+//        if(sub.getParent() == null){
+//            UI.getCurrent().addWindow(sub);
+//        }
     };
     
     int getTotalTestItems(){
         return totalTestItems;
+    }
+    
+    void populateGridRow(Item item){
+        item.getItemProperty("Topic").setValue(topic.getItem(topic.getValue()).toString());
+        item.getItemProperty("Hrs Spent").setValue(ss.getEstimatedTime(getSyllabusId()));
+        item.getItemProperty("Re-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Remember.toString())));
+        item.getItemProperty("Re-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Remember.toString())));
+        item.getItemProperty("Un-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Understand.toString())));
+        item.getItemProperty("Un-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Understand.toString())));
+        item.getItemProperty("Ap-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Apply.toString())));
+        item.getItemProperty("Ap-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Apply.toString())));
+        item.getItemProperty("An-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Analyze.toString())));
+        item.getItemProperty("An-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Analyze.toString())));
+        item.getItemProperty("Ev-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Evaluate.toString())));
+        item.getItemProperty("Ev-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Evaluate.toString())));
+        item.getItemProperty("Cr-U(TB)").setValue(cis.getTotalUnanalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Create.toString())));
+        item.getItemProperty("Cr-A(TB)").setValue(cis.getTotalAnalyzeItem(syllabusId, tq.getBloomsClassId(BloomsClass.Create.toString())));
+    }
+    
+    void populateGridFooter(){
+        footer.getCell("Hrs Spent").setText(String.valueOf(tq.calculateTotalHourSpent(grid)));
+        tq.calculateProportion(grid);
+        tq.calculateMaxItems(grid, totalItems);
+        footer.getCell("Proportion(%)").setText(String.valueOf(tq.calculateTotalProportion(grid)));
+        footer.getCell("Max Items").setText(String.valueOf(tq.calculateTotalMaxItems(grid)));
+        footer.getCell("Re-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Re-U(TB)")));
+        footer.getCell("Re-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Re-A(TB)")));
+        footer.getCell("Un-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Un-U(TB)")));
+        footer.getCell("Un-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Un-A(TB)")));
+        footer.getCell("Ap-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ap-U(TB)")));
+        footer.getCell("Ap-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ap-A(TB)")));
+        footer.getCell("An-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "An-U(TB)")));
+        footer.getCell("An-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "An-A(TB)")));
+        footer.getCell("Ev-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-U(TB)")));
+        footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
+        footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
+        footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));
     }
 }

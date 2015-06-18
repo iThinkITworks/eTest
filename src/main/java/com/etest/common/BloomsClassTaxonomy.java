@@ -16,7 +16,7 @@ public class BloomsClassTaxonomy extends VerticalLayout {
     public enum BloomsClass {
         Remember, Understand, Apply, Analyze, Evaluate, Create
     }
-    
-    public BloomsClass bloomsClass;
-    
+//    
+//    public BloomsClass bloomsClass;
+//    
 }

@@ -20,6 +20,7 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.RichTextArea;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -32,7 +33,7 @@ public class CellCaseWindow extends Window {
     CellCaseService ccs = new CellCaseServiceImpl();
     ComboBox subject = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
     ComboBox topic = new ComboBox();
-    RichTextArea caseTopic;
+    TextArea caseTopic;
     
     private int cellCaseId;
     
@@ -64,9 +65,10 @@ public class CellCaseWindow extends Window {
         topic.addStyleName(ValoTheme.COMBOBOX_SMALL);
         form.addComponent(topic);
         
-        caseTopic = new RichTextArea();
+        caseTopic = new TextArea();
         caseTopic.setCaption("Case: ");
-        caseTopic.setWidth("100%");      
+        caseTopic.setWidth("100%");    
+        caseTopic.setRows(5);
         form.addComponent(caseTopic);
                 
         HorizontalLayout hlayout = new HorizontalLayout();
