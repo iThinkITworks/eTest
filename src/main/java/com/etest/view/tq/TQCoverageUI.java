@@ -5,23 +5,34 @@
  */
 package com.etest.view.tq;
 
-import com.etest.common.BloomsClassTaxonomy;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.global.ShowErrorNotification;
-import com.etest.pdfgenerator.TQViewer;
+import com.etest.model.CellCase;
+import com.etest.model.CellItem;
+import com.etest.model.ItemKeys;
+import com.etest.model.TQCoverage;
+import com.etest.model.TQItems;
+import com.etest.model.TopicCoverage;
+import com.etest.service.CellCaseService;
 import com.etest.service.CellItemService;
+import com.etest.service.ItemKeyService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
+import com.etest.service.TeamTeachService;
+import com.etest.serviceprovider.CellCaseServiceImpl;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
+import com.etest.serviceprovider.TeamTeachServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -37,17 +48,26 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.renderers.ClickableRenderer;
 import com.vaadin.ui.themes.ValoTheme;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.vaadin.gridutil.renderer.DeleteButtonValueRenderer;
 
 /**
  *
  * @author jetdario
  */
-public class TQCoverageMainUI extends BloomsClassTaxonomy {
+public class TQCoverageUI extends VerticalLayout {
 
     SyllabusService ss = new SyllabusServiceImpl();
+    TeamTeachService tts = new TeamTeachServiceImpl();
     TQCoverageService tq = new TQCoverageServiceImpl();
+    CellCaseService ccs = new CellCaseServiceImpl();
     CellItemService cis = new CellItemServiceImpl();
+    ItemKeyService k = new ItemKeyServiceImpl();
     
     Grid grid = new TQCoverageDataGrid();
     TextField examTitle = new CommonTextField("Enter Exam Title..", null);
@@ -58,10 +78,16 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
     
     private int syllabusId;
     private String topicStr;
-    private int bloomsClassId;
+//    private int bloomsClassId;
     private int totalTestItems;
+    private int curriculumId;
+    private int teamTeachId;
     
-    public TQCoverageMainUI() {
+    public enum BloomsClass {
+        Remember, Understand, Apply, Analyze, Evaluate, Create
+    }
+    
+    public TQCoverageUI() {
         setSizeFull();
         setMargin(true);      
                            
@@ -123,7 +149,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         
         footer.getCell("Topic").setText("Total");        
         footer.setStyleName("align-center");
-        
+                
         Button generateTQ = new Button("Generate TQ");
         generateTQ.setWidth("300px");
         generateTQ.addClickListener(buttonClickListener);
@@ -164,6 +190,11 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         button.addStyleName(ValoTheme.BUTTON_PRIMARY);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener((Button.ClickEvent event) -> {
+            if(examTitle.getValue() == null || examTitle.getValue().trim().isEmpty()){
+                Notification.show("Select an Exam Title!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
             if(subject.getValue() == null){
                 Notification.show("Select a Subject!", Notification.Type.WARNING_MESSAGE);
                 return;
@@ -200,7 +231,7 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         topic.addStyleName(ValoTheme.COMBOBOX_SMALL);
         topic.setWidth("100%");
         topic.addValueChangeListener((Property.ValueChangeEvent event) -> {
-            if(event.getProperty().getValue() == null){                
+            if(event.getProperty().getValue() == null){                 
             } else {
                 syllabusId = (int) event.getProperty().getValue();
                 topicStr = topic.getItem(topic.getValue()).toString();                
@@ -214,8 +245,12 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         button.addStyleName(ValoTheme.BUTTON_PRIMARY);
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener((Button.ClickEvent event) -> {
-            populateGridRow(item);
-            populateGridFooter();                        
+            if(topic.getValue() == null){
+                Notification.show("Select a Topic!", Notification.Type.WARNING_MESSAGE);
+            } else {
+                populateGridRow(item);
+                populateGridFooter();
+            }                                    
             sub.close();
         });
         v.addComponent(button);
@@ -235,9 +270,21 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
         return topicStr;
     }
     
-    int getBloomsClassId(){
-        return bloomsClassId;
+    int getTotalTestItems(){
+        return totalTestItems;
     }
+    
+    int getCurriculumId(){
+        return curriculumId;
+    }
+        
+    int getTeamTeachId(){
+        return teamTeachId;
+    }
+    
+//    int getBloomsClassId(){
+//        return bloomsClassId;
+//    }
     
     Window getPickWindow(Item item, 
             String propertyId){
@@ -359,25 +406,60 @@ public class TQCoverageMainUI extends BloomsClassTaxonomy {
             return;
         }
 
-        Window pdf = new TQViewer(grid, 
-                (int) subject.getValue(), 
-                getTotalTestItems());
-        if(pdf.getParent() == null){
-            UI.getCurrent().addWindow(pdf);
+        TopicCoverage coverage = new TopicCoverage();
+        coverage.setExamTitle(examTitle.getValue().trim());
+        coverage.setCurriculumId((int) subject.getValue());
+        coverage.setTeamTeachId(tts.getTeamTeachIdByUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString())));
+        coverage.setTotalHoursCoverage(tq.calculateTotalHourSpent(grid));
+        coverage.setSyllabusId(getSyllabusId());
+        coverage.setTotalItems(getTotalTestItems());
+        
+        List<CellItem> cellItemIdList = tq.getItemIdByDiscriminationIndex(grid);
+        List<Integer> cellCaseIdList = new ArrayList<>();
+        cellItemIdList.stream().map((ci) -> ccs.getCellCaseIdByCellItemId(ci.getCellItemId())).forEach((c) -> {
+            cellCaseIdList.add(c.getCellCaseId());
+        });
+        Set<Integer> s = new LinkedHashSet<Integer>(cellCaseIdList);      
+        cellCaseIdList.clear();
+        cellCaseIdList.addAll(s);
+
+        Map<Integer, Integer> itemAndKeyMap = null; 
+        List<Integer> keyList;
+        
+        Map<Integer, Map<Integer, Integer>> cellCaseItemKey = new HashMap<>();
+        for(Object cellCaseId : cellCaseIdList){  
+            itemAndKeyMap = new HashMap<>();
+            for(CellItem ci : cellItemIdList){                      
+                if((int)cellCaseId == ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()){
+                    keyList = k.getItemKeyIdsByCellItemId(ci.getCellItemId());                    
+                    itemAndKeyMap.put(ci.getCellItemId(), keyList.get(0));
+                }
+                cellCaseItemKey.put((Integer) cellCaseId, itemAndKeyMap);
+            }
         }
         
-//        Window sub = new TQCoverageWindow(grid, 
+        TQItems tqItems = new TQItems();
+        tqItems.setCellCaseItemKey(cellCaseItemKey);
+        boolean result = tq.insertNewTQCoverage(coverage, tqItems, null, grid);
+        if(result){
+            Notification.show("Successfully Created TQ Coverage!", Notification.Type.HUMANIZED_MESSAGE);
+            return;
+        }
+        
+//        Window pdf = new TQViewer(grid,
+//                (int) subject.getValue(), 
+//                getTotalTestItems());
+//        if(pdf.getParent() == null){
+//            UI.getCurrent().addWindow(pdf);
+//        }
+//        Window sub = new TQCoverageWindow(grid,
 //                (int) subject.getValue(), 
 //                getTotalTestItems());
 //        if(sub.getParent() == null){
 //            UI.getCurrent().addWindow(sub);
 //        }
-    };
-    
-    int getTotalTestItems(){
-        return totalTestItems;
-    }
-    
+    };    
+        
     void populateGridRow(Item item){
         item.getItemProperty("Topic").setValue(topic.getItem(topic.getValue()).toString());
         item.getItemProperty("Hrs Spent").setValue(ss.getEstimatedTime(getSyllabusId()));

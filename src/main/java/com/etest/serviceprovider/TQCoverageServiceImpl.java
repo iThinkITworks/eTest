@@ -7,7 +7,10 @@ package com.etest.serviceprovider;
 
 import com.etest.dao.TQCoverageDAO;
 import com.etest.model.CellItem;
-import com.etest.model.ItemKeys;
+import com.etest.model.TQAnswerKey;
+import com.etest.model.TQCoverage;
+import com.etest.model.TQItems;
+import com.etest.model.TopicCoverage;
 import com.etest.service.TQCoverageService;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
@@ -56,7 +59,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public void calculateMaxItems(Grid grid, TextField totalItems) {
+    public void calculateMaxItems(Grid grid, 
+            TextField totalItems) {
         Collection c = grid.getContainerDataSource().getItemIds();
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
@@ -112,7 +116,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }    
 
     @Override
-    public int getTotalForBloomsClassColumn(Grid grid, String propertyId) {
+    public int getTotalForBloomsClassColumn(Grid grid, 
+            String propertyId) {
         int total = 0;
         
         Collection c = grid.getContainerDataSource().getItemIds();
@@ -142,7 +147,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public boolean isGreaterThanInTB(Item item, String propertyIdInTB, String inputValue) {
+    public boolean isGreaterThanInTB(Item item, 
+            String propertyIdInTB, 
+            String inputValue) {
         boolean result = false;
         if(CommonUtilities.convertStringToInt(inputValue) > 
                 CommonUtilities.convertStringToInt(item.getItemProperty(propertyIdInTB).getValue().toString())){
@@ -153,7 +160,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public int calculateTotalPickItems(Grid grid, String propertyId) {
+    public int calculateTotalPickItems(Grid grid, 
+            String propertyId) {
         int total = 0;
         
         Collection c = grid.getContainerDataSource().getItemIds();
@@ -169,7 +177,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public int calculateTotalPickItemsPerTopic(Grid grid, Object itemId) {
+    public int calculateTotalPickItemsPerTopic(Grid grid, 
+            Object itemId) {
         String propertyId = null;
         int runningTotal = 0;
         
@@ -188,7 +197,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public void revertAllInputItemsToZero(Grid grid, Object itemId) {
+    public void revertAllInputItemsToZero(Grid grid, 
+            Object itemId) {
         String propertyId = null;
         int runningTotal = 0;
         
@@ -223,7 +233,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public boolean isMaxItemsCompareToInputItems(double maxItems, int inputItems) {
+    public boolean isMaxItemsCompareToInputItems(double maxItems, 
+            int inputItems) {
         if(maxItems > inputItems){
             return false;
         } else if (maxItems < inputItems){
@@ -234,23 +245,30 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public boolean isValueOfRunningTotal(Item item, String propertyId) {
+    public boolean isValueOfRunningTotal(Item item, 
+            String propertyId) {
         return item.getItemProperty(propertyId).getValue() != null || 
                 item.getItemProperty(propertyId).getValue().equals("0");
     }
 
     @Override
-    public boolean isRunningTotalGreaterThanMaxItemsTotal(int runningTotal, double maxItemsTotal) {
-        if(runningTotal > maxItemsTotal || 
-                runningTotal < maxItemsTotal){
-            return true;
-        } else {
-            return false;
-        }
+    public boolean isRunningTotalGreaterThanMaxItemsTotal(int runningTotal, 
+            double maxItemsTotal) {
+        return runningTotal > maxItemsTotal || 
+                runningTotal < maxItemsTotal;
     }
 
     @Override
     public List<CellItem> getItemIdByDiscriminationIndex(Grid grid) {
         return TQCoverageDAO.getItemIdByDiscriminationIndex(grid);
     }
+
+    @Override
+    public boolean insertNewTQCoverage(TopicCoverage coverage, 
+            TQItems items, 
+            TQAnswerKey answerKey, 
+            Grid grid) {
+        return TQCoverageDAO.insertNewTQCoverage(coverage, items, answerKey, grid);
+    }
+
 }

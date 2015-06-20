@@ -5,7 +5,8 @@
  */
 package com.etest.view;
 
-import com.etest.view.tq.TQCoverageMainUI;
+import com.etest.view.tq.TQCoverageUI;
+import com.etest.view.tq.TQMainUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.Label;
@@ -15,12 +16,12 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author jetdario
  */
-public class TQCoverageView extends VerticalLayout implements View {
+public class TQView extends VerticalLayout implements View {
 
-    public TQCoverageView() {
+    public TQView() {
         setWidth("100%");
                 
-        addComponent(new TQCoverageMainUI());
+        addComponent(new TQMainUI());
     }
 
     @Override

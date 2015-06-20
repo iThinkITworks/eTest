@@ -123,6 +123,36 @@ public class ItemKeyDAO {
         return keyList;
     }
     
+    public static List<Integer> getItemKeyIdsByCellItemId(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Integer> itemKeyIdList = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT ItemKeyID FROM item_keys "
+                    + "WHERE CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                itemKeyIdList.add(CommonUtilities.convertStringToInt(rs.getString("ItemKeyID")));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return itemKeyIdList;
+    }
+    
     public static String getItemKey(int cellItemId, 
             String answer){
         Connection conn = DBConnection.connectToDB();

@@ -49,4 +49,6 @@ public interface ItemKeyService {
     
     public List<ItemKeys> getItemKeysByCellItemId(int cellItemId);
     
+    public List<Integer> getItemKeyIdsByCellItemId(int cellItemId);
+    
 }

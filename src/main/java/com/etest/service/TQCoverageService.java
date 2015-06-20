@@ -6,7 +6,10 @@
 package com.etest.service;
 
 import com.etest.model.CellItem;
-import com.etest.model.ItemKeys;
+import com.etest.model.TQAnswerKey;
+import com.etest.model.TQCoverage;
+import com.etest.model.TQItems;
+import com.etest.model.TopicCoverage;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
@@ -34,7 +37,8 @@ public interface TQCoverageService {
     public int getTotalForBloomsClassColumn(Grid grid, 
             String propertyId); 
     
-    public boolean isValueInTBNotZero(Item item, String propertyId);
+    public boolean isValueInTBNotZero(Item item, 
+            String propertyId);
     
     public boolean isGreaterThanInTB(Item item, 
             String propertyIdInTB, 
@@ -54,10 +58,16 @@ public interface TQCoverageService {
     public boolean isMaxItemsCompareToInputItems(double maxItems, 
             int inputItems);
     
-    public boolean isValueOfRunningTotal(Item item, String propertyId);
+    public boolean isValueOfRunningTotal(Item item, 
+            String propertyId);
     
     public boolean isRunningTotalGreaterThanMaxItemsTotal(int runningTotal, 
             double maxItemsTotal);
     
     public List<CellItem> getItemIdByDiscriminationIndex(Grid grid);
+    
+    public boolean insertNewTQCoverage(TopicCoverage coverage, 
+            TQItems items, 
+            TQAnswerKey answerKey, 
+            Grid grid);
 }

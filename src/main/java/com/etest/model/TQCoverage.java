@@ -14,6 +14,7 @@ import java.util.Date;
 public class TQCoverage extends TeamTeach {
     
     private int TqCoverageId;
+    private String examTitle;
     private Date dateCreated;
     private double totalHoursCoverage;
     private int totalItems;
@@ -21,6 +22,10 @@ public class TQCoverage extends TeamTeach {
 
     public int getTqCoverageId() {
         return TqCoverageId;
+    }
+
+    public String getExamTitle() {
+        return examTitle;
     }
 
     public Date getDateCreated() {
@@ -41,6 +46,10 @@ public class TQCoverage extends TeamTeach {
 
     public void setTqCoverageId(int TqCoverageId) {
         this.TqCoverageId = TqCoverageId;
+    }
+
+    public void setExamTitle(String examTitle) {
+        this.examTitle = examTitle;
     }
 
     public void setDateCreated(Date dateCreated) {

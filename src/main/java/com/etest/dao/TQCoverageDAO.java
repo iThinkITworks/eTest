@@ -11,19 +11,27 @@ import com.etest.model.BloomsTaxonomy;
 import com.etest.model.CellItem;
 import com.etest.model.ItemKeys;
 import com.etest.model.Syllabus;
+import com.etest.model.TQAnswerKey;
+import com.etest.model.TQCoverage;
+import com.etest.model.TQItems;
+import com.etest.model.TopicCoverage;
 import com.etest.service.SyllabusService;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -70,7 +78,6 @@ public class TQCoverageDAO {
         Statement stmt = null;
         ResultSet rs = null;
         List<CellItem> cellItemIdList = new ArrayList<>();
-//        List<BloomsTaxonomy> bloomsClassIdList = BloomsClassDAO.
         
         try {
             int syllabusId = 0;
@@ -366,5 +373,140 @@ public class TQCoverageDAO {
         }
         
         return cellItemIdList;
+    }
+    
+    public static boolean insertNewTQCoverage(TopicCoverage coverage, 
+            TQItems items, 
+            TQAnswerKey answerKey, 
+            Grid grid) {
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement tqCoverage = null;
+        PreparedStatement topicCoverage = null;
+        PreparedStatement tqCases = null;
+        PreparedStatement tqItems = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            conn.setAutoCommit(false);
+            tqCoverage = conn.prepareStatement("INSERT INTO tq_coverage SET "
+                    + "ExamTitle = ?, "
+                    + "CurriculumID = ?, "
+                    + "TeamTeachID = ?, "
+                    + "DateCreated = now(), "
+                    + "TotalHoursCoverage = ?, "
+                    + "TotalItems = ? ");
+            tqCoverage.setString(1, coverage.getExamTitle());
+            tqCoverage.setInt(2, coverage.getCurriculumId());
+            tqCoverage.setInt(3, coverage.getTeamTeachId());
+            tqCoverage.setDouble(4, coverage.getTotalHoursCoverage());
+            tqCoverage.setInt(5, coverage.getTotalItems());
+            tqCoverage.executeUpdate();
+            
+            int tqCoverageId = 0;            
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT last_insert_id() AS TqCoverageID FROM tq_coverage ");
+            while(rs.next()){
+                tqCoverageId = CommonUtilities.convertStringToInt(rs.getString("TqCoverageID"));
+            }
+            
+            Collection c = grid.getContainerDataSource().getItemIds();
+            Iterator iterator = c.iterator();
+            while(iterator.hasNext()){
+                Item item = grid.getContainerDataSource().getItem(iterator.next());                
+                topicCoverage = conn.prepareStatement("INSERT INTO topic_coverage SET "
+                        + "TqCoverageID = ?, "
+                        + "SyllabusID = ?, "
+                        + "HoursSpent = ?, "
+                        + "Proportion = ?, "
+                        + "RememberU = ?, "
+                        + "RememberA = ?, "
+                        + "UnderstandU = ?, "
+                        + "UnderstandA = ?, "
+                        + "ApplyU = ?, "
+                        + "ApplyA = ?, "
+                        + "AnalyzeU = ?, "
+                        + "AnalyzeA = ?, "
+                        + "EvaluateU = ?, "
+                        + "EvaluateA = ?, "
+                        + "CreateU = ?, "
+                        + "CreateA = ?, "
+                        + "TotalItemsRequired = ? ");
+                topicCoverage.setInt(1, tqCoverageId);
+                topicCoverage.setInt(2, coverage.getSyllabusId());
+                topicCoverage.setDouble(3, (double) item.getItemProperty("Hrs Spent").getValue());
+                topicCoverage.setDouble(4, (double) item.getItemProperty("Proportion(%)").getValue());
+                topicCoverage.setInt(5,  (item.getItemProperty("Re-U(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Re-U(Pick)").getValue());
+                topicCoverage.setInt(6,  (item.getItemProperty("Re-A(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Re-A(Pick)").getValue());
+                topicCoverage.setInt(7,  (item.getItemProperty("Un-U(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Un-U(Pick)").getValue());
+                topicCoverage.setInt(8,  (item.getItemProperty("Un-A(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Un-A(Pick)").getValue());
+                topicCoverage.setInt(9,  (item.getItemProperty("Ap-U(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Ap-U(Pick)").getValue());
+                topicCoverage.setInt(10,  (item.getItemProperty("Ap-A(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Ap-A(Pick)").getValue());
+                topicCoverage.setInt(11,  (item.getItemProperty("An-U(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("An-U(Pick)").getValue());
+                topicCoverage.setInt(12,  (item.getItemProperty("An-A(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("An-A(Pick)").getValue());
+                topicCoverage.setInt(13,  (item.getItemProperty("Ev-U(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Ev-U(Pick)").getValue());
+                topicCoverage.setInt(14,  (item.getItemProperty("Ev-A(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Ev-A(Pick)").getValue());
+                topicCoverage.setInt(15,  (item.getItemProperty("Cr-U(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Cr-U(Pick)").getValue());
+                topicCoverage.setInt(16,  (item.getItemProperty("Cr-A(Pick)").getValue() == null) ? 0 : (int)item.getItemProperty("Cr-A(Pick)").getValue());
+                topicCoverage.setDouble(17, (double) item.getItemProperty("Max Items").getValue());
+                topicCoverage.executeUpdate();
+            }
+            
+            Map<Integer, Map<Integer, Integer>> cellCaseItemKey = items.getCellCaseItemKey();
+            for (Map.Entry<Integer, Map<Integer, Integer>> cellCase : cellCaseItemKey.entrySet()) {
+                Integer cellCaseId = cellCase.getKey();
+                Map<Integer, Integer> itemAndKeyMap = cellCase.getValue();
+                tqCases = conn.prepareStatement("INSERT INTO tq_cases SET "
+                    + "TqCoverageID = "+tqCoverageId+", "
+                    + "CellCaseID = "+cellCaseId+" ");
+                tqCases.executeUpdate();
+                
+                int tqCaseId = 0;            
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("SELECT last_insert_id() AS TqCaseId FROM tq_cases ");
+                while(rs.next()){
+                    tqCaseId = CommonUtilities.convertStringToInt(rs.getString("TqCaseId"));
+                }
+                
+                Map<Integer, Integer> cellItemKeyMap = itemAndKeyMap;
+                for (Map.Entry<Integer, Integer> entrySet : cellItemKeyMap.entrySet()) {
+                    Integer cellItemId = entrySet.getKey();
+                    Integer itemKeyId = entrySet.getValue();                    
+                    
+                    tqItems = conn.prepareStatement("INSERT INTO tq_items SET "
+                        + "TqCaseID = "+tqCaseId+", "
+                        + "CellItemID = "+cellItemId+", "
+                        + "ItemKeyID = "+itemKeyId+" ");
+                    tqItems.executeUpdate();
+                }
+            }
+            conn.commit();
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                tqCoverage.close();
+                topicCoverage.close();
+                tqCases.close();
+                tqItems.close();
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }

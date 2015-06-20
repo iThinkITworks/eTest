@@ -12,7 +12,6 @@ import com.etest.model.CellCase;
 import com.etest.service.CellCaseService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
 import com.vaadin.data.Property;
-import com.vaadin.event.ItemClickEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;

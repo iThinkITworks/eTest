@@ -39,6 +39,13 @@ public class UsersDAO {
                 VaadinSession.getCurrent().setAttribute("userId", rs.getString("UserID"));
                 result = true;
             }
+            
+//            stmt = conn.createStatement();
+//            rs = stmt.executeQuery("SELECT TeamTeachID FROM enrolled_semestral_team_view "
+//                    + "WHERE userId = "+VaadinSession.getCurrent().getAttribute("userId")+" ");
+//            while(rs.next()){
+//                VaadinSession.getCurrent().setAttribute("teamTeachId", rs.getString("TeamTeachID"));
+//            }
         } catch (SQLException ex) {
             ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
