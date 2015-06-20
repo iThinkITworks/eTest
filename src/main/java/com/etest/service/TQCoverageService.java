@@ -70,4 +70,6 @@ public interface TQCoverageService {
             TQItems items, 
             TQAnswerKey answerKey, 
             Grid grid);
+    
+    public List<TQCoverage> getAllTQCoverage();
 }

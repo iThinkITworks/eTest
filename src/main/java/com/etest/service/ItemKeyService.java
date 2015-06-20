@@ -51,4 +51,5 @@ public interface ItemKeyService {
     
     public List<Integer> getItemKeyIdsByCellItemId(int cellItemId);
     
+    public String getAnswerByItemKeyId(int itemKeyId);
 }

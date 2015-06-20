@@ -100,5 +100,10 @@ public class ItemKeyServiceImpl implements ItemKeyService {
     public List<Integer> getItemKeyIdsByCellItemId(int cellItemId) {
         return ItemKeyDAO.getItemKeyIdsByCellItemId(cellItemId);
     }
+
+    @Override
+    public String getAnswerByItemKeyId(int itemKeyId) {
+        return ItemKeyDAO.getAnswerByItemKeyId(itemKeyId);
+    }
     
 }

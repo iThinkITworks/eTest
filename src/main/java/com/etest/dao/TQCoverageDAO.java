@@ -7,10 +7,7 @@ package com.etest.dao;
 
 import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
-import com.etest.model.BloomsTaxonomy;
 import com.etest.model.CellItem;
-import com.etest.model.ItemKeys;
-import com.etest.model.Syllabus;
 import com.etest.model.TQAnswerKey;
 import com.etest.model.TQCoverage;
 import com.etest.model.TQItems;
@@ -27,8 +24,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -384,6 +379,7 @@ public class TQCoverageDAO {
         PreparedStatement topicCoverage = null;
         PreparedStatement tqCases = null;
         PreparedStatement tqItems = null;
+        PreparedStatement tqAnswerKey = null;
         Statement stmt = null;
         ResultSet rs = null;
         boolean result = false;
@@ -457,6 +453,7 @@ public class TQCoverageDAO {
             for (Map.Entry<Integer, Map<Integer, Integer>> cellCase : cellCaseItemKey.entrySet()) {
                 Integer cellCaseId = cellCase.getKey();
                 Map<Integer, Integer> itemAndKeyMap = cellCase.getValue();
+                
                 tqCases = conn.prepareStatement("INSERT INTO tq_cases SET "
                     + "TqCoverageID = "+tqCoverageId+", "
                     + "CellCaseID = "+cellCaseId+" ");
@@ -475,12 +472,29 @@ public class TQCoverageDAO {
                     Integer itemKeyId = entrySet.getValue();                    
                     
                     tqItems = conn.prepareStatement("INSERT INTO tq_items SET "
-                        + "TqCaseID = "+tqCaseId+", "
-                        + "CellItemID = "+cellItemId+", "
-                        + "ItemKeyID = "+itemKeyId+" ");
+                        + "TqCaseID = ?, "
+                        + "CellItemID = ?, "
+                        + "ItemKeyID = ? ");
+                    tqItems.setInt(1, tqCaseId);
+                    tqItems.setInt(2, cellItemId);
+                    tqItems.setInt(3, itemKeyId);
                     tqItems.executeUpdate();
                 }
             }
+            
+            for (Map.Entry<Integer, String> entrySet : answerKey.getItemNoAndAnswer().entrySet()) {
+                Integer itemNo = entrySet.getKey();
+                String answer = entrySet.getValue();
+                tqAnswerKey = conn.prepareStatement("INSERT INTO tq_answer_key SET "
+                        + "TqCoverageID = ?, "
+                        + "ItemNo = ?, "
+                        + "Answer = ? ");
+                tqAnswerKey.setInt(1, tqCoverageId);
+                tqAnswerKey.setInt(2, itemNo);
+                tqAnswerKey.setString(3, answer);
+                tqAnswerKey.executeUpdate();
+            }
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -508,5 +522,42 @@ public class TQCoverageDAO {
         }
         
         return result;
+    }
+    
+    public static List<TQCoverage> getAllTQCoverage(){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<TQCoverage> tqCoverageList = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM tq_coverage ");
+            while(rs.next()){
+                TQCoverage tqc = new TQCoverage();
+                tqc.setTqCoverageId(CommonUtilities.convertStringToInt(rs.getString("TqCoverageID")));
+                tqc.setExamTitle(rs.getString("ExamTitle"));
+                tqc.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
+                tqc.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
+                tqc.setTotalHoursCoverage(CommonUtilities.convertStringToDouble(rs.getString("TotalHoursCoverage")));
+                tqc.setTotalItems(CommonUtilities.convertStringToInt(rs.getString("TotalItems")));
+                tqc.setStatus(CommonUtilities.convertStringToInt(rs.getString("Status")));
+                tqCoverageList.add(tqc);
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return tqCoverageList;
     }
 }

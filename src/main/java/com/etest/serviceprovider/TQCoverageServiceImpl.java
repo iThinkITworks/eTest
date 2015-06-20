@@ -271,4 +271,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         return TQCoverageDAO.insertNewTQCoverage(coverage, items, answerKey, grid);
     }
 
+    @Override
+    public List<TQCoverage> getAllTQCoverage() {
+        return TQCoverageDAO.getAllTQCoverage();
+    }
+
 }

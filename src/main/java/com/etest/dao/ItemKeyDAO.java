@@ -398,4 +398,33 @@ public class ItemKeyDAO {
         return result;
     }
     
+    public static String getAnswerByItemKeyId(int itemKeyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String answer = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT Answer FROM item_keys "
+                    + "WHERE ItemKeyId = "+itemKeyId+" ");
+            while(rs.next()){
+                answer = rs.getString("Answer");
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return answer;
+    }
 }

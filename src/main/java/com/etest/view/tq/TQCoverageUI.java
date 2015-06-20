@@ -12,6 +12,7 @@ import com.etest.global.ShowErrorNotification;
 import com.etest.model.CellCase;
 import com.etest.model.CellItem;
 import com.etest.model.ItemKeys;
+import com.etest.model.TQAnswerKey;
 import com.etest.model.TQCoverage;
 import com.etest.model.TQItems;
 import com.etest.model.TopicCoverage;
@@ -424,25 +425,48 @@ public class TQCoverageUI extends VerticalLayout {
         cellCaseIdList.addAll(s);
 
         Map<Integer, Integer> itemAndKeyMap = null; 
-        List<Integer> keyList;
+        List<Integer> keyList = null;
         
-        Map<Integer, Map<Integer, Integer>> cellCaseItemKey = new HashMap<>();
+        Map<Integer, Map<Integer, Integer>> cellCaseItemKey = new HashMap<>();                
         for(Object cellCaseId : cellCaseIdList){  
             itemAndKeyMap = new HashMap<>();
             for(CellItem ci : cellItemIdList){                      
                 if((int)cellCaseId == ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()){
-                    keyList = k.getItemKeyIdsByCellItemId(ci.getCellItemId());                    
-                    itemAndKeyMap.put(ci.getCellItemId(), keyList.get(0));
-                }
-                cellCaseItemKey.put((Integer) cellCaseId, itemAndKeyMap);
+                    keyList = k.getItemKeyIdsByCellItemId(ci.getCellItemId());
+                    if(keyList.isEmpty()){
+                        ShowErrorNotification.error("No Item Key was found for STEM: \n"
+                                +cis.getCellItemById(ci.getCellItemId()).getItem());
+                        return;
+                    }
+                    itemAndKeyMap.put(ci.getCellItemId(), keyList.get(0));                    
+                }                
+                cellCaseItemKey.put((Integer) cellCaseId, itemAndKeyMap);  
+            }            
+        }
+        
+        int itemNo = 1;
+        Map<Integer, String> itemNoAndAnswer = new HashMap<>();
+        for (Map.Entry<Integer, Map<Integer, Integer>> cellCase : cellCaseItemKey.entrySet()) {
+            Object key = cellCase.getKey();
+            Map<Integer, Integer> itemAndKey = cellCase.getValue();  
+            for (Map.Entry<Integer, Integer> entrySet : itemAndKey.entrySet()) {
+                int itemId = entrySet.getKey();
+                int itemKeyId = entrySet.getValue();
+                itemNoAndAnswer.put(itemNo, k.getAnswerByItemKeyId(itemKeyId));
+                itemNo++;
             }
         }
         
         TQItems tqItems = new TQItems();
         tqItems.setCellCaseItemKey(cellCaseItemKey);
-        boolean result = tq.insertNewTQCoverage(coverage, tqItems, null, grid);
+        
+        TQAnswerKey answerKey = new TQAnswerKey();
+        answerKey.setItemNoAndAnswer(itemNoAndAnswer);
+        
+        boolean result = tq.insertNewTQCoverage(coverage, tqItems, answerKey, grid);
         if(result){
             Notification.show("Successfully Created TQ Coverage!", Notification.Type.HUMANIZED_MESSAGE);
+            clearFieldsAfterSaving();
             return;
         }
         
@@ -495,5 +519,11 @@ public class TQCoverageUI extends VerticalLayout {
         footer.getCell("Ev-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Ev-A(TB)")));
         footer.getCell("Cr-U(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-U(TB)")));
         footer.getCell("Cr-A(TB)").setText(String.valueOf(tq.getTotalForBloomsClassColumn(grid, "Cr-A(TB)")));
+    }
+    
+    void clearFieldsAfterSaving(){
+        examTitle.setValue("");
+        totalItems.setValue("0");
+        grid.getContainerDataSource().removeAllItems();
     }
 }
