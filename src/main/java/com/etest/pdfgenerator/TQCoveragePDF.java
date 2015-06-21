@@ -6,7 +6,6 @@
 package com.etest.pdfgenerator;
 
 import com.etest.global.ShowErrorNotification;
-import com.etest.model.CellItem;
 import com.etest.service.CellCaseService;
 import com.etest.service.CellItemService;
 import com.etest.service.ItemKeyService;
@@ -19,7 +18,6 @@ import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.serviceprovider.TeamTeachServiceImpl;
-import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -31,9 +29,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Window;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,6 +37,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.text.MutableAttributeSet;
@@ -70,13 +67,10 @@ public class TQCoveragePDF implements StreamSource {
     List<Integer> CellItemIdList = new ArrayList<>();
     
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    private int tqCoverageId;
     
-    public TQCoveragePDF(Grid grid, 
-            int curriculumId, 
-            int totalTestItems) {
-        this.grid = grid;
-        this.curriculumId = curriculumId;
-        this.totalTestItems = totalTestItems;
+    public TQCoveragePDF(int tqCoverageId) {
+        this.tqCoverageId = tqCoverageId;
         
         Document document = null;         
         
@@ -85,82 +79,80 @@ public class TQCoveragePDF implements StreamSource {
             PdfWriter.getInstance(document, outputStream);
             document.open();
             
-            List<CellItem> cellItemIdList = tq.getItemIdByDiscriminationIndex(grid);
-            int i = 1;        
-            for(CellItem ci : cellItemIdList){   
+            int itemNo = 1;
+            Map<Integer, Map<Integer, Integer>> tqCoverage = tq.getTQCoverage(getTQCoverageId());
+            for (Map.Entry<Integer, Map<Integer, Integer>> tqCases : tqCoverage.entrySet()) {
+                Integer tqCaseId = tqCases.getKey();
 
                 Label caseTopic = new Label();
-                caseTopic.setValue(ccs.getCellCaseById(ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()).getCaseTopic());
+                caseTopic.setValue(ccs.getCellCaseById(tqCaseId).getCaseTopic());
                 caseTopic.setContentMode(ContentMode.HTML); 
                 document.add(new Paragraph(caseTopic.getValue().replaceAll("(?i)<p.*?>.*?</p>", "")));
-                
-                List<String> keyList = k.getAllItemKey(ci.getCellItemId());
-                if(keyList.isEmpty()){
-                    ShowErrorNotification.error("No Item Key was found for STEM: \n"
-                            +cis.getCellItemById(ci.getCellItemId()).getItem());
-                    return;
+
+                Map<Integer, Integer> value = tqCases.getValue();
+                for (Map.Entry<Integer, Integer> itemIds : value.entrySet()) {
+                    Integer itemId = itemIds.getKey();
+                    Integer itemKeyId = itemIds.getValue();
+
+                    List<String> keyList = k.getAllItemKey(itemId);
+                    if(keyList.isEmpty()){
+                        ShowErrorNotification.error("No Item Key was found for STEM: \n"
+                                +cis.getCellItemById(itemId).getItem());
+                        return;
+                    }
+
+                    Label stem = new Label();            
+                    stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", keyList.get(0)));
+                    stem.setContentMode(ContentMode.HTML);
+                    document.add(new Paragraph(stem.getValue()));
+
+                    PdfPTable table = new PdfPTable(2);
+                    table.setWidthPercentage(100);
+                    table.setSpacingBefore(10f);
+                    table.setSpacingAfter(10f);
+
+                    //Set Column widths
+                    float[] columnWidths = {1f, 1f};
+                    table.setWidths(columnWidths);
+
+                    PdfPCell cell1 = new PdfPCell(new Paragraph("A) "+cis.getCellItemById(itemId).getOptionA()));
+    //                cell1.setBorderColor(BaseColor.BLUE);
+                    cell1.setBorder(0);
+                    cell1.setPaddingLeft(10);
+                    cell1.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+                    PdfPCell cell2 = new PdfPCell(new Paragraph("C) "+cis.getCellItemById(itemId).getOptionC()));
+    //                cell2.setBorderColor(BaseColor.GREEN);
+                    cell2.setBorder(0);
+                    cell2.setPaddingLeft(10);
+                    cell2.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+                    PdfPCell cell3 = new PdfPCell(new Paragraph("B) "+cis.getCellItemById(itemId).getOptionB()));
+    //                cell3.setBorderColor(BaseColor.RED);
+                    cell3.setBorder(0);
+                    cell3.setPaddingLeft(10);
+                    cell3.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+                    PdfPCell cell4 = new PdfPCell(new Paragraph("D) "+ cis.getCellItemById(itemId).getOptionD()));
+    //                cell4.setBorderColor(BaseColor.RED);
+                    cell4.setBorder(0);
+                    cell4.setPaddingLeft(10);
+                    cell4.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+                    cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+                    table.addCell(cell1);
+                    table.addCell(cell2);
+                    table.addCell(cell3);
+                    table.addCell(cell4);
+
+                    document.add(table);
+                    
+                    itemNo++;
                 }
-                
-                Label stem = new Label();            
-                stem.setValue(i+". "+cis.getCellItemById(ci.getCellItemId()).getItem().replace("{key}", keyList.get(0)));
-                stem.setContentMode(ContentMode.HTML);
-                document.add(new Paragraph(stem.getValue()));
-
-                PdfPTable table = new PdfPTable(2);
-                table.setWidthPercentage(100);
-                table.setSpacingBefore(10f);
-                table.setSpacingAfter(10f);
-                
-                //Set Column widths
-                float[] columnWidths = {1f, 1f};
-                table.setWidths(columnWidths);
-
-                PdfPCell cell1 = new PdfPCell(new Paragraph("A) "+cis.getCellItemById(ci.getCellItemId()).getOptionA()));
-//                cell1.setBorderColor(BaseColor.BLUE);
-                cell1.setBorder(0);
-                cell1.setPaddingLeft(10);
-                cell1.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-                cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                PdfPCell cell2 = new PdfPCell(new Paragraph("C) "+cis.getCellItemById(ci.getCellItemId()).getOptionC()));
-//                cell2.setBorderColor(BaseColor.GREEN);
-                cell2.setBorder(0);
-                cell2.setPaddingLeft(10);
-                cell2.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-                cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
-
-                PdfPCell cell3 = new PdfPCell(new Paragraph("B) "+cis.getCellItemById(ci.getCellItemId()).getOptionB()));
-//                cell3.setBorderColor(BaseColor.RED);
-                cell3.setBorder(0);
-                cell3.setPaddingLeft(10);
-                cell3.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-                cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                
-                PdfPCell cell4 = new PdfPCell(new Paragraph("D) "+ cis.getCellItemById(ci.getCellItemId()).getOptionD()));
-//                cell4.setBorderColor(BaseColor.RED);
-                cell4.setBorder(0);
-                cell4.setPaddingLeft(10);
-                cell4.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
-                cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
-                
-                table.addCell(cell1);
-                table.addCell(cell2);
-                table.addCell(cell3);
-                table.addCell(cell4);
-
-                document.add(table);
-                
-//                GridLayout glayout = new GridLayout(2, 2);
-//                glayout.setWidth("100%");
-//
-//                glayout.addComponent(new Label("A) "+cis.getCellItemById(ci.getCellItemId()).getOptionA(), ContentMode.HTML), 0, 0);
-//                glayout.addComponent(new Label("C) "+cis.getCellItemById(ci.getCellItemId()).getOptionC(), ContentMode.HTML), 0, 1);
-//                glayout.addComponent(new Label("B) "+cis.getCellItemById(ci.getCellItemId()).getOptionB(), ContentMode.HTML), 1, 0);
-//                glayout.addComponent(new Label("D) "+ cis.getCellItemById(ci.getCellItemId()).getOptionD(), ContentMode.HTML), 1, 1);
-
-                i++;
-            }
-            
+            }            
         } catch (DocumentException ex) {
             Logger.getLogger(TQCoveragePDF.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -170,6 +162,10 @@ public class TQCoveragePDF implements StreamSource {
         }
     }
 
+    int getTQCoverageId(){
+        return tqCoverageId;
+    }
+    
     Grid getTQCoverageGrid(){
         return grid;
     }

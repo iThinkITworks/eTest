@@ -6,6 +6,7 @@
 package com.etest.view.tq;
 
 import com.etest.model.TQCoverage;
+import com.etest.pdfgenerator.TQViewer;
 import com.etest.service.CurriculumService;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
@@ -13,8 +14,9 @@ import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -25,29 +27,29 @@ public class TQListUI extends TQListTableProperties{
 
     TQCoverageService coverageService = new TQCoverageServiceImpl();
     CurriculumService cs = new CurriculumServiceImpl();
-    
+        
     public TQListUI() {
         populateTable();
     }
     
-    void populateTable(){
+    public void populateTable(){
         removeAllItems();
         int i = 0;
         for(TQCoverage tq : coverageService.getAllTQCoverage()){
-            HorizontalLayout h = new HorizontalLayout();
-            h.setWidth("100%");
+            VerticalLayout v = new VerticalLayout();
+            v.setWidth("100%");
             
             Button view = new Button("view");
             view.setSizeFull();
             view.setData(tq.getTqCoverageId());
-            view.setIcon(FontAwesome.PENCIL);
+            view.setIcon(FontAwesome.VIDEO_CAMERA);
             view.addStyleName(ValoTheme.BUTTON_LINK);
             view.addStyleName(ValoTheme.BUTTON_TINY);
             view.addStyleName(ValoTheme.BUTTON_QUIET);
             view.addStyleName("button-container");
-//            edit.addClickListener(modifyBtnClickListener);
-            h.addComponent(view);
-            h.setComponentAlignment(view, Alignment.MIDDLE_LEFT);
+            view.addClickListener(remarksBtnClickListener);
+            v.addComponent(view);
+            v.setComponentAlignment(view, Alignment.MIDDLE_LEFT);
             
             Button approve = new Button("status");
             approve.setSizeFull();
@@ -56,11 +58,29 @@ public class TQListUI extends TQListTableProperties{
             approve.addStyleName(ValoTheme.BUTTON_TINY);
             approve.addStyleName(ValoTheme.BUTTON_QUIET);
             approve.addStyleName("button-container");
-            h.addComponent(approve);
-            h.setComponentAlignment(approve, Alignment.MIDDLE_LEFT);
+            v.addComponent(approve);
+            v.setComponentAlignment(approve, Alignment.MIDDLE_LEFT);
             
-            if(tq.getStatus() == 0){ approve.setIcon(FontAwesome.THUMBS_DOWN); }
-            else { approve.setIcon(FontAwesome.THUMBS_UP); } 
+            Button print = new Button("print");
+            print.setSizeFull();
+            print.setData(tq.getTqCoverageId());  
+            print.setIcon(FontAwesome.PRINT);
+            print.addStyleName(ValoTheme.BUTTON_LINK);
+            print.addStyleName(ValoTheme.BUTTON_TINY);
+            print.addStyleName(ValoTheme.BUTTON_QUIET);
+            print.addStyleName("button-container");
+            print.addClickListener(remarksBtnClickListener);
+            v.addComponent(print);
+            v.setComponentAlignment(print, Alignment.MIDDLE_LEFT);
+            
+            if(tq.getStatus() == 0){ 
+                approve.setIcon(FontAwesome.THUMBS_DOWN); 
+                print.setVisible(false);
+            }
+            else { 
+                approve.setIcon(FontAwesome.THUMBS_UP); 
+                print.setVisible(true);
+            } 
             
             addItem(new Object[]{
                 tq.getExamTitle(), 
@@ -68,9 +88,26 @@ public class TQListUI extends TQListTableProperties{
                 tq.getDateCreated(), 
                 tq.getTotalHoursCoverage(), 
                 tq.getTotalItems(), 
-                h
+                v
             }, i);
             i++;
         }
     }
+    
+    Button.ClickListener remarksBtnClickListener = (Button.ClickEvent event) -> {
+        if(event.getButton().getCaption().equals("view")){
+            Window sub = new TQCoverageWindow((int) event.getButton().getData());
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+            sub.addCloseListener((Window.CloseEvent e) -> {
+                populateTable();
+            });
+        } else {
+            Window pdf = new TQViewer((int) event.getButton().getData());
+            if(pdf.getParent() == null){
+                UI.getCurrent().addWindow(pdf);
+            }
+        }
+    };
 }

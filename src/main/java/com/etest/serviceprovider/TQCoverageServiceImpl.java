@@ -19,6 +19,7 @@ import com.vaadin.ui.TextField;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -274,6 +275,21 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     @Override
     public List<TQCoverage> getAllTQCoverage() {
         return TQCoverageDAO.getAllTQCoverage();
+    }
+
+    @Override
+    public Map<Integer, Map<Integer, Integer>> getTQCoverage(int tqCoverageId) {
+        return TQCoverageDAO.getTQCoverage(tqCoverageId);
+    }
+
+    @Override
+    public boolean approveTQCoverage(int tqCoverageId) {
+        return TQCoverageDAO.approveTQCoverage(tqCoverageId);
+    }
+
+    @Override
+    public boolean isTQCoverageApproved(int tqCoverageId) {
+        return TQCoverageDAO.isTQCoverageApproved(tqCoverageId);
     }
 
 }

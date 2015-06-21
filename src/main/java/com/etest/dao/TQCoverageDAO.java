@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -559,5 +560,110 @@ public class TQCoverageDAO {
         }
         
         return tqCoverageList;
+    }
+
+    public static Map<Integer, Map<Integer, Integer>> getTQCoverage(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement cases = null;
+        Statement items = null;
+        ResultSet rsCases = null;
+        ResultSet rsItems = null;
+        Map<Integer, Map<Integer, Integer>> tqCoverage = new HashMap<>();
+        Map<Integer, Integer> itemsAndKeys;
+        int tqCaseId;
+        
+        try {
+            cases = conn.createStatement();
+            rsCases = cases.executeQuery("SELECT TQCaseID, CellCaseID FROM tq_cases "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            while(rsCases.next()){
+//                tqCaseId = CommonUtilities.convertStringToInt(rsCases.getString("TqCaseID"));
+                itemsAndKeys = new HashMap<>();
+                items = conn.createStatement();
+                rsItems = items.executeQuery("SELECT CellItemID, ItemKeyID FROM tq_items "
+                        + "WHERE TqCaseID = "+CommonUtilities.convertStringToInt(rsCases.getString("TqCaseID"))+" ");
+                while(rsItems.next()){
+                    itemsAndKeys.put(CommonUtilities.convertStringToInt(rsItems.getString("CellItemID")), 
+                            CommonUtilities.convertStringToInt(rsItems.getString("ItemKeyID")));
+                }
+                tqCoverage.put(CommonUtilities.convertStringToInt(rsCases.getString("CellCaseID")), itemsAndKeys);
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                cases.close();
+                items.close();
+                rsCases.close();
+                rsItems.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return tqCoverage;
+    }
+
+    public static boolean approveTQCoverage(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE tq_coverage "
+                    + "SET Status = 1 "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+
+    public static boolean isTQCoverageApproved(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT Status FROM tq_coverage "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            while(rs.next()){
+                if(rs.getString("Status").equals("1")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }

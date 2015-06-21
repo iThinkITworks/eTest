@@ -5,7 +5,6 @@
  */
 package com.etest.view.tq;
 
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -18,10 +17,10 @@ import java.util.Date;
 public class TQListTableProperties extends Table {
 
     public TQListTableProperties() {
-        setWidth("100%");
+        setWidth("90%");
         setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
-        setStyleName("wordwrap-table");
+//        setStyleName("wordwrap-table");
         setImmediate(true);
         
         addContainerProperty("Exam Title", String.class, null);
@@ -29,7 +28,14 @@ public class TQListTableProperties extends Table {
         addContainerProperty("date created", Date.class, null);
         addContainerProperty("Total Hours", Double.class, null);
         addContainerProperty("Total Items", Integer.class, null);
-        addContainerProperty("modify", HorizontalLayout.class, null);
+        addContainerProperty("remarks", VerticalLayout.class, null);
+        
+        setColumnAlignment("date created", Align.CENTER);
+        setColumnAlignment("Total Hours", Align.CENTER);
+        setColumnAlignment("Total Items", Align.CENTER);
+        setColumnAlignment("remarks", Align.CENTER);
+        
+        setColumnWidth("remarks", 80);
     }
     
 }

@@ -15,6 +15,8 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeListener {
 
+    TQListUI tqListUI = new TQListUI();
+    
     public TQMainUI() {
         setWidth("100%");
         addStyleName("bar");
@@ -29,7 +31,7 @@ public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeList
         v = new VerticalLayout();
         v.setCaption("TQ List");
         v.setWidth("100%");
-        v.addComponent(new TQListUI());
+        v.addComponent(tqListUI);
         v.setMargin(true);        
         addComponent(v);
         
@@ -39,6 +41,7 @@ public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeList
     @Override
     public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
         //TODO
+        tqListUI.populateTable();
     }
         
 }

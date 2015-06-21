@@ -18,22 +18,17 @@ import com.vaadin.ui.Window;
 public class TQViewer extends Window {
 
     Grid grid = new Grid();    
-    private final int curriculumId;
-    private final int totalTestItems;
+    private final int tqCoverageId;
     
-    public TQViewer(Grid grid, 
-            int curriculumId, 
-            int totalTestItems) {
-        this.grid = grid;
-        this.curriculumId = curriculumId;
-        this.totalTestItems = totalTestItems;
+    public TQViewer(int tqCoverageId) {
+        this.tqCoverageId = tqCoverageId;
         
         setSizeFull();
         setWidth("900px");
         setHeight("600px");
         center();
                 
-        StreamResource resource = new StreamResource(new TQCoveragePDF(getTQCoverageGrid(), getCurriculumId(), getTotalTestItems()), "TQ.pdf");
+        StreamResource resource = new StreamResource(new TQCoveragePDF(getTQCoverageId()), "TQ.pdf");
         resource.setMIMEType("application/pdf");       
 
         VerticalLayout v = new VerticalLayout();
@@ -47,15 +42,7 @@ public class TQViewer extends Window {
         setContent(v);
     }
     
-    Grid getTQCoverageGrid(){
-        return grid;
-    }
-    
-    int getCurriculumId(){
-        return curriculumId;
-    }
-        
-    int getTotalTestItems(){
-        return totalTestItems;
+    int getTQCoverageId(){
+        return tqCoverageId;
     }
 }

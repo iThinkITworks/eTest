@@ -14,6 +14,7 @@ import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.TextField;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -72,4 +73,10 @@ public interface TQCoverageService {
             Grid grid);
     
     public List<TQCoverage> getAllTQCoverage();
+    
+    public Map<Integer, Map<Integer, Integer>> getTQCoverage(int tqCoverageId);
+    
+    public boolean approveTQCoverage(int tqCoverageId);
+    
+    public boolean isTQCoverageApproved(int tqCoverageId);
 }
