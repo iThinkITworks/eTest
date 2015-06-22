@@ -666,4 +666,29 @@ public class TQCoverageDAO {
         
         return result;
     }
+    
+    public static boolean deleteTQCoverage(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("DELETE FROM tq_coverage "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
 }

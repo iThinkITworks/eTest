@@ -292,4 +292,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         return TQCoverageDAO.isTQCoverageApproved(tqCoverageId);
     }
 
+    @Override
+    public boolean deleteTQCoverage(int tqCoverageId) {
+        return TQCoverageDAO.deleteTQCoverage(tqCoverageId);
+    }
+
 }

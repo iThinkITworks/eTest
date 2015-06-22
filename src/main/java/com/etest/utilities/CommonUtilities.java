@@ -160,6 +160,10 @@ public class CommonUtilities {
     }
     
     public static String escapeSingleQuote(Object object){
+        return object.toString().replace("'", "\'");
+    }
+    
+    public static String addSingleQuoteForQuery(Object object){
         return object.toString().replace("'", "\\'");
     }
     

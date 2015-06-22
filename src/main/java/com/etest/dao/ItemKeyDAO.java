@@ -70,7 +70,7 @@ public class ItemKeyDAO {
             rs = stmt.executeQuery("SELECT ItemKey FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" ");
             while(rs.next()){
-                keyList.add(rs.getString("ItemKey"));
+                keyList.add(CommonUtilities.escapeSingleQuote(rs.getString("ItemKey")));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -102,8 +102,8 @@ public class ItemKeyDAO {
             while(rs.next()){
                 ItemKeys k = new ItemKeys();
                 k.setItemKeyId(CommonUtilities.convertStringToInt(rs.getString("ItemKeyID")));
-                k.setItemKey(rs.getString("ItemKey"));
-                k.setAnswer(rs.getString("Answer"));
+                k.setItemKey(CommonUtilities.escapeSingleQuote(rs.getString("ItemKey")));
+                k.setAnswer(CommonUtilities.escapeSingleQuote(rs.getString("Answer")));
                 keyList.add(k);
             }
         } catch (SQLException ex) {
@@ -164,10 +164,10 @@ public class ItemKeyDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT ItemKey FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" "
-                    + "AND Answer = '"+answer+"' "
+                    + "AND Answer = '"+answer.replace("'", "\\'")+"' "
                     + "ORDER BY ItemKeyID DESC LIMIT 1");
             while(rs.next()){
-                key = rs.getString("ItemKey");
+                key = CommonUtilities.escapeSingleQuote(rs.getString("ItemKey"));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -197,7 +197,7 @@ public class ItemKeyDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT COUNT(*) AS itemKey FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" "
-                    + "AND Answer = '"+answer+"' ");
+                    + "AND Answer = '"+answer.replace("'", "\\'")+"' ");
             while(rs.next()){
                 if(rs.getString("itemKey").equals("1")){
                     result = true;
@@ -231,7 +231,7 @@ public class ItemKeyDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT ItemKeyID FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" "
-                    + "AND Answer = '"+answer+"' ");
+                    + "AND Answer = '"+answer.replace("'", "\\'")+"' ");
             while(rs.next()){
                 itemKeyId = CommonUtilities.convertStringToInt(rs.getString("ItemKeyID"));
             }
@@ -263,13 +263,13 @@ public class ItemKeyDAO {
         
         try {
             pstmt = conn.prepareStatement("UPDATE cell_items SET "
-                    + ""+optionColumn+" = '"+optionValue+"' "
+                    + ""+optionColumn+" = '"+optionValue.replace("'", "\\'")+"' "
                     + "WHERE cellItemId = "+cellItemId+" ");
             pstmt.executeUpdate();
             
             if(isOptionAKeyExist){
                 pstmt = conn.prepareStatement("UPDATE item_keys SET "
-                        + "Answer = '"+optionValue+"' "
+                        + "Answer = '"+optionValue.replace("'", "\\'")+"' "
                         + "WHERE ItemKeyID = "+itemKeyId+" ");
                 pstmt.executeUpdate();
             }
@@ -300,10 +300,14 @@ public class ItemKeyDAO {
         PreparedStatement pstmt = null;
         boolean result = false;
         
+        System.out.println("key: "+keyValue);
+        System.out.println("itemKeyId: "+itemKeyId);
+        System.out.println("optionKeyExist: "+isOptionKeyExist);
+        
         try {
             if(isOptionKeyExist){
                 pstmt = conn.prepareStatement("UPDATE item_keys SET "
-                        + "ItemKey = '"+keyValue+"' "
+                        + "ItemKey = '"+keyValue.replace("'", "\\'")+"' "
                         + "WHERE ItemKeyID = "+itemKeyId+" ");
                 pstmt.executeUpdate();
             } else {
@@ -373,8 +377,8 @@ public class ItemKeyDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT COUNT(*) AS result FROM item_keys "
                     + "WHERE CellItemID = "+cellItemId+" "
-                    + "AND ItemKey = '"+key+"' "
-                    + "AND Answer = '"+answer+"' "
+                    + "AND ItemKey = '"+key.replace("'", "\\'")+"' "
+                    + "AND Answer = '"+answer.replace("'", "\\'")+"' "
                     + "ORDER BY ItemKeyID DESC LIMIT 1");
             while(rs.next()){
                 if(rs.getString("result").equals("1")){
@@ -409,7 +413,7 @@ public class ItemKeyDAO {
             rs = stmt.executeQuery("SELECT Answer FROM item_keys "
                     + "WHERE ItemKeyId = "+itemKeyId+" ");
             while(rs.next()){
-                answer = rs.getString("Answer");
+                answer = CommonUtilities.escapeSingleQuote(rs.getString("Answer"));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());

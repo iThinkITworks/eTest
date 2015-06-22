@@ -79,4 +79,6 @@ public interface TQCoverageService {
     public boolean approveTQCoverage(int tqCoverageId);
     
     public boolean isTQCoverageApproved(int tqCoverageId);
+    
+    public boolean deleteTQCoverage(int tqCoverageId);
 }

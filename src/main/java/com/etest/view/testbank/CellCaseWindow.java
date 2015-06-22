@@ -145,7 +145,7 @@ public class CellCaseWindow extends Window {
         
         CellCase c = new CellCase();
         c.setSyllabusId((int) topic.getValue());
-        c.setCaseTopic(caseTopic.getValue().trim());
+        c.setCaseTopic(CommonUtilities.escapeSingleQuote(caseTopic.getValue().trim()));
         c.setUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
         c.setCellCaseId(getCellCaseId());
         

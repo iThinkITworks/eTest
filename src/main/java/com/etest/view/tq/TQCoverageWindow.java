@@ -22,6 +22,8 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.List;
@@ -144,6 +146,10 @@ public class TQCoverageWindow extends Window {
     Button.ClickListener buttonClickListener = (Button.ClickEvent e) -> {
         if(e.getButton().getCaption().equals("DELETE")){
             //TODO
+            Window sub = confirmDeleteWindow();
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
         } else {
             boolean result = tq.approveTQCoverage(getTQCoverageId());
             if(result){
@@ -152,4 +158,34 @@ public class TQCoverageWindow extends Window {
         }
     };
     
+    Window confirmDeleteWindow(){        
+        Window sub = new Window("TQ Coverage");
+        sub.setWidth("250px");
+        sub.setResizable(false);
+        sub.setModal(true);
+        sub.center();
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+             
+        Button delete  = new Button("DELETE TQ?");
+        delete.setWidth("100%");
+        delete.setIcon(FontAwesome.TRASH_O);
+        delete.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        delete.addStyleName(ValoTheme.BUTTON_SMALL);
+        delete.addClickListener((Button.ClickEvent event) -> {
+            boolean result = tq.deleteTQCoverage(getTQCoverageId());
+            if(result){
+                sub.close();
+                close();
+            }
+        });
+        v.addComponent(delete);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
 }

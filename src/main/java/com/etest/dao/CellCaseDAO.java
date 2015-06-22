@@ -38,8 +38,8 @@ public class CellCaseDAO {
             while(rs.next()){
                 CellCase c = new CellCase();
                 c.setSubject(rs.getString("CurrSubject"));
-                c.setTopic(rs.getString("Topic"));
-                c.setCaseTopic(rs.getString("caseTopic"));
+                c.setTopic(CommonUtilities.escapeSingleQuote(rs.getString("Topic")));
+                c.setCaseTopic(CommonUtilities.escapeSingleQuote(rs.getString("caseTopic")));
                 c.setUsername_(rs.getString("Author"));
                 c.setApprovalStatus(CommonUtilities.convertStringToInt(rs.getString("ApprovalStatus")));
                 cellCaseList.add(c);
@@ -76,8 +76,8 @@ public class CellCaseDAO {
                 CellCase c = new CellCase();
                 c.setCellCaseId(CommonUtilities.convertStringToInt(rs.getString("CellCaseID")));
                 c.setSubject(rs.getString("CurrSubject"));
-                c.setTopic(rs.getString("Topic"));
-                c.setCaseTopic(rs.getString("caseTopic"));
+                c.setTopic(CommonUtilities.escapeSingleQuote(rs.getString("Topic")));
+                c.setCaseTopic(CommonUtilities.escapeSingleQuote(rs.getString("caseTopic")));
                 c.setUsername_(rs.getString("Author"));
                 c.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
                 c.setApprovalStatus(CommonUtilities.convertStringToInt(rs.getString("ApprovalStatus")));
@@ -113,8 +113,8 @@ public class CellCaseDAO {
                     + "AND CellCaseStatus = 0 ");
             while(rs.next()){                
                 c.setSubject(rs.getString("CurrSubject"));
-                c.setTopic(rs.getString("Topic"));
-                c.setCaseTopic(rs.getString("caseTopic"));
+                c.setTopic(CommonUtilities.escapeSingleQuote(rs.getString("Topic")));
+                c.setCaseTopic(CommonUtilities.escapeSingleQuote(rs.getString("caseTopic")));
                 c.setUsername_(rs.getString("Author"));
                 c.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 c.setSyllabusId(CommonUtilities.convertStringToInt(rs.getString("SyllabusID")));
@@ -150,8 +150,8 @@ public class CellCaseDAO {
             while(rs.next()){
                 CellCase c = new CellCase();
                 c.setSubject(rs.getString("CurrSubject"));
-                c.setTopic(rs.getString("Topic"));
-                c.setCaseTopic(rs.getString("caseTopic"));
+                c.setTopic(CommonUtilities.escapeSingleQuote(rs.getString("Topic")));
+                c.setCaseTopic(CommonUtilities.escapeSingleQuote(rs.getString("caseTopic")));
                 c.setUsername_(rs.getString("Username_"));
                 cellCaseList.add(c);
             }

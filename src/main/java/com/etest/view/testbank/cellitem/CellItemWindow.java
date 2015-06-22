@@ -246,19 +246,20 @@ public class CellItemWindow extends Window {
              * OPTION A
              */
             optionA.setValue(ci.getOptionA());
-            isOptionAKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionA()));
+            isOptionAKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionA());
             if(isOptionAKeyExist){
                 keyA.setValue(k.getItemKey(getCellItemId(), ci.getOptionA()));                
             } 
-            keyA.setData(k.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionA())));
+            keyA.setData(k.getItemKeyId(getCellItemId(), ci.getOptionA()));
             
             /**
              * OPTION B
              */
             optionB.setValue(ci.getOptionB()); 
-            isOptionBKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionB()));
-            if(k.isKeyExist(getCellItemId(), ci.getOptionB())){
-                keyB.setValue(k.getItemKey(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionB())));                
+            isOptionBKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionB());
+//            if(k.isKeyExist(getCellItemId(), ci.getOptionB())){
+            if(isOptionBKeyExist){
+                keyB.setValue(k.getItemKey(getCellItemId(), ci.getOptionB()));                
             }
             keyB.setData(k.getItemKeyId(getCellItemId(), ci.getOptionB()));
             
@@ -266,21 +267,23 @@ public class CellItemWindow extends Window {
              * OPTION C
              */
             optionC.setValue(ci.getOptionC());   
-            isOptionCKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionC()));
-            if(k.isKeyExist(getCellItemId(), ci.getOptionC())){
+            isOptionCKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionC());
+//            if(k.isKeyExist(getCellItemId(), ci.getOptionC())){
+            if(isOptionCKeyExist){    
                 keyC.setValue(k.getItemKey(getCellItemId(), ci.getOptionC()));                
             }
-            keyC.setData(k.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionC())));
+            keyC.setData(k.getItemKeyId(getCellItemId(), ci.getOptionC()));
             
             /**
              * OPTION D
              */
             optionD.setValue(ci.getOptionD());
-            isOptionDKeyExist = k.isKeyExist(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionD()));
-            if(k.isKeyExist(getCellItemId(), ci.getOptionD())){
+            isOptionDKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionD());
+//            if(k.isKeyExist(getCellItemId(), ci.getOptionD())){
+            if(isOptionDKeyExist){
                 keyD.setValue(k.getItemKey(getCellItemId(), ci.getOptionD()));                
             }
-            keyD.setData(k.getItemKeyId(getCellItemId(), CommonUtilities.escapeSingleQuote(ci.getOptionD())));
+            keyD.setData(k.getItemKeyId(getCellItemId(), ci.getOptionD()));
                                
             h.addComponent(remove);
             h.setComponentAlignment(remove, Alignment.MIDDLE_RIGHT);
@@ -333,32 +336,36 @@ public class CellItemWindow extends Window {
         Map<String, String> keys = new HashMap<>();
         if(keyA.getValue().trim().isEmpty()){            
         } else {
-            keys.put(keyA.getValue().trim(), optionA.getValue().trim());
+            keys.put(CommonUtilities.escapeSingleQuote(keyA.getValue().trim()), 
+                    CommonUtilities.escapeSingleQuote(optionA.getValue().trim()));
         }
         
         if(keyA.getValue().trim().isEmpty()){
         } else {
-            keys.put(keyB.getValue().trim(), optionB.getValue().trim());
+            keys.put(CommonUtilities.escapeSingleQuote(keyB.getValue().trim()), 
+                    CommonUtilities.escapeSingleQuote(optionB.getValue().trim()));
         }
         
         if(keyC.getValue().trim().isEmpty()){
         } else {
-            keys.put(keyC.getValue().trim(), optionC.getValue().trim());
+            keys.put(CommonUtilities.escapeSingleQuote(keyC.getValue().trim()), 
+                    CommonUtilities.escapeSingleQuote(optionC.getValue().trim()));
         }
         
         if(keyD.getValue().trim().isEmpty()){
         } else {
-            keys.put(keyD.getValue().trim(), optionD.getValue().trim());
+            keys.put(CommonUtilities.escapeSingleQuote(keyD.getValue().trim()), 
+                    CommonUtilities.escapeSingleQuote(optionD.getValue().trim()));
         }
                 
         CellItem ci = new CellItem();
         ci.setCellCaseId(getCellCaseId());
         ci.setBloomsClassId((int) bloomsTaxonomy.getValue());
-        ci.setItem(stem.getValue().trim());
-        ci.setOptionA(optionA.getValue().trim());
-        ci.setOptionB(optionB.getValue().trim());
-        ci.setOptionC(optionC.getValue().trim());
-        ci.setOptionD(optionD.getValue().trim());
+        ci.setItem(CommonUtilities.escapeSingleQuote(stem.getValue().trim()));
+        ci.setOptionA(CommonUtilities.escapeSingleQuote(optionA.getValue().trim()));
+        ci.setOptionB(CommonUtilities.escapeSingleQuote(optionB.getValue().trim()));
+        ci.setOptionC(CommonUtilities.escapeSingleQuote(optionC.getValue().trim()));
+        ci.setOptionD(CommonUtilities.escapeSingleQuote(optionD.getValue().trim()));
         ci.setUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
         ci.setItemKeys(keys);        
         
