@@ -679,16 +679,49 @@ public class TQCoverageDAO {
             
             result = true;
         } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 pstmt.close();
                 conn.close();
             } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
                 Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         return result;
+    }
+    
+    public static Map<Integer, String> getTQCoverageAnswerKey(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Map<Integer, String> answerKey = new HashMap<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT ItemNo, Answer FROM tq_answer_key "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            while(rs.next()){
+                answerKey.put(CommonUtilities.convertStringToInt(rs.getString("ItemNo")), 
+                        CommonUtilities.escapeSingleQuote(rs.getString("Answer")));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return answerKey;
     }
 }

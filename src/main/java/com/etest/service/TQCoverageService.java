@@ -81,4 +81,6 @@ public interface TQCoverageService {
     public boolean isTQCoverageApproved(int tqCoverageId);
     
     public boolean deleteTQCoverage(int tqCoverageId);
+    
+    public Map<Integer, String> getTQCoverageAnswerKey(int tqCoverageId);
 }

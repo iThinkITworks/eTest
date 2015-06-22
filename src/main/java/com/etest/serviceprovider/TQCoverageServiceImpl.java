@@ -297,4 +297,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         return TQCoverageDAO.deleteTQCoverage(tqCoverageId);
     }
 
+    @Override
+    public Map<Integer, String> getTQCoverageAnswerKey(int tqCoverageId) {
+        return TQCoverageDAO.getTQCoverageAnswerKey(tqCoverageId);
+    }
+
 }

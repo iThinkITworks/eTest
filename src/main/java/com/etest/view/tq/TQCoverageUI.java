@@ -220,7 +220,6 @@ public class TQCoverageUI extends VerticalLayout {
         sub.setWidth("500px");
         sub.setModal(true);
         sub.center();
-//        sub.setClosable(false);
         sub.setResizable(false);
         
         VerticalLayout v = new VerticalLayout();

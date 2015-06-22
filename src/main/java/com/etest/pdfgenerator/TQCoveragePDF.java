@@ -149,10 +149,22 @@ public class TQCoveragePDF implements StreamSource {
                     table.addCell(cell4);
 
                     document.add(table);
-                    
+                                        
                     itemNo++;
                 }
-            }            
+            }         
+            
+            document.newPage();
+            document.add(new Paragraph("Answer Key: "));
+            
+            Map<Integer, String> answerKey = tq.getTQCoverageAnswerKey(getTQCoverageId());
+            for (Map.Entry<Integer, String> entrySet : answerKey.entrySet()) {
+                Integer key = entrySet.getKey();
+                String value = entrySet.getValue();
+                
+                document.add(new Paragraph(key+": "+value));                
+            }         
+            
         } catch (DocumentException ex) {
             Logger.getLogger(TQCoveragePDF.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

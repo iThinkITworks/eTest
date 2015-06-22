@@ -80,7 +80,7 @@ public class ViewStemWindow extends Window {
                     +ci.getItem());
             return null;
         }
-        stem = ci.getItem().replace("{key}", keyList.get(getKeyIndex()));
+        stem = ci.getItem().replace("{key}", "<u>"+keyList.get(getKeyIndex())+"</u>");
                 
         label.setValue("<b>STEM</b>: "+getStem());
         label.setContentMode(ContentMode.HTML);
