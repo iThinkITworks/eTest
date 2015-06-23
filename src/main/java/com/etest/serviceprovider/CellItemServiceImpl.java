@@ -9,6 +9,7 @@ import com.etest.dao.CellItemDAO;
 import com.etest.model.CellItem;
 import com.etest.service.CellItemService;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -68,5 +69,10 @@ public class CellItemServiceImpl implements CellItemService {
             int bloomsClassId) {
         return CellItemDAO.getTotalAnalyzeItem(syllabusId, 
                 bloomsClassId);
+    }
+
+    @Override
+    public Map<String, Character> getOptionAnswer(int cellItemId) {
+        return CellItemDAO.getOptionAnswer(cellItemId);
     }
 }

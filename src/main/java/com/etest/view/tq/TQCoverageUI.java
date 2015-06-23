@@ -425,10 +425,12 @@ public class TQCoverageUI extends VerticalLayout {
 
         Map<Integer, Integer> itemAndKeyMap = null; 
         List<Integer> keyList = null;
-        
-        Map<Integer, Map<Integer, Integer>> cellCaseItemKey = new HashMap<>();                
+                
+        int itemNo = 1;
+        List<TQAnswerKey> tqAnswerKeyList;
+        Map<Integer, List<TQAnswerKey>> cellCaseItemKey = new HashMap<>();                
         for(Object cellCaseId : cellCaseIdList){  
-            itemAndKeyMap = new HashMap<>();
+            tqAnswerKeyList = new ArrayList<>();
             for(CellItem ci : cellItemIdList){                      
                 if((int)cellCaseId == ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()){
                     keyList = k.getItemKeyIdsByCellItemId(ci.getCellItemId());
@@ -437,32 +439,23 @@ public class TQCoverageUI extends VerticalLayout {
                                 +cis.getCellItemById(ci.getCellItemId()).getItem());
                         return;
                     }
-                    itemAndKeyMap.put(ci.getCellItemId(), keyList.get(0));                    
+                    TQAnswerKey tqAnswerKey = new TQAnswerKey();
+                    tqAnswerKey.setCellItemId(ci.getCellItemId());
+                    tqAnswerKey.setItemKeyId(keyList.get(0));
+                    tqAnswerKey.setItemNo(itemNo);
+                    tqAnswerKey.setAnswer(k.getAnswerByItemKeyId(keyList.get(0)));
+                    tqAnswerKeyList.add(tqAnswerKey);
+                    
+                    itemNo++;                   
                 }                
-                cellCaseItemKey.put((Integer) cellCaseId, itemAndKeyMap);  
+                cellCaseItemKey.put((Integer) cellCaseId, tqAnswerKeyList);  
             }            
-        }
-        
-        int itemNo = 1;
-        Map<Integer, String> itemNoAndAnswer = new HashMap<>();
-        for (Map.Entry<Integer, Map<Integer, Integer>> cellCase : cellCaseItemKey.entrySet()) {
-            Object key = cellCase.getKey();
-            Map<Integer, Integer> itemAndKey = cellCase.getValue();  
-            for (Map.Entry<Integer, Integer> entrySet : itemAndKey.entrySet()) {
-                int itemId = entrySet.getKey();
-                int itemKeyId = entrySet.getValue();
-                itemNoAndAnswer.put(itemNo, k.getAnswerByItemKeyId(itemKeyId));
-                itemNo++;
-            }
         }
         
         TQItems tqItems = new TQItems();
         tqItems.setCellCaseItemKey(cellCaseItemKey);
-        
-        TQAnswerKey answerKey = new TQAnswerKey();
-        answerKey.setItemNoAndAnswer(itemNoAndAnswer);
-        
-        boolean result = tq.insertNewTQCoverage(coverage, tqItems, answerKey, grid);
+              
+        boolean result = tq.insertNewTQCoverage(coverage, tqItems, cellCaseItemKey, grid);
         if(result){
             Notification.show("Successfully Created TQ Coverage!", Notification.Type.HUMANIZED_MESSAGE);
             clearFieldsAfterSaving();

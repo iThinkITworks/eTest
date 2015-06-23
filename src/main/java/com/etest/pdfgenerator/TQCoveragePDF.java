@@ -6,6 +6,7 @@
 package com.etest.pdfgenerator;
 
 import com.etest.global.ShowErrorNotification;
+import com.etest.model.TQAnswerKey;
 import com.etest.service.CellCaseService;
 import com.etest.service.CellItemService;
 import com.etest.service.ItemKeyService;
@@ -156,13 +157,11 @@ public class TQCoveragePDF implements StreamSource {
             
             document.newPage();
             document.add(new Paragraph("Answer Key: "));
-            
-            Map<Integer, String> answerKey = tq.getTQCoverageAnswerKey(getTQCoverageId());
-            for (Map.Entry<Integer, String> entrySet : answerKey.entrySet()) {
-                Integer key = entrySet.getKey();
-                String value = entrySet.getValue();
-                
-                document.add(new Paragraph(key+": "+value));                
+                        
+            itemNo = 1;
+            List<TQAnswerKey> answerKey = tq.getTQCoverageAnswerKey(getTQCoverageId());
+            for (TQAnswerKey t : answerKey) {
+                document.add(new Paragraph(t.getItemNo()+": "+cis.getOptionAnswer(t.getCellItemId()).get(t.getAnswer())));
             }         
             
         } catch (DocumentException ex) {

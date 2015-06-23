@@ -5,7 +5,7 @@
  */
 package com.etest.model;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,13 +15,18 @@ import java.util.Map;
 public class TQItems extends TQCases {
     
     private int tqItemId;
-    private Map<Integer, Map<Integer, Integer>> cellCaseItemKey;
+    private int itemKeyId;
+    private Map<Integer, List<TQAnswerKey>> cellCaseItemKey;
 
     public int getTqItemId() {
         return tqItemId;
     }
 
-    public Map<Integer, Map<Integer, Integer>> getCellCaseItemKey() {
+    public int getItemKeyId() {
+        return itemKeyId;
+    }
+
+    public Map<Integer, List<TQAnswerKey>> getCellCaseItemKey() {
         return cellCaseItemKey;
     }
     
@@ -29,7 +34,11 @@ public class TQItems extends TQCases {
         this.tqItemId = tqItemId;
     }
 
-    public void setCellCaseItemKey(Map<Integer, Map<Integer, Integer>> cellCaseItemKey) {
+    public void setItemKeyId(int itemKeyId) {
+        this.itemKeyId = itemKeyId;
+    }
+
+    public void setCellCaseItemKey(Map<Integer, List<TQAnswerKey>> cellCaseItemKey) {
         this.cellCaseItemKey = cellCaseItemKey;
     }
     

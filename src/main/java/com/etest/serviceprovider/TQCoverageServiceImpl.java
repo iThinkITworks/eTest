@@ -267,9 +267,12 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     @Override
     public boolean insertNewTQCoverage(TopicCoverage coverage, 
             TQItems items, 
-            TQAnswerKey answerKey, 
+            Map<Integer, List<TQAnswerKey>> cellCaseItemKey, 
             Grid grid) {
-        return TQCoverageDAO.insertNewTQCoverage(coverage, items, answerKey, grid);
+        return TQCoverageDAO.insertNewTQCoverage(coverage, 
+                items, 
+                cellCaseItemKey, 
+                grid);
     }
 
     @Override
@@ -298,7 +301,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public Map<Integer, String> getTQCoverageAnswerKey(int tqCoverageId) {
+    public List<TQAnswerKey> getTQCoverageAnswerKey(int tqCoverageId) {
         return TQCoverageDAO.getTQCoverageAnswerKey(tqCoverageId);
     }
 

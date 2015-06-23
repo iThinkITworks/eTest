@@ -373,7 +373,7 @@ public class TQCoverageDAO {
     
     public static boolean insertNewTQCoverage(TopicCoverage coverage, 
             TQItems items, 
-            TQAnswerKey answerKey, 
+            Map<Integer, List<TQAnswerKey>> cellCaseItemKey, 
             Grid grid) {
         Connection conn = DBConnection.connectToDB();
         PreparedStatement tqCoverage = null;
@@ -450,10 +450,9 @@ public class TQCoverageDAO {
                 topicCoverage.executeUpdate();
             }
             
-            Map<Integer, Map<Integer, Integer>> cellCaseItemKey = items.getCellCaseItemKey();
-            for (Map.Entry<Integer, Map<Integer, Integer>> cellCase : cellCaseItemKey.entrySet()) {
-                Integer cellCaseId = cellCase.getKey();
-                Map<Integer, Integer> itemAndKeyMap = cellCase.getValue();
+            Map<Integer, List<TQAnswerKey>> testMap = cellCaseItemKey;
+            for (Map.Entry<Integer, List<TQAnswerKey>> entrySet : testMap.entrySet()) {
+                Object cellCaseId = entrySet.getKey();
                 
                 tqCases = conn.prepareStatement("INSERT INTO tq_cases SET "
                     + "TqCoverageID = "+tqCoverageId+", "
@@ -467,35 +466,35 @@ public class TQCoverageDAO {
                     tqCaseId = CommonUtilities.convertStringToInt(rs.getString("TqCaseId"));
                 }
                 
-                Map<Integer, Integer> cellItemKeyMap = itemAndKeyMap;
-                for (Map.Entry<Integer, Integer> entrySet : cellItemKeyMap.entrySet()) {
-                    Integer cellItemId = entrySet.getKey();
-                    Integer itemKeyId = entrySet.getValue();                    
-                    
+                List<TQAnswerKey> answerKeyList = entrySet.getValue();
+                for(TQAnswerKey t : answerKeyList){
                     tqItems = conn.prepareStatement("INSERT INTO tq_items SET "
                         + "TqCaseID = ?, "
                         + "CellItemID = ?, "
                         + "ItemKeyID = ? ");
                     tqItems.setInt(1, tqCaseId);
-                    tqItems.setInt(2, cellItemId);
-                    tqItems.setInt(3, itemKeyId);
+                    tqItems.setInt(2, t.getCellItemId());
+                    tqItems.setInt(3, t.getItemKeyId());
                     tqItems.executeUpdate();
+                    
+                    int tqItemId = 0;
+                    stmt = conn.createStatement();
+                    rs = stmt.executeQuery("SELECT last_insert_id() AS TqCaseId FROM tq_cases ");
+                    while(rs.next()){
+                        tqItemId = CommonUtilities.convertStringToInt(rs.getString("TqCaseId"));
+                    }
+                    
+                    tqAnswerKey = conn.prepareStatement("INSERT INTO tq_answer_key SET "
+                            + "TqItemID = ?, "
+                            + "ItemNo = ?, "
+                            + "Answer = ? ");
+                    tqAnswerKey.setInt(1, tqItemId);
+                    tqAnswerKey.setInt(2, t.getItemNo());
+                    tqAnswerKey.setString(3, t.getAnswer());
+                    tqAnswerKey.executeUpdate();
                 }
-            }
-            
-            for (Map.Entry<Integer, String> entrySet : answerKey.getItemNoAndAnswer().entrySet()) {
-                Integer itemNo = entrySet.getKey();
-                String answer = entrySet.getValue();
-                tqAnswerKey = conn.prepareStatement("INSERT INTO tq_answer_key SET "
-                        + "TqCoverageID = ?, "
-                        + "ItemNo = ?, "
-                        + "Answer = ? ");
-                tqAnswerKey.setInt(1, tqCoverageId);
-                tqAnswerKey.setInt(2, itemNo);
-                tqAnswerKey.setString(3, answer);
-                tqAnswerKey.executeUpdate();
-            }
-            
+            }            
+                        
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -694,19 +693,23 @@ public class TQCoverageDAO {
         return result;
     }
     
-    public static Map<Integer, String> getTQCoverageAnswerKey(int tqCoverageId){
+    public static List<TQAnswerKey> getTQCoverageAnswerKey(int tqCoverageId){
         Connection conn = DBConnection.connectToDB();
         Statement stmt = null;
         ResultSet rs = null;
-        Map<Integer, String> answerKey = new HashMap<>();
+        List<TQAnswerKey> tqAnswerKeyList = new ArrayList<>();
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT ItemNo, Answer FROM tq_answer_key "
-                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            rs = stmt.executeQuery("SELECT CellItemID, ItemNo, Answer FROM tq_coverage_answer "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" "
+                    + "ORDER BY ItemNo ASC ");
             while(rs.next()){
-                answerKey.put(CommonUtilities.convertStringToInt(rs.getString("ItemNo")), 
-                        CommonUtilities.escapeSingleQuote(rs.getString("Answer")));
+                TQAnswerKey  t = new TQAnswerKey();
+                t.setCellItemId(CommonUtilities.convertStringToInt(rs.getString("CellItemID")));
+                t.setItemNo(CommonUtilities.convertStringToInt(rs.getString("ItemNo")));
+                t.setAnswer(CommonUtilities.escapeSingleQuote(rs.getString("Answer")));
+                tqAnswerKeyList.add(t);
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -722,6 +725,6 @@ public class TQCoverageDAO {
             }
         }
         
-        return answerKey;
+        return tqAnswerKeyList;
     }
 }

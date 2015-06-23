@@ -8,6 +8,7 @@ package com.etest.service;
 import com.etest.model.CellItem;
 import com.etest.model.ItemKeys;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -36,4 +37,6 @@ public interface CellItemService {
     
     public int getTotalAnalyzeItem(int syllabusId, 
             int bloomsClassId);
+    
+    public Map<String, Character> getOptionAnswer(int cellItemId);
 }

@@ -69,7 +69,7 @@ public interface TQCoverageService {
     
     public boolean insertNewTQCoverage(TopicCoverage coverage, 
             TQItems items, 
-            TQAnswerKey answerKey, 
+            Map<Integer, List<TQAnswerKey>> cellCaseItemKey, 
             Grid grid);
     
     public List<TQCoverage> getAllTQCoverage();
@@ -82,5 +82,5 @@ public interface TQCoverageService {
     
     public boolean deleteTQCoverage(int tqCoverageId);
     
-    public Map<Integer, String> getTQCoverageAnswerKey(int tqCoverageId);
+    public List<TQAnswerKey> getTQCoverageAnswerKey(int tqCoverageId);
 }

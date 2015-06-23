@@ -401,4 +401,36 @@ public class CellItemDAO {
         
         return total;
     }
+    
+    public static Map<String, Character> getOptionAnswer(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Map<String, Character> option = new HashMap<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT OptionA, OptionB, OptionC, OptionD FROM "
+                    + "cell_items WHERE CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                option.put(rs.getString("OptionA"), 'A');
+                option.put(rs.getString("OptionB"), 'B');
+                option.put(rs.getString("OptionC"), 'C');
+                option.put(rs.getString("OptionD"), 'D');
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return option;
+    }
 }
