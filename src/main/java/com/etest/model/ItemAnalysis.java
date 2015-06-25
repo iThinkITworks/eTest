@@ -14,15 +14,15 @@ import java.util.List;
 public class ItemAnalysis {
     
     private String StudentNumber;
-    private List<Integer> itemNumber;
+    private int totalScore;
     private List<Character> answer;
 
     public String getStudentNumber() {
         return StudentNumber;
     }
 
-    public List<Integer> getItemNumber() {
-        return itemNumber;
+    public int getTotalScore() {
+        return totalScore;
     }
 
     public List<Character> getAnswer() {
@@ -33,8 +33,8 @@ public class ItemAnalysis {
         this.StudentNumber = StudentNumber;
     }
 
-    public void setItemNumber(List<Integer> itemNumber) {
-        this.itemNumber = itemNumber;
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
     }
 
     public void setAnswer(List<Character> answer) {

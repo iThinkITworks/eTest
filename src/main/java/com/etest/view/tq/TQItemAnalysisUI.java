@@ -6,19 +6,21 @@
 package com.etest.view.tq;
 
 import com.etest.model.ItemAnalysis;
-import com.etest.view.itemanalysis.ProcessItemAnalysis;
+import com.etest.view.itemanalysis.ItemAnalysisInterpretation;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -84,9 +86,10 @@ public class TQItemAnalysisUI extends VerticalLayout {
 
             List<ItemAnalysis> itemAnalysisList = new ArrayList<>();
             List<Character> answer;
+            ItemAnalysis itemAnalysis = null;
             
             for(int c = 0; c < cols; c++){
-                ItemAnalysis itemAnalysis = new ItemAnalysis();
+                itemAnalysis = new ItemAnalysis();
                 answer = new ArrayList<>();
                for(int r = 0; r < rows; r++){
                    row = sheet.getRow(r);
@@ -109,28 +112,85 @@ public class TQItemAnalysisUI extends VerticalLayout {
                    itemAnalysisList.add(itemAnalysis);
                }                     
             }
-                        
-            ProcessItemAnalysis p = new ProcessItemAnalysis(tqCoverageId);
+                     
+//            ItemAnalysisInterpretation p = new ItemAnalysisInterpretation(tqCoverageId);
             int totalScore = 0;
-            Map<String, Integer> studentTotalScore = new HashMap<>();
+            Map<String, Integer> studentNoAndTotalScore = new HashMap<>();
+            Map<String, List<Character>> studentNoAndAnswer = new HashMap<>();
             for(ItemAnalysis i : itemAnalysisList){
-                if(!i.getAnswer().isEmpty()){
-                    totalScore = p.getTotalScoresOfStudent(tqCoverageId, i.getAnswer());
-                    studentTotalScore.put(i.getStudentNumber(), totalScore);
-//                    System.out.println("");
-//                    System.out.println("student no: "+i.getStudentNumber());
-//                    System.out.println("");
-                }
-            }            
-            
-            for (Map.Entry<String, Integer> entrySet : studentTotalScore.entrySet()) {
-                String key = entrySet.getKey();
-                Integer value = entrySet.getValue();
-                System.out.println("studentNo: "+key+" totalScore: "+value);
+                studentNoAndTotalScore.put(i.getStudentNumber(), ItemAnalysisInterpretation.getTotalScoresOfAllStudent(tqCoverageId, i.getAnswer()));
+                studentNoAndAnswer.put(i.getStudentNumber(), i.getAnswer());
             }
+            
+            List<String> upperGroupStudentNo = getUpperGroupStudent(studentNoAndTotalScore);
+            List<String> lowerGroupStudentNo = getLowerGroupStudent(studentNoAndTotalScore);
+            
+            for(String s : upperGroupStudentNo){
+                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, studentNoAndAnswer.get(s));
+                System.out.println("");
+//                System.out.println("upper: "+studentNoAndAnswer.get(s));
+            }
+            
+            for(String s : lowerGroupStudentNo){
+                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, studentNoAndAnswer.get(s));
+                System.out.println("");
+//                System.out.println("lower: "+studentNoAndAnswer.get(s));
+            }
+           
         } catch (IOException ex) {
             Logger.getLogger(TQItemAnalysisUI.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
     
+    public List<String> getLowerGroupStudent(Map<String, Integer> studentNoAndTotalScore){
+        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
+                    .sorted(Map.Entry.comparingByValue());
+        
+        List<String> lowerGroupStudentNo = new ArrayList<>();
+        
+            double lowerGroupTotal = 0;        
+            if(studentNoAndTotalScore.size() < 30){
+                lowerGroupTotal = studentNoAndTotalScore.size() * .5;
+            }        
+        
+            int i = 1;
+            Iterator iterator = sorted.iterator();
+            while(iterator.hasNext()){
+                if(i > lowerGroupTotal){
+                    break;
+                }
+                String[] s = iterator.next().toString().split("=");
+                lowerGroupStudentNo.add(s[0]);
+//                System.out.println("studentNo: "+s[0]+" totalScore: "+s[1]);
+                i++;
+            } 
+        
+            return lowerGroupStudentNo;
+    }
+    
+    public List<String> getUpperGroupStudent(Map<String, Integer> studentNoAndTotalScore){
+        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
+            
+        List<String> upperGroupStudentNo = new ArrayList<>();
+        
+            double upperGroupTotal = 0;        
+            if(studentNoAndTotalScore.size() < 30){
+                upperGroupTotal = studentNoAndTotalScore.size() * .5;
+            }
+        
+            int i = 1;
+            Iterator iterator = sorted.iterator();
+            while(iterator.hasNext()){
+                if(i > upperGroupTotal){
+                    break;
+                }
+                String[] s = iterator.next().toString().split("=");
+                upperGroupStudentNo.add(s[0]);
+//                System.out.println("studentNo: "+s[0]+" totalScore: "+s[1]);
+                i++;
+            }
+            
+        return upperGroupStudentNo;    
+    }
 }
