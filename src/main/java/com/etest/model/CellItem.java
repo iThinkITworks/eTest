@@ -23,8 +23,8 @@ public class CellItem extends CellCase {
     private String optionD;
     private int approveItemStatus;
     private int cellItemStatus;
-    private int difficultIndex;
-    private int discriminationIndex;
+    private double difficultIndex;
+    private double discriminationIndex;
     private Date dateCreated; 
     private Map<String, String> itemKeys;
 
@@ -64,11 +64,11 @@ public class CellItem extends CellCase {
         return cellItemStatus;
     }
 
-    public int getDifficultIndex() {
+    public double getDifficultIndex() {
         return difficultIndex;
     }
 
-    public int getDiscriminationIndex() {
+    public double getDiscriminationIndex() {
         return discriminationIndex;
     }
 
@@ -112,11 +112,11 @@ public class CellItem extends CellCase {
         this.cellItemStatus = cellItemStatus;
     }
 
-    public void setDifficultIndex(int difficultIndex) {
+    public void setDifficultIndex(double difficultIndex) {
         this.difficultIndex = difficultIndex;
     }
 
-    public void setDiscriminationIndex(int discriminationIndex) {
+    public void setDiscriminationIndex(double discriminationIndex) {
         this.discriminationIndex = discriminationIndex;
     }
 

@@ -49,8 +49,8 @@ public class CellItemDAO {
                 ci.setOptionC(CommonUtilities.escapeSingleQuote(rs.getString("OptionC")));
                 ci.setOptionD(CommonUtilities.escapeSingleQuote(rs.getString("OptionD")));
                 ci.setCellItemStatus(CommonUtilities.convertStringToInt(rs.getString("CellItemStatus")));
-                ci.setDifficultIndex(CommonUtilities.convertStringToInt(rs.getString("DifficultIndex")));
-                ci.setDiscriminationIndex(CommonUtilities.convertStringToInt(rs.getString("DiscriminationIndex")));
+                ci.setDifficultIndex(CommonUtilities.convertStringToDouble(rs.getString("DifficultIndex")));
+                ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
                 ci.setUserId(CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID")));
                 ci.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
                 cellItemList.add(ci);
@@ -95,8 +95,8 @@ public class CellItemDAO {
                 ci.setOptionC(CommonUtilities.escapeSingleQuote(rs.getString("OptionC")));
                 ci.setOptionD(CommonUtilities.escapeSingleQuote(rs.getString("OptionD")));
                 ci.setApproveItemStatus(CommonUtilities.convertStringToInt(rs.getString("ApproveStatus")));
-                ci.setDifficultIndex(CommonUtilities.convertStringToInt(rs.getString("DifficultIndex")));
-                ci.setDiscriminationIndex(CommonUtilities.convertStringToInt(rs.getString("DiscriminationIndex")));
+                ci.setDifficultIndex(CommonUtilities.convertStringToDouble(rs.getString("DifficultIndex")));
+                ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
                 ci.setUserId(CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID")));
                 ci.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
                 ci.setCellItemStatus(CommonUtilities.convertStringToInt(rs.getString("CellItemStatus")));                
@@ -141,8 +141,8 @@ public class CellItemDAO {
                 ci.setOptionC(CommonUtilities.escapeSingleQuote(rs.getString("OptionC")));
                 ci.setOptionD(CommonUtilities.escapeSingleQuote(rs.getString("OptionD")));
                 ci.setApproveItemStatus(CommonUtilities.convertStringToInt(rs.getString("ApproveStatus")));
-                ci.setDifficultIndex(CommonUtilities.convertStringToInt(rs.getString("DifficultIndex")));
-                ci.setDiscriminationIndex(CommonUtilities.convertStringToInt(rs.getString("DiscriminationIndex")));
+                ci.setDifficultIndex(CommonUtilities.convertStringToDouble(rs.getString("DifficultIndex")));
+                ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
                 ci.setUserId(CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID")));
                 ci.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));                
                 ci.setCellItemStatus(CommonUtilities.convertStringToInt(rs.getString("CellItemStatus")));

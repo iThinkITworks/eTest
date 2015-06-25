@@ -1,5 +1,6 @@
 package com.etest.main;
 
+import com.etest.view.tq.TQItemAnalysisUI;
 import com.etest.view.CellCaseView;
 import com.etest.view.SyllabusView;
 import com.etest.view.HousekeepingView;
@@ -160,7 +161,7 @@ private boolean testMode = false;
         navigator.addView("semestral-team", SemestralTeamView.class);
         navigator.addView("housekeeping", HousekeepingView.class);
         navigator.addView("cells", CellCaseView.class);
-        navigator.addView("run-item-analysis", RunItemAnalysisView.class);
+//        navigator.addView("run-item-analysis", TQItemAnalysisUI.class);
         navigator.addView("tq", TQView.class);
         
 //        navigator.addView("common", CommonParts.class);
@@ -282,7 +283,7 @@ private boolean testMode = false;
         menuItems.put("semestral-team", "Semestral Team");
         menuItems.put("housekeeping", "Housekeeping");
         menuItems.put("cells", "Create/Modify/Approve Cells");
-        menuItems.put("run-item-analysis", "Run Item Analysis");
+//        menuItems.put("run-item-analysis", "Run Item Analysis");
         menuItems.put("tq", "Test Questionnaire");
         
 //        menuItems.put("common", "Dashboard");
