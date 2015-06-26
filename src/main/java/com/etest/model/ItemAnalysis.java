@@ -16,6 +16,7 @@ public class ItemAnalysis {
     private String StudentNumber;
     private int totalScore;
     private List<Character> answer;
+    private List<Integer> cellItemId;
 
     public String getStudentNumber() {
         return StudentNumber;
@@ -29,6 +30,10 @@ public class ItemAnalysis {
         return answer;
     }
 
+    public List<Integer> getCellItemId() {
+        return cellItemId;
+    }
+
     public void setStudentNumber(String StudentNumber) {
         this.StudentNumber = StudentNumber;
     }
@@ -39,6 +44,10 @@ public class ItemAnalysis {
 
     public void setAnswer(List<Character> answer) {
         this.answer = answer;
+    }
+
+    public void setCellItemId(List<Integer> cellItemId) {
+        this.cellItemId = cellItemId;
     }
     
 }

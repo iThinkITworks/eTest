@@ -305,4 +305,21 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         return TQCoverageDAO.getTQCoverageAnswerKey(tqCoverageId);
     }
 
+    @Override
+    public List<Integer> getCellItemIdByTQCoverageId(int tqCoverageId) {
+        return TQCoverageDAO.getCellItemIdByTQCoverageId(tqCoverageId);
+    }
+
+    @Override
+    public String getAnswerByCellItemId(int tqCoverageId, 
+            int cellItemId) {
+        return TQCoverageDAO.getAnswerByCellItemId(tqCoverageId, 
+                cellItemId);
+    }
+
+    @Override
+    public TQCoverage getTQCoverageById(int tqCoverageId) {
+        return TQCoverageDAO.getTQCoverageById(tqCoverageId);
+    }
+
 }

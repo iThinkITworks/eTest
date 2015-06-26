@@ -727,4 +727,99 @@ public class TQCoverageDAO {
         
         return tqAnswerKeyList;
     }
+
+    public static List<Integer> getCellItemIdByTQCoverageId(int tqCoverageId) {
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<Integer> itemIds = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT CellItemID FROM tq_coverage_answer "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" "
+                    + "ORDER BY ItemNo ASC ");
+            while(rs.next()){
+                itemIds.add(CommonUtilities.convertStringToInt(rs.getString("CellItemID")));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return itemIds;
+    }
+    
+    public static String getAnswerByCellItemId(int tqCoverageId, 
+            int cellItemId) {
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String answer = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT Answer FROM tq_coverage_answer "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" "
+                    + "AND CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                answer = CommonUtilities.escapeSingleQuote(rs.getString("Answer"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return answer;
+    }
+    public static TQCoverage getTQCoverageById(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        TQCoverage tqCoverage = new TQCoverage();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT c.CurrSubject, tc.ExamTitle, tc.DateCreated, tc.TqCoverageID FROM tq_coverage tc "
+                    + "INNER JOIN curriculum c ON tc.CurriculumID = c.CurriculumID "
+                    + "WHERE tc.TqCoverageID = "+tqCoverageId+" ");
+            while(rs.next()){
+                tqCoverage.setSubject(rs.getString("c.CurrSubject"));
+                tqCoverage.setExamTitle(rs.getString("tc.ExamTitle"));
+                tqCoverage.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("tc.DateCreated")));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return tqCoverage;
+    }
 }

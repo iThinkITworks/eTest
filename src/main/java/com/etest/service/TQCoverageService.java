@@ -83,4 +83,11 @@ public interface TQCoverageService {
     public boolean deleteTQCoverage(int tqCoverageId);
     
     public List<TQAnswerKey> getTQCoverageAnswerKey(int tqCoverageId);
+
+    public List<Integer> getCellItemIdByTQCoverageId(int tqCoverageId);
+    
+    public String getAnswerByCellItemId(int tqCoverageId, 
+            int cellItemId);
+    
+    public TQCoverage getTQCoverageById(int tqCoverageId);
 }

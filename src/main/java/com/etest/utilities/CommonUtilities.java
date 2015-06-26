@@ -8,6 +8,7 @@ package com.etest.utilities;
 import com.etest.global.ShowErrorNotification;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupView.Content;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -169,6 +170,17 @@ public class CommonUtilities {
     
     public static double roundOffToWholeNumber(double value){
         DecimalFormat df = new DecimalFormat("##0");
+        return new Double(df.format(value));
+    }
+    
+    public static double roundOffToTwoDecimal(double value){
+        DecimalFormat df = new DecimalFormat("0.00");
+        return new Double(df.format(value));
+    }
+    
+    public static double roundModeUnnecessaryToWholeNumber(double value){
+        DecimalFormat df = new DecimalFormat("##0");
+        df.setRoundingMode(RoundingMode.DOWN);
         return new Double(df.format(value));
     }
     

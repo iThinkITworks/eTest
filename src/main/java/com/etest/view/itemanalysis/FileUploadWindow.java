@@ -3,27 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.tq;
+package com.etest.view.itemanalysis;
 
 import com.etest.model.ItemAnalysis;
-import com.etest.model.TQCoverage;
 import com.etest.service.CurriculumService;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.etest.view.itemanalysis.FileUploadWindow;
-import com.etest.view.itemanalysis.ItemAnalysisDataGridProperties;
-import com.etest.view.itemanalysis.ItemAnalysisDataTable;
-import com.etest.view.itemanalysis.ItemAnalysisInterpretation;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
+import com.etest.view.tq.TQItemAnalysisUI;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,12 +41,13 @@ import pl.exsio.plupload.manager.PluploadManager;
  *
  * @author jetdario
  */
-public class TQItemAnalysisUI extends VerticalLayout {
+public class FileUploadWindow extends Window {
 
     TQCoverageService tq = new TQCoverageServiceImpl();
     CurriculumService cs = new CurriculumServiceImpl();
     
     private int tqCoverageId = 0;
+    
     List<String> upperGroupStudentNo = new ArrayList<>();
     List<String> lowerGroupStudentNo = new ArrayList<>();
     List<Integer> itemIds;
@@ -61,21 +55,33 @@ public class TQItemAnalysisUI extends VerticalLayout {
     private double groupTotalForProportion = 0;
     File excelFile;
     
-    Table table = new ItemAnalysisDataTable();
-    PluploadManager manager;
-    
-    public TQItemAnalysisUI() {
-        setWidth("100%");        
+    public FileUploadWindow(int tqCoverageId) {
+        this.tqCoverageId = tqCoverageId;
         
-        manager = new PluploadManager();
+        setCaption("UPLOAD FILE");
+        setWidth("700px");
+        setHeight("100%");
+        setModal(true);
+        center();
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);
+        
+        v.addComponent(new Label("Subject: <b>"+tq.getTQCoverageById(getTqCoverageId()).getSubject()+"</b>", ContentMode.HTML));
+        v.addComponent(new Label("Exam Tile: <b>"+tq.getTQCoverageById(getTqCoverageId()).getExamTitle()+"</b>", ContentMode.HTML));
+        v.addComponent(new Label("Date Created: <b>"+tq.getTQCoverageById(getTqCoverageId()).getDateCreated()+"</b>", ContentMode.HTML));
+                
+        PluploadManager manager = new PluploadManager();
         manager.getUploader().setMaxFileSize("5mb");
         manager.getUploader().addFileUploadedListener((PluploadFile file) -> {
             Notification.show("I've just uploaded file: "
                     + file.getName());
             excelFile = new File(file.getUploadedFile().toString());
-            readContentFromExcelFile(excelFile);      
+            readContentFromExcelFile(excelFile);  
             
-            addComponent(new ItemAnalysisDataGridProperties(
+            v.addComponent(new ItemAnalysisDataGridProperties(
                     getTqCoverageId(), 
                     getUpperGroupStudentNo(), 
                     getLowerGroupStudentNo(), 
@@ -89,10 +95,11 @@ public class TQItemAnalysisUI extends VerticalLayout {
                  + error.getMessage() + " (" + error.getType() + ")",
                  Notification.Type.ERROR_MESSAGE);
         }); 
-         
-//        addComponent(manager);
-        populateDataTable();
-        addComponent(table);
+        
+        v.addComponent(manager);
+        
+        setContent(v);
+//        getContent().setHeightUndefined();
     }
     
     void readContentFromExcelFile(File excelFile){        
@@ -190,39 +197,6 @@ public class TQItemAnalysisUI extends VerticalLayout {
         }    
         
         groupTotalForProportion = upperAndLowerGroup;
-    }
-    
-    void populateDataTable(){
-        table.removeAllItems();
-        int i = 0;
-        for(TQCoverage t : tq.getAllTQCoverage()){            
-            Button analyze = new Button("analyze");
-            analyze.setSizeFull();
-            analyze.setData(t.getTqCoverageId());
-            analyze.setIcon(FontAwesome.BULLSEYE);
-            analyze.addStyleName(ValoTheme.BUTTON_LINK);
-            analyze.addStyleName(ValoTheme.BUTTON_TINY);
-            analyze.addStyleName(ValoTheme.BUTTON_QUIET);
-            analyze.addStyleName("button-container");
-            analyze.addClickListener((Button.ClickEvent event) -> {                
-                tqCoverageId = (int) event.getButton().getData(); 
-                Window sub = new FileUploadWindow(tqCoverageId);
-                if(sub.getParent() == null){
-                    UI.getCurrent().addWindow(sub);
-                }
-            });
-                                    
-            table.addItem(new Object[]{
-                t.getExamTitle(), 
-                cs.getCurriculumById(t.getCurriculumId()).getSubject(), 
-                t.getDateCreated(), 
-                t.getTotalHoursCoverage(), 
-                t.getTotalItems(), 
-                analyze
-            }, i);
-            i++;
-        }
-        table.setPageLength(table.size());                
     }
     
     int getTqCoverageId(){
