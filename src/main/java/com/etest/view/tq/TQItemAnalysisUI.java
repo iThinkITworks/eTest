@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -73,15 +74,15 @@ public class TQItemAnalysisUI extends VerticalLayout {
             Notification.show("I've just uploaded file: "
                     + file.getName());
             excelFile = new File(file.getUploadedFile().toString());
-            readContentFromExcelFile(excelFile);      
+//            readContentFromExcelFile(excelFile);      
             
-            addComponent(new ItemAnalysisDataGridProperties(
-                    getTqCoverageId(), 
-                    getUpperGroupStudentNo(), 
-                    getLowerGroupStudentNo(), 
-                    tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
-                    getStudentNoAndAnswer(), 
-                    getGroupTotalForProportion()));
+//            addComponent(new ItemAnalysisDataGridProperties(
+//                    getTqCoverageId(), 
+//                    getUpperGroupStudentNo(), 
+//                    getLowerGroupStudentNo(), 
+//                    tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
+//                    getStudentNoAndAnswer(), 
+//                    getGroupTotalForProportion()));
         });
         
         manager.getUploader().addErrorListener((PluploadError error) -> {
@@ -156,13 +157,13 @@ public class TQItemAnalysisUI extends VerticalLayout {
             
             getLowerAndUpperGroupStudent(studentNoAndTotalScore);
             
-            for(String s : getUpperGroupStudentNo()){
-                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, getStudentNoAndAnswer().get(s));
-            }
-            
-            for(String s : getLowerGroupStudentNo()){
-                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, getStudentNoAndAnswer().get(s));
-            }
+//            for(String s : getUpperGroupStudentNo()){
+//                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, getStudentNoAndAnswer().get(s));
+//            }
+//            
+//            for(String s : getLowerGroupStudentNo()){
+//                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, getStudentNoAndAnswer().get(s));
+//            }
            
         } catch (IOException ex) {
             Logger.getLogger(TQItemAnalysisUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,20 +171,24 @@ public class TQItemAnalysisUI extends VerticalLayout {
     }
     
     public void getLowerAndUpperGroupStudent(Map<String, Integer> studentNoAndTotalScore){
+//        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
+//                    .sorted(Map.Entry.comparingByValue());
         Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue());
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
         
         double upperAndLowerGroup = 0;        
         if(studentNoAndTotalScore.size() < 30){
-            upperAndLowerGroup = CommonUtilities.roundModeUnnecessaryToWholeNumber(studentNoAndTotalScore.size() * .5);
+            upperAndLowerGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .5);
             int i = 1;
             Iterator iterator = sorted.iterator();
             while(iterator.hasNext()){
                 String[] s = iterator.next().toString().split("=");
                 if(i > upperAndLowerGroup){
                     upperGroupStudentNo.add(s[0]);
+                    System.out.println("upper: "+s[0]);
                 } else {
                     lowerGroupStudentNo.add(s[0]);
+                    System.out.println("lower: "+s[0]);
                 }                        
                 i++;
             } 

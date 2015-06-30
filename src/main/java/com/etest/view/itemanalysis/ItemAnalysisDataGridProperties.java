@@ -70,13 +70,11 @@ public class ItemAnalysisDataGridProperties extends Grid {
         
         List<Double> lowerDifficultyIndex = new ArrayList<>();
         List<Double> lowerProportion = new ArrayList<>();
-         
-        System.out.println("group total for proportion: "+groupTotalForProportion);
-        
+                 
         int upper = 0;        
         for(Integer i : tq.getCellItemIdByTQCoverageId(tqCoverageId)){ 
             double rowTotal = 0;
-            for(int j = 0; j < getGroupTotalForProportion(); j++){
+            for(int j = 0; j < getUpperGroupStudentNo().size(); j++){
                 List<Character> c = getStudentNoAndAnswer().get(getUpperGroupStudentNo().get(j));
                 rowTotal = rowTotal + (c.get(upper).equals(ItemAnalysisInterpretation.convertValueToOneOrZero(tqCoverageId, i)) ? 1 : 0);                 
             }
@@ -87,7 +85,7 @@ public class ItemAnalysisDataGridProperties extends Grid {
         int lower = 0;        
         for(Integer i : tq.getCellItemIdByTQCoverageId(tqCoverageId)){ 
             double rowTotal = 0;
-            for(int j = 0; j < getGroupTotalForProportion(); j++){
+            for(int j = 0; j < getLowerGroupStudentNo().size(); j++){
                 List<Character> c = getStudentNoAndAnswer().get(getLowerGroupStudentNo().get(j));
                 rowTotal = rowTotal + (c.get(lower).equals(ItemAnalysisInterpretation.convertValueToOneOrZero(tqCoverageId, i)) ? 1 : 0);                 
             }
@@ -154,7 +152,7 @@ public class ItemAnalysisDataGridProperties extends Grid {
     }
     
     public double calculateDisriminationIndex(double upperProportion, double lowerProportion){
-        return (upperProportion - lowerProportion);
+        return (upperProportion - lowerProportion) < 0 ? 0.00 : (upperProportion - lowerProportion);
     }
     
 }

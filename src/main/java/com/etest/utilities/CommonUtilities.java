@@ -178,7 +178,7 @@ public class CommonUtilities {
         return new Double(df.format(value));
     }
     
-    public static double roundModeUnnecessaryToWholeNumber(double value){
+    public static double roundingDownToWholeNumber(double value){
         DecimalFormat df = new DecimalFormat("##0");
         df.setRoundingMode(RoundingMode.DOWN);
         return new Double(df.format(value));

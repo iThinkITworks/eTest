@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -163,40 +164,70 @@ public class FileUploadWindow extends Window {
             
             getLowerAndUpperGroupStudent(studentNoAndTotalScore);
             
-            for(String s : getUpperGroupStudentNo()){
-                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, getStudentNoAndAnswer().get(s));
-            }
-            
-            for(String s : getLowerGroupStudentNo()){
-                ItemAnalysisInterpretation.getTotalScoresForUpperAndLower(tqCoverageId, getStudentNoAndAnswer().get(s));
-            }
-           
         } catch (IOException ex) {
             Logger.getLogger(TQItemAnalysisUI.class.getName()).log(Level.SEVERE, null, ex);
         }        
     }
     
     public void getLowerAndUpperGroupStudent(Map<String, Integer> studentNoAndTotalScore){
-        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
-                    .sorted(Map.Entry.comparingByValue());
+//        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
+//                    .sorted(Map.Entry.comparingByValue());
         
-        double upperAndLowerGroup = 0;        
+        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
+                    .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
+        
+        double upperAndLowerGroup = 0;       
+        double forTotalProportion = 0;
         if(studentNoAndTotalScore.size() < 30){
-            upperAndLowerGroup = CommonUtilities.roundModeUnnecessaryToWholeNumber(studentNoAndTotalScore.size() * .5);
-            int i = 1;
+            upperAndLowerGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .5);
+            forTotalProportion = studentNoAndTotalScore.size() * .5;
+            int i = 0;
+            Iterator iterator = sorted.iterator();
+            if((studentNoAndTotalScore.size() % 2) != 0){
+                while(iterator.hasNext()){
+                    String[] s = iterator.next().toString().split("=");
+                    if(i == (studentNoAndTotalScore.size()+1)/2-1){ //Elimate the median for the list of Students
+                    } else {
+                        if((i+1) < upperAndLowerGroup){
+                            upperGroupStudentNo.add(s[0]); //add all students with high score to upper group
+                        } else {
+                            lowerGroupStudentNo.add(s[0]); //add all students with low score to lower group
+                        }
+                        
+                    }
+                    i++;
+                }
+            } else {
+                while(iterator.hasNext()){
+                    String[] s = iterator.next().toString().split("=");
+                    if(i < upperAndLowerGroup){
+                        upperGroupStudentNo.add(s[0]);
+                    } else {
+                        lowerGroupStudentNo.add(s[0]);
+                    }
+                    i++;
+                }
+            }
+        } else {
+            double upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .27);
+            double lowerGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .73);
+            forTotalProportion = studentNoAndTotalScore.size() * .27;
+            int i = 0;
             Iterator iterator = sorted.iterator();
             while(iterator.hasNext()){
                 String[] s = iterator.next().toString().split("=");
-                if(i > upperAndLowerGroup){
+                if((i+1) < upperGroup){
                     upperGroupStudentNo.add(s[0]);
-                } else {
+                } 
+                
+                if((i+1) > lowerGroup){
                     lowerGroupStudentNo.add(s[0]);
-                }                        
+                }
                 i++;
-            } 
+            }
         }    
         
-        groupTotalForProportion = upperAndLowerGroup;
+        groupTotalForProportion = forTotalProportion;
     }
     
     int getTqCoverageId(){
