@@ -176,11 +176,9 @@ public class FileUploadWindow extends Window {
         Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
         
-        double upperAndLowerGroup = 0;       
-        double forTotalProportion = 0;
+        double upperGroup = 0;   
         if(studentNoAndTotalScore.size() < 30){
-            upperAndLowerGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .5);
-            forTotalProportion = studentNoAndTotalScore.size() * .5;
+            upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .5);
             int i = 0;
             Iterator iterator = sorted.iterator();
             if((studentNoAndTotalScore.size() % 2) != 0){
@@ -188,7 +186,7 @@ public class FileUploadWindow extends Window {
                     String[] s = iterator.next().toString().split("=");
                     if(i == (studentNoAndTotalScore.size()+1)/2-1){ //Elimate the median for the list of Students
                     } else {
-                        if((i+1) < upperAndLowerGroup){
+                        if((i+1) < upperGroup){
                             upperGroupStudentNo.add(s[0]); //add all students with high score to upper group
                         } else {
                             lowerGroupStudentNo.add(s[0]); //add all students with low score to lower group
@@ -200,7 +198,7 @@ public class FileUploadWindow extends Window {
             } else {
                 while(iterator.hasNext()){
                     String[] s = iterator.next().toString().split("=");
-                    if(i < upperAndLowerGroup){
+                    if(i < upperGroup){
                         upperGroupStudentNo.add(s[0]);
                     } else {
                         lowerGroupStudentNo.add(s[0]);
@@ -209,9 +207,8 @@ public class FileUploadWindow extends Window {
                 }
             }
         } else {
-            double upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .27);
+            upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .27);
             double lowerGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .73);
-            forTotalProportion = studentNoAndTotalScore.size() * .27;
             int i = 0;
             Iterator iterator = sorted.iterator();
             while(iterator.hasNext()){
@@ -227,7 +224,7 @@ public class FileUploadWindow extends Window {
             }
         }    
         
-        groupTotalForProportion = forTotalProportion;
+        groupTotalForProportion = upperGroup;
     }
     
     int getTqCoverageId(){
