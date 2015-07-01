@@ -7,7 +7,6 @@ package com.etest.utilities;
 
 import com.etest.global.ShowErrorNotification;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupView.Content;
 import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.DecimalFormat;

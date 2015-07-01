@@ -13,10 +13,13 @@ import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.etest.view.tq.TQItemAnalysisUI;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -82,13 +85,15 @@ public class FileUploadWindow extends Window {
             excelFile = new File(file.getUploadedFile().toString());
             readContentFromExcelFile(excelFile);  
             
+            v.addComponent(viewTableProportion());
+            
             v.addComponent(new ItemAnalysisDataGridProperties(
                     getTqCoverageId(), 
                     getUpperGroupStudentNo(), 
                     getLowerGroupStudentNo(), 
                     tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
                     getStudentNoAndAnswer(), 
-                    getGroupTotalForProportion()));
+                    getGroupTotalForProportion()));            
         });
         
         manager.getUploader().addErrorListener((PluploadError error) -> {
@@ -179,16 +184,19 @@ public class FileUploadWindow extends Window {
         double upperGroup = 0;   
         if(studentNoAndTotalScore.size() < 30){
             upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .5);
-            int i = 0;
+            int i = 1;
             Iterator iterator = sorted.iterator();
             if((studentNoAndTotalScore.size() % 2) != 0){
                 while(iterator.hasNext()){
-                    String[] s = iterator.next().toString().split("=");
-                    if(i == (studentNoAndTotalScore.size()+1)/2-1){ //Elimate the median for the list of Students
+                    String[] s = iterator.next().toString().split("=");                    
+                    if(i == (studentNoAndTotalScore.size()+1)/2){ //Elimate the median for the list of Students
+//                        System.out.println(i+" median: "+((studentNoAndTotalScore.size()+1)/2)+" "+s[0]+" "+s[1]);
                     } else {
-                        if((i+1) < upperGroup){
+                        if((i) <= upperGroup){
+//                            System.out.println(i+": "+s[0]+" "+s[1]);
                             upperGroupStudentNo.add(s[0]); //add all students with high score to upper group
                         } else {
+//                            System.out.println(i+": "+s[0]+" "+s[1]);
                             lowerGroupStudentNo.add(s[0]); //add all students with low score to lower group
                         }
                         
@@ -198,7 +206,7 @@ public class FileUploadWindow extends Window {
             } else {
                 while(iterator.hasNext()){
                     String[] s = iterator.next().toString().split("=");
-                    if(i < upperGroup){
+                    if(i <= upperGroup){
                         upperGroupStudentNo.add(s[0]);
                     } else {
                         lowerGroupStudentNo.add(s[0]);
@@ -213,11 +221,11 @@ public class FileUploadWindow extends Window {
             Iterator iterator = sorted.iterator();
             while(iterator.hasNext()){
                 String[] s = iterator.next().toString().split("=");
-                if((i+1) < upperGroup){
+                if((i) < upperGroup){
                     upperGroupStudentNo.add(s[0]);
                 } 
                 
-                if((i+1) > lowerGroup){
+                if((i) > (lowerGroup+1)){
                     lowerGroupStudentNo.add(s[0]);
                 }
                 i++;
@@ -245,5 +253,29 @@ public class FileUploadWindow extends Window {
     
     double getGroupTotalForProportion(){
         return groupTotalForProportion;
+    }
+    
+    Button viewTableProportion(){
+        Button button = new Button("View Proportion Table");
+        button.setWidthUndefined();
+        button.addStyleName(ValoTheme.BUTTON_LINK);
+        button.addClickListener((Button.ClickEvent event) -> {
+//            for(Object obj : getUpperGroupStudentNo()){
+//                System.out.println("upper: "+obj.toString());
+//            }
+//            
+//            for(Object obj : getLowerGroupStudentNo()){
+//                System.out.println("lower: "+obj.toString());
+//            }
+            Window sub = new ProportionDataTable(getStudentNoAndAnswer(), 
+                    getUpperGroupStudentNo(), 
+                    getLowerGroupStudentNo(), 
+                    tq.getCellItemIdByTQCoverageId(getTqCoverageId()));
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+        
+        return button;
     }
 }

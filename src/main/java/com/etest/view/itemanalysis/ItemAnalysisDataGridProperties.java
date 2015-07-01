@@ -9,7 +9,11 @@ import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -41,6 +45,7 @@ public class ItemAnalysisDataGridProperties extends Grid {
         this.lowerGroupStudentNo = lowerGroupStudentNo;
         this.studentNoAndAnswer = studentNoAndAnswer;
         this.groupTotalForProportion = groupTotalForProportion;
+        this.itemIds = itemIds;
         
         setWidth("100%");
         setSelectionMode(Grid.SelectionMode.NONE);
@@ -153,6 +158,5 @@ public class ItemAnalysisDataGridProperties extends Grid {
     
     public double calculateDisriminationIndex(double upperProportion, double lowerProportion){
         return (upperProportion - lowerProportion) < 0 ? 0.00 : (upperProportion - lowerProportion);
-    }
-    
+    }    
 }
