@@ -7,6 +7,7 @@ package com.etest.view.itemanalysis;
 
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -59,12 +60,12 @@ public class ProportionDataTable extends Window {
         upperGroupTable.addContainerProperty("Item No.", Integer.class, null);
         upperGroupTable.setSelectable(true);
         upperGroupTable.setWidthUndefined();
-        v.addComponent(upperGroupTable);
+        v.addComponent(upperGroupStudentPanel());
         
         lowerGroupTable.addContainerProperty("Item No.", Integer.class, null);
         lowerGroupTable.setSelectable(true);
         lowerGroupTable.setWidthUndefined();
-        v.addComponent(lowerGroupTable);
+        v.addComponent(lowerGroupStudentPanel());
         
         upperGroupTable.setWidthUndefined();
         lowerGroupTable.setWidthUndefined();
@@ -74,6 +75,22 @@ public class ProportionDataTable extends Window {
         
         setContent(v);
         getContent().setWidthUndefined();
+    }
+    
+    Panel upperGroupStudentPanel(){
+        Panel panel = new Panel("UPPER GROUP");
+        panel.setWidth("100%");
+        panel.setContent(upperGroupTable);
+        
+        return panel;
+    }
+    
+    Panel lowerGroupStudentPanel(){
+        Panel panel = new Panel("LOWER GROUP");
+        panel.setWidth("100%");
+        panel.setContent(lowerGroupTable);
+        
+        return panel;
     }
     
     void getUpperGroupStudentTable(){

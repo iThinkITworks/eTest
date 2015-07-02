@@ -5,15 +5,8 @@
  */
 package com.etest.view.itemanalysis;
 
-import com.etest.model.TQCoverage;
-import com.etest.service.CurriculumService;
-import com.etest.service.TQCoverageService;
-import com.etest.serviceprovider.CurriculumServiceImpl;
-import com.etest.serviceprovider.TQCoverageServiceImpl;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.Date;
 
@@ -24,10 +17,11 @@ import java.util.Date;
 public class ItemAnalysisDataTable extends Table {
     
     public ItemAnalysisDataTable() {
-        setWidth("90%");
+        setWidth("80%");
         setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
         setImmediate(true);
+        setSelectable(true);
         
         addContainerProperty("Exam Title", String.class, null);
         addContainerProperty("Subject", String.class, null);
@@ -41,7 +35,7 @@ public class ItemAnalysisDataTable extends Table {
         setColumnAlignment("Total Items", Align.CENTER);
         setColumnAlignment("remarks", Align.CENTER);
         
-        setColumnWidth("remarks", 80);
+        setColumnWidth("remarks", 100);
     }
     
 }

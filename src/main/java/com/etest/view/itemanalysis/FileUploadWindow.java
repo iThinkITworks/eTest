@@ -17,6 +17,7 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -59,6 +60,7 @@ public class FileUploadWindow extends Window {
     Map<String, List<Character>> studentNoAndAnswer;
     private double groupTotalForProportion = 0;
     File excelFile;
+    int totalItems;
     
     public FileUploadWindow(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
@@ -80,21 +82,25 @@ public class FileUploadWindow extends Window {
                 
         PluploadManager manager = new PluploadManager();
         manager.getUploader().setMaxFileSize("5mb");
-        manager.getUploader().addFileUploadedListener((PluploadFile file) -> {
-            Notification.show("I've just uploaded file: "
-                    + file.getName());
+        manager.getUploader().addFileUploadedListener((PluploadFile file) -> {            
             excelFile = new File(file.getUploadedFile().toString());
             readContentFromExcelFile(excelFile);  
+                                          
+            Notification.show("Succesfully uploaded file: " + file.getName());
             
             v.addComponent(viewTableProportion());
             
-            v.addComponent(new ItemAnalysisDataGridProperties(
+            Panel panel = new Panel("ITEM ANALYSIS");
+            panel.setWidth("100%");
+            panel.setContent(new ItemAnalysisDataGridProperties(
                     getTqCoverageId(), 
                     getUpperGroupStudentNo(), 
                     getLowerGroupStudentNo(), 
                     tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
                     getStudentNoAndAnswer(), 
-                    getGroupTotalForProportion()));            
+                    getGroupTotalForProportion()));
+            
+            v.addComponent(panel);            
         });
         
         manager.getUploader().addErrorListener((PluploadError error) -> {
@@ -106,7 +112,6 @@ public class FileUploadWindow extends Window {
         v.addComponent(manager);
         
         setContent(v);
-//        getContent().setHeightUndefined();
     }
     
     void readContentFromExcelFile(File excelFile){        
@@ -156,10 +161,7 @@ public class FileUploadWindow extends Window {
             List<ItemAnalysis> itemAnalysisList = new ArrayList<>();
             List<Character> answer;
             ItemAnalysis itemAnalysis = null;
-            
-            System.out.println("columns: "+cols);
-            System.out.println("rows: "+rows);
-            
+                        
             for(int c = 0; c < cols; c++){
                 itemAnalysis = new ItemAnalysis();
                 answer = new ArrayList<>();
@@ -180,8 +182,11 @@ public class FileUploadWindow extends Window {
                                if(r == 0){                                   
                                    itemAnalysis.setStudentNumber(cell.toString().trim());
                                } else {
-                                   System.out.println("column: "+c+" Row: "+r+" cell value: "+cell.toString().trim().charAt(0));
                                    answer.add(cell.toString().trim().charAt(0));
+                               }
+                           } else {
+                               if(r != 0){
+                                   totalItems++;
                                }
                            }                            
                        }                       
@@ -193,12 +198,20 @@ public class FileUploadWindow extends Window {
                }                     
             }
                      
+            if(tq.getCellItemIdByTQCoverageId(getTqCoverageId()).size() != totalItems){
+                ShowErrorNotification.error("Total Items do not MATCH!");
+                totalItems = 0;
+                return;
+            }
+            
             int totalScore = 0;
             Map<String, Integer> studentNoAndTotalScore = new HashMap<>();
             studentNoAndAnswer = new HashMap<>();
+            int totalItems = 1;
             for(ItemAnalysis i : itemAnalysisList){
                 studentNoAndTotalScore.put(i.getStudentNumber(), ItemAnalysisInterpretation.getTotalScoresOfAllStudent(tqCoverageId, i.getAnswer()));
                 studentNoAndAnswer.put(i.getStudentNumber(), i.getAnswer());
+                totalItems++;
             }
             
             getLowerAndUpperGroupStudent(studentNoAndTotalScore);
@@ -224,13 +237,10 @@ public class FileUploadWindow extends Window {
                 while(iterator.hasNext()){
                     String[] s = iterator.next().toString().split("=");                    
                     if(i == (studentNoAndTotalScore.size()+1)/2){ //Elimate the median for the list of Students
-//                        System.out.println(i+" median: "+((studentNoAndTotalScore.size()+1)/2)+" "+s[0]+" "+s[1]);
                     } else {
                         if((i) <= upperGroup){
-//                            System.out.println(i+": "+s[0]+" "+s[1]);
                             upperGroupStudentNo.add(s[0]); //add all students with high score to upper group
                         } else {
-//                            System.out.println(i+": "+s[0]+" "+s[1]);
                             lowerGroupStudentNo.add(s[0]); //add all students with low score to lower group
                         }
                         
@@ -259,7 +269,7 @@ public class FileUploadWindow extends Window {
                     upperGroupStudentNo.add(s[0]);
                 } 
                 
-                if((i) > (lowerGroup+1)){
+                if((i) > (lowerGroup)){
                     lowerGroupStudentNo.add(s[0]);
                 }
                 i++;
@@ -294,13 +304,6 @@ public class FileUploadWindow extends Window {
         button.setWidthUndefined();
         button.addStyleName(ValoTheme.BUTTON_LINK);
         button.addClickListener((Button.ClickEvent event) -> {
-//            for(Object obj : getUpperGroupStudentNo()){
-//                System.out.println("upper: "+obj.toString());
-//            }
-//            
-//            for(Object obj : getLowerGroupStudentNo()){
-//                System.out.println("lower: "+obj.toString());
-//            }
             Window sub = new ProportionDataTable(getStudentNoAndAnswer(), 
                     getUpperGroupStudentNo(), 
                     getLowerGroupStudentNo(), 
