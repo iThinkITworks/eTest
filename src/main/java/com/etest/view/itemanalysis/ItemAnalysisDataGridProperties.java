@@ -9,11 +9,7 @@ import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.ValoTheme;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -101,30 +97,30 @@ public class ItemAnalysisDataGridProperties extends Grid {
         Collection c = getContainerDataSource().getItemIds();
         Iterator iterator = c.iterator();
         while(iterator.hasNext()){
-            int x = (int) iterator.next();
-            Item item = getContainerDataSource().getItem(x);
+            int itemId = (int) iterator.next();
+            Item item = getContainerDataSource().getItem(itemId);
             item.getItemProperty("difficulty index").setValue(
                     CommonUtilities.roundOffToTwoDecimal(
                             calculateDifficultyIndex(
-                                    upperProportion.get(x-1), 
-                                    lowerProportion.get(x-1))));
+                                    upperProportion.get(itemId-1), 
+                                    lowerProportion.get(itemId-1))));
             item.getItemProperty("difficulty interpretation").setValue(
                     ItemAnalysisInterpretation.getDifficultyInterpretation(
                             CommonUtilities.roundOffToTwoDecimal(
                                     calculateDifficultyIndex(
-                                            upperProportion.get(x-1), 
-                                            lowerProportion.get(x-1)))));
+                                            upperProportion.get(itemId-1), 
+                                            lowerProportion.get(itemId-1)))));
             item.getItemProperty("discrimination index").setValue(
                     CommonUtilities.roundOffToTwoDecimal(
                             calculateDisriminationIndex(
-                                    upperProportion.get(x-1), 
-                                    lowerProportion.get(x-1))));
+                                    upperProportion.get(itemId-1), 
+                                    lowerProportion.get(itemId-1))));
             item.getItemProperty("discrimination interpretation").setValue(
                     ItemAnalysisInterpretation.getDiscriminationInterpretation(
                             CommonUtilities.roundOffToTwoDecimal(
                                     calculateDisriminationIndex(
-                                            upperProportion.get(x-1), 
-                                            lowerProportion.get(x-1)))));
+                                            upperProportion.get(itemId-1), 
+                                            lowerProportion.get(itemId-1)))));
         }
     }
     

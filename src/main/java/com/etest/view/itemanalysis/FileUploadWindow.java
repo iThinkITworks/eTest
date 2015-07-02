@@ -5,6 +5,7 @@
  */
 package com.etest.view.itemanalysis;
 
+import com.etest.global.ShowErrorNotification;
 import com.etest.model.ItemAnalysis;
 import com.etest.service.CurriculumService;
 import com.etest.service.TQCoverageService;
@@ -116,6 +117,27 @@ public class FileUploadWindow extends Window {
             HSSFRow row;
             HSSFCell cell;
                         
+            boolean stop = false;
+            boolean nonBlankRowFound;
+            int s;
+            HSSFRow lastRow = null;
+            
+            while (stop == false) {
+                nonBlankRowFound = false;
+                lastRow = sheet.getRow(sheet.getLastRowNum());
+                for (s = lastRow.getFirstCellNum(); s <= lastRow.getLastCellNum(); s++) {
+                    cell = lastRow.getCell(s);
+                    if (cell != null && lastRow.getCell(s).getCellType() != HSSFCell.CELL_TYPE_BLANK) {
+                        nonBlankRowFound = true;
+                    }
+                }
+                if (nonBlankRowFound == true) {
+                    stop = true;
+                } else {
+                    sheet.removeRow(lastRow);
+                }
+            }
+            
             int rows; // No of rows
             rows = sheet.getPhysicalNumberOfRows();
 
@@ -135,25 +157,37 @@ public class FileUploadWindow extends Window {
             List<Character> answer;
             ItemAnalysis itemAnalysis = null;
             
+            System.out.println("columns: "+cols);
+            System.out.println("rows: "+rows);
+            
             for(int c = 0; c < cols; c++){
                 itemAnalysis = new ItemAnalysis();
                 answer = new ArrayList<>();
                for(int r = 0; r < rows; r++){
                    row = sheet.getRow(r);
-                   if(row != null){
+                   if(row == null || row.toString().isEmpty()){       
+                       ShowErrorNotification.error("Remove all blank/empty rows after the last Item!");
+                       return;
+                   } else {
+//                   if(row != null){
                        cell = row.getCell(c);
-                       if(cell != null){                           
+                       if(cell == null || cell.toString().isEmpty()){
+                           ShowErrorNotification.error("Remove all blank/empty columns after the last student!");
+                           return;
+                       } else {
+//                       if(cell != null){                           
                            if(c != 0){         
-                               if(r == 0){
-                                   itemAnalysis.setStudentNumber(cell.toString());
+                               if(r == 0){                                   
+                                   itemAnalysis.setStudentNumber(cell.toString().trim());
                                } else {
-                                   answer.add(cell.toString().charAt(0));
+                                   System.out.println("column: "+c+" Row: "+r+" cell value: "+cell.toString().trim().charAt(0));
+                                   answer.add(cell.toString().trim().charAt(0));
                                }
                            }                            
                        }                       
                    }                    
                }     
-               if(c != 0){
+               if(c != 0){                   
                    itemAnalysis.setAnswer(answer);
                    itemAnalysisList.add(itemAnalysis);
                }                     
@@ -270,7 +304,9 @@ public class FileUploadWindow extends Window {
             Window sub = new ProportionDataTable(getStudentNoAndAnswer(), 
                     getUpperGroupStudentNo(), 
                     getLowerGroupStudentNo(), 
-                    tq.getCellItemIdByTQCoverageId(getTqCoverageId()));
+                    tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
+                    getTqCoverageId(), 
+                    getGroupTotalForProportion());
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
