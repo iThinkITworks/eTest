@@ -69,7 +69,7 @@ public class TQCoverageDAO {
         return bloomsClassId;
     }
     
-    public static List<CellItem> getItemIdByDiscriminationIndex(Grid grid){
+    public static List<CellItem> getItemIdByBloomClassId(Grid grid){
         Connection conn = DBConnection.connectToDB();
         Statement stmt = null;
         ResultSet rs = null;
@@ -104,6 +104,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 1 "
+                                        + "AND Analyzed = 0 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -126,6 +127,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 1 "
+                                        + "AND Analyzed = 1 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -148,6 +150,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 2 "
+                                        + "AND Analyzed = 0 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -170,6 +173,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 2 "
+                                        + "AND Analyzed = 1 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -192,6 +196,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 3 "
+                                        + "AND Analyzed = 0 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -213,6 +218,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 3 "
+                                        + "AND Analyzed = 1 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -235,6 +241,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 4 "
+                                        + "AND Analyzed = 0 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -257,6 +264,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 4 "
+                                        + "AND Analyzed = 1 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -279,6 +287,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 5 "
+                                        + "AND Analyzed = 0 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -301,6 +310,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 5 "
+                                        + "AND Analyzed = 1 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -323,6 +333,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 6 "
+                                        + "AND Analyzed = 0 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -345,6 +356,7 @@ public class TQCoverageDAO {
                                         + "WHERE ci.CellItemStatus = 0 "
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 6 "
+                                        + "AND Analyzed = 1 "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -542,6 +554,7 @@ public class TQCoverageDAO {
                 tqc.setTotalHoursCoverage(CommonUtilities.convertStringToDouble(rs.getString("TotalHoursCoverage")));
                 tqc.setTotalItems(CommonUtilities.convertStringToInt(rs.getString("TotalItems")));
                 tqc.setStatus(CommonUtilities.convertStringToInt(rs.getString("Status")));
+                tqc.setAnalyzed(CommonUtilities.convertStringToInt(rs.getString("Analyzed")));
                 tqCoverageList.add(tqc);
             }
         } catch (SQLException ex) {
@@ -821,5 +834,76 @@ public class TQCoverageDAO {
         }
         
         return tqCoverage;
+    }
+
+    public static boolean saveItemAnalysis(Grid grid, 
+            int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            conn.setAutoCommit(false);
+            Collection c = grid.getContainerDataSource().getItemIds();
+            Iterator iterator = c.iterator();
+            while(iterator.hasNext()){
+                Item item = grid.getContainerDataSource().getItem(iterator.next());
+                Collection x = item.getItemPropertyIds();
+                Iterator it = x.iterator();
+                Object propertyId;
+                while(it.hasNext()){
+                    propertyId = it.next();
+                    if(propertyId.equals("itemId")){                        
+                        stmt = conn.createStatement();
+                        rs = stmt.executeQuery("SELECT Analyzed FROM cell_items "
+                                + "WHERE CellItemID = "+item.getItemProperty(propertyId).getValue()+" ");
+                        while(rs.next()){
+                            if(rs.getString("Analyzed").equals("0")){
+                                pstmt = conn.prepareStatement("UPDATE cell_items SET "
+                                        + "DifficultIndex = ?, "
+                                        + "DiscriminationIndex = ?, "
+                                        + "Analyzed = ? "
+                                        + "WHERE CellItemID = "+item.getItemProperty(propertyId).getValue()+" ");
+                                pstmt.setDouble(1, CommonUtilities.convertStringToDouble(item.getItemProperty("difficulty index").getValue().toString()));
+                                pstmt.setDouble(2, CommonUtilities.convertStringToDouble(item.getItemProperty("discrimination index").getValue().toString()));
+                                pstmt.setInt(3, 1);
+                                pstmt.executeUpdate();
+                                
+                                pstmt = conn.prepareStatement("UPDATE tq_coverage SET "
+                                        + "Analyzed = 1 "
+                                        + "WHERE TqCoverageID = "+tqCoverageId+" ");
+                                pstmt.executeUpdate();
+                            }
+                        }
+                    }                    
+                }
+            }         
+            
+            conn.commit();
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }

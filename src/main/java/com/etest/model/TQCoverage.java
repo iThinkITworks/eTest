@@ -19,6 +19,7 @@ public class TQCoverage extends TeamTeach {
     private double totalHoursCoverage;
     private int totalItems;
     private int status;
+    private int analyzed;
 
     public int getTqCoverageId() {
         return TqCoverageId;
@@ -44,6 +45,10 @@ public class TQCoverage extends TeamTeach {
         return status;
     }
 
+    public int getAnalyzed() {
+        return analyzed;
+    }
+
     public void setTqCoverageId(int TqCoverageId) {
         this.TqCoverageId = TqCoverageId;
     }
@@ -66,6 +71,10 @@ public class TQCoverage extends TeamTeach {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public void setAnalyzed(int analyzed) {
+        this.analyzed = analyzed;
     }
     
 }

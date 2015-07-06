@@ -14,10 +14,12 @@ import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import java.util.List;
 
 /**
  *
@@ -25,23 +27,23 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 public class TQListUI extends TQListTableProperties{
 
-    TQCoverageService coverageService = new TQCoverageServiceImpl();
+    TQCoverageService tq = new TQCoverageServiceImpl();
     CurriculumService cs = new CurriculumServiceImpl();
         
     public TQListUI() {
-        populateTable();
+        populateDataTable();
     }
     
-    public void populateTable(){
+    public Table populateDataTable(){
         removeAllItems();
         int i = 0;
-        for(TQCoverage tq : coverageService.getAllTQCoverage()){
+        for(TQCoverage t : tq.getAllTQCoverage()){
             VerticalLayout v = new VerticalLayout();
             v.setWidth("100%");
             
             Button view = new Button("view");
             view.setSizeFull();
-            view.setData(tq.getTqCoverageId());
+            view.setData(t.getTqCoverageId());
             view.setIcon(FontAwesome.VIDEO_CAMERA);
             view.addStyleName(ValoTheme.BUTTON_LINK);
             view.addStyleName(ValoTheme.BUTTON_TINY);
@@ -53,7 +55,7 @@ public class TQListUI extends TQListTableProperties{
             
             Button approve = new Button("status");
             approve.setSizeFull();
-            approve.setData(tq.getTqCoverageId());            
+            approve.setData(t.getTqCoverageId());            
             approve.addStyleName(ValoTheme.BUTTON_LINK);
             approve.addStyleName(ValoTheme.BUTTON_TINY);
             approve.addStyleName(ValoTheme.BUTTON_QUIET);
@@ -63,7 +65,7 @@ public class TQListUI extends TQListTableProperties{
             
             Button print = new Button("print");
             print.setSizeFull();
-            print.setData(tq.getTqCoverageId());  
+            print.setData(t.getTqCoverageId());  
             print.setIcon(FontAwesome.PRINT);
             print.addStyleName(ValoTheme.BUTTON_LINK);
             print.addStyleName(ValoTheme.BUTTON_TINY);
@@ -73,7 +75,7 @@ public class TQListUI extends TQListTableProperties{
             v.addComponent(print);
             v.setComponentAlignment(print, Alignment.MIDDLE_LEFT);
             
-            if(tq.getStatus() == 0){ 
+            if(t.getStatus() == 0){ 
                 approve.setIcon(FontAwesome.THUMBS_DOWN); 
                 print.setVisible(false);
             }
@@ -83,15 +85,17 @@ public class TQListUI extends TQListTableProperties{
             } 
             
             addItem(new Object[]{
-                tq.getExamTitle(), 
-                cs.getCurriculumById(tq.getCurriculumId()).getSubject(), 
-                tq.getDateCreated(), 
-                tq.getTotalHoursCoverage(), 
-                tq.getTotalItems(), 
+                t.getExamTitle(), 
+                cs.getCurriculumById(t.getCurriculumId()).getSubject(), 
+                t.getDateCreated(), 
+                t.getTotalHoursCoverage(), 
+                t.getTotalItems(), 
                 v
             }, i);
             i++;
         }
+        
+        return this;
     }
     
     Button.ClickListener remarksBtnClickListener = (Button.ClickEvent event) -> {
@@ -101,7 +105,7 @@ public class TQListUI extends TQListTableProperties{
                 UI.getCurrent().addWindow(sub);
             }
             sub.addCloseListener((Window.CloseEvent e) -> {
-                populateTable();
+                populateDataTable();
             });
         } else {
             Window pdf = new TQViewer((int) event.getButton().getData());

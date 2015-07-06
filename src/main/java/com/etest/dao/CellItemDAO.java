@@ -53,6 +53,7 @@ public class CellItemDAO {
                 ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
                 ci.setUserId(CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID")));
                 ci.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
+                ci.setAnalyze(CommonUtilities.convertStringToInt(rs.getString("Analyzed")));
                 cellItemList.add(ci);
             }
         } catch (SQLException ex) {
@@ -99,7 +100,8 @@ public class CellItemDAO {
                 ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
                 ci.setUserId(CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID")));
                 ci.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
-                ci.setCellItemStatus(CommonUtilities.convertStringToInt(rs.getString("CellItemStatus")));                
+                ci.setCellItemStatus(CommonUtilities.convertStringToInt(rs.getString("CellItemStatus")));  
+                ci.setAnalyze(CommonUtilities.convertStringToInt(rs.getString("Analyzed")));
                 cellItemList.add(ci);
             }            
         } catch (SQLException ex) {
@@ -146,6 +148,7 @@ public class CellItemDAO {
                 ci.setUserId(CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID")));
                 ci.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));                
                 ci.setCellItemStatus(CommonUtilities.convertStringToInt(rs.getString("CellItemStatus")));
+                ci.setAnalyze(CommonUtilities.convertStringToInt(rs.getString("Analyzed")));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -345,7 +348,7 @@ public class CellItemDAO {
                     + "WHERE ci.CellItemStatus = 0 "
                     + "AND s.SyllabusID = "+syllabusId+" "
                     + "AND ci.BloomsClassID = "+bloomsClassId+" "
-                    + "AND ci.DiscriminationIndex = 0 ");
+                    + "AND ci.Analyzed = 0 ");
             while(rs.next()){                
                 total = CommonUtilities.convertStringToInt(rs.getString("u"));
             }
@@ -381,7 +384,7 @@ public class CellItemDAO {
                     + "WHERE ci.CellItemStatus = 0 "
                     + "AND s.SyllabusID = "+syllabusId+" "
                     + "AND ci.BloomsClassID = "+bloomsClassId+" "
-                    + "AND ci.DiscriminationIndex = 1 ");
+                    + "AND ci.Analyzed = 1 ");
             while(rs.next()){                
                 total = CommonUtilities.convertStringToInt(rs.getString("a"));
             }

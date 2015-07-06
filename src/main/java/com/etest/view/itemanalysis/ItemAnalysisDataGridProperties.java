@@ -9,7 +9,9 @@ import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
+import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Notification;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -53,23 +55,22 @@ public class ItemAnalysisDataGridProperties extends Grid {
         addColumn("difficulty interpretation", String.class);
         addColumn("discrimination index", Double.class);
         addColumn("discrimination interpretation", String.class);
+        addColumn("itemId", Integer.class);
         
         HeaderRow mainHeader = getDefaultHeaderRow();
         mainHeader.getCell("difficulty index").setText("Difficulty");
         mainHeader.getCell("difficulty interpretation").setText("Interpretation");
         mainHeader.getCell("discrimination index").setText("Discrimination");
         mainHeader.getCell("discrimination interpretation").setText("Interpretation");
+        mainHeader.getCell("itemId").setText("Item ID");
         
         int itemNo = 1;
         for(Integer cellItemId : itemIds){
-            addRow(itemNo, null, null, null, null);
+            addRow(itemNo, null, null, null, null, cellItemId);
             itemNo++;
         }
         
-        List<Double> upperDifficultyIndex = new ArrayList<>();
         List<Double> upperProportion = new ArrayList<>();
-        
-        List<Double> lowerDifficultyIndex = new ArrayList<>();
         List<Double> lowerProportion = new ArrayList<>();
                  
         int upper = 0;        
@@ -122,6 +123,8 @@ public class ItemAnalysisDataGridProperties extends Grid {
                                             upperProportion.get(itemId-1), 
                                             lowerProportion.get(itemId-1)))));
         }
+        
+        removeColumn("itemId");
     }
     
     int getTqCoverageId(){

@@ -14,7 +14,11 @@ import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.etest.view.tq.TQItemAnalysisUI;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
@@ -62,8 +66,13 @@ public class FileUploadWindow extends Window {
     File excelFile;
     int totalItems;
     
-    public FileUploadWindow(int tqCoverageId) {
+    Grid grid;
+    Button analyze;
+    
+    public FileUploadWindow(int tqCoverageId, 
+            Button analyze) {
         this.tqCoverageId = tqCoverageId;
+        this.analyze = analyze;
         
         setCaption("UPLOAD FILE");
         setWidth("700px");
@@ -84,23 +93,29 @@ public class FileUploadWindow extends Window {
         manager.getUploader().setMaxFileSize("5mb");
         manager.getUploader().addFileUploadedListener((PluploadFile file) -> {            
             excelFile = new File(file.getUploadedFile().toString());
-            readContentFromExcelFile(excelFile);  
-                                          
+            
+            String extension = "";
+            int i = excelFile.getName().lastIndexOf('.');
+            if(i >= 0){
+                extension = excelFile.getName().substring(i+1);
+            }
+            
+            if(extension.equals("xlsx")){
+                Notification.show("Convert Excel File from .xlsx to .xls",Notification.Type.ERROR_MESSAGE);
+                return;
+            }
+            
+            readContentFromExcelFile(excelFile);                                            
             Notification.show("Succesfully uploaded file: " + file.getName());
             
-            v.addComponent(viewTableProportion());
+            HorizontalLayout h = new HorizontalLayout();
+            h.setWidth("100%");
             
-            Panel panel = new Panel("ITEM ANALYSIS");
-            panel.setWidth("100%");
-            panel.setContent(new ItemAnalysisDataGridProperties(
-                    getTqCoverageId(), 
-                    getUpperGroupStudentNo(), 
-                    getLowerGroupStudentNo(), 
-                    tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
-                    getStudentNoAndAnswer(), 
-                    getGroupTotalForProportion()));
-            
-            v.addComponent(panel);            
+            h.addComponent(viewTableProportion());
+            h.addComponent(approveItemAnalysis());
+            v.addComponent(h);
+                                    
+            v.addComponent(itemAnalysisGridPanel());            
         });
         
         manager.getUploader().addErrorListener((PluploadError error) -> {
@@ -114,7 +129,27 @@ public class FileUploadWindow extends Window {
         setContent(v);
     }
     
-    void readContentFromExcelFile(File excelFile){        
+    Panel itemAnalysisGridPanel(){
+        grid = new ItemAnalysisDataGridProperties(
+                getTqCoverageId(), 
+                getUpperGroupStudentNo(), 
+                getLowerGroupStudentNo(), 
+                tq.getCellItemIdByTQCoverageId(getTqCoverageId()), 
+                getStudentNoAndAnswer(), 
+                getGroupTotalForProportion());
+        
+        Panel panel = new Panel("ITEM ANALYSIS");
+        panel.setWidth("100%");
+        panel.setContent(grid);
+        
+        return panel;
+    }
+    
+    Grid getItemAnalysisGrid(){
+        return grid;
+    }
+    
+    void readContentFromExcelFile(File excelFile){            
         try {
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(excelFile));
             HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -313,6 +348,22 @@ public class FileUploadWindow extends Window {
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
+        });
+        
+        return button;
+    }
+    
+    Button approveItemAnalysis(){
+        Button button = new Button("Approve Item Analysis");
+        button.setWidthUndefined();
+        button.addStyleName(ValoTheme.BUTTON_LINK);
+        button.addClickListener((Button.ClickEvent event) -> {  
+            boolean result = tq.saveItemAnalysis(getItemAnalysisGrid(), 
+                    getTqCoverageId());
+            if(result){
+                close();
+                analyze.setCaption("Analyze");
+            }            
         });
         
         return button;

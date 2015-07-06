@@ -7,6 +7,7 @@ package com.etest.view.itemanalysis;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.Date;
 
@@ -28,14 +29,14 @@ public class ItemAnalysisDataTable extends Table {
         addContainerProperty("date created", Date.class, null);
         addContainerProperty("Total Hours", Double.class, null);
         addContainerProperty("Total Items", Integer.class, null);
-        addContainerProperty("remarks", Button.class, null);
+        addContainerProperty("remarks", VerticalLayout .class, null);
         
         setColumnAlignment("date created", Align.CENTER);
         setColumnAlignment("Total Hours", Align.CENTER);
         setColumnAlignment("Total Items", Align.CENTER);
         setColumnAlignment("remarks", Align.CENTER);
         
-        setColumnWidth("remarks", 100);
+        setColumnWidth("remarks", 120);
     }
     
 }

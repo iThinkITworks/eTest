@@ -260,8 +260,8 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     }
 
     @Override
-    public List<CellItem> getItemIdByDiscriminationIndex(Grid grid) {
-        return TQCoverageDAO.getItemIdByDiscriminationIndex(grid);
+    public List<CellItem> getItemIdByBloomClassId(Grid grid) {
+        return TQCoverageDAO.getItemIdByBloomClassId(grid);
     }
 
     @Override
@@ -320,6 +320,13 @@ public class TQCoverageServiceImpl implements TQCoverageService {
     @Override
     public TQCoverage getTQCoverageById(int tqCoverageId) {
         return TQCoverageDAO.getTQCoverageById(tqCoverageId);
+    }
+
+    @Override
+    public boolean saveItemAnalysis(Grid grid, 
+            int tqCoverageId) {
+        return TQCoverageDAO.saveItemAnalysis(grid, 
+                tqCoverageId);
     }
 
 }

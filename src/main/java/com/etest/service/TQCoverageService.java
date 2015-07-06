@@ -65,7 +65,7 @@ public interface TQCoverageService {
     public boolean isRunningTotalGreaterThanMaxItemsTotal(int runningTotal, 
             double maxItemsTotal);
     
-    public List<CellItem> getItemIdByDiscriminationIndex(Grid grid);
+    public List<CellItem> getItemIdByBloomClassId(Grid grid);
     
     public boolean insertNewTQCoverage(TopicCoverage coverage, 
             TQItems items, 
@@ -90,4 +90,7 @@ public interface TQCoverageService {
             int cellItemId);
     
     public TQCoverage getTQCoverageById(int tqCoverageId);
+    
+    public boolean saveItemAnalysis(Grid grid, 
+            int tqCoverageId);
 }

@@ -5,7 +5,7 @@
  */
 package com.etest.view.tq;
 
-import com.etest.model.TQCoverage;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 
@@ -14,8 +14,9 @@ import com.vaadin.ui.VerticalLayout;
  * @author jetdario
  */
 public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeListener {
-
+    
     TQListUI tqListUI = new TQListUI();
+    TQItemAnalysisUI tqItemAnalysis = new TQItemAnalysisUI();
     
     public TQMainUI() {
         setWidth("100%");
@@ -25,20 +26,20 @@ public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeList
         v.setCaption("Create TQ Coverage");
         v.setWidth("100%");
         v.addComponent(new TQCoverageUI());
-//        v.setMargin(true);
+        v.setMargin(true);
         addComponent(v);
         
         v = new VerticalLayout();
         v.setCaption("TQ List");
         v.setWidth("100%");
-        v.addComponent(tqListUI);
+        v.addComponent(tqListUI.populateDataTable());
         v.setMargin(true);        
         addComponent(v);
         
         v = new VerticalLayout();
         v.setCaption("Item Analysis");
         v.setWidth("100%");
-        v.addComponent(new TQItemAnalysisUI());
+        v.addComponent(tqItemAnalysis.populateDataTable());
         v.setMargin(true);        
         addComponent(v);
         
@@ -48,7 +49,8 @@ public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeList
     @Override
     public void selectedTabChange(TabSheet.SelectedTabChangeEvent event) {
         //TODO
-        tqListUI.populateTable();
+        tqItemAnalysis.populateDataTable();
+        tqListUI.populateDataTable();        
     }
         
 }

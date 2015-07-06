@@ -26,6 +26,7 @@ public class CellItem extends CellCase {
     private double difficultIndex;
     private double discriminationIndex;
     private Date dateCreated; 
+    private int analyze;
     private Map<String, String> itemKeys;
 
     public int getCellItemId() {
@@ -70,6 +71,10 @@ public class CellItem extends CellCase {
 
     public double getDiscriminationIndex() {
         return discriminationIndex;
+    }
+
+    public int getAnalyze() {
+        return analyze;
     }
 
     public Map<String, String> getItemKeys() {
@@ -118,6 +123,10 @@ public class CellItem extends CellCase {
 
     public void setDiscriminationIndex(double discriminationIndex) {
         this.discriminationIndex = discriminationIndex;
+    }
+
+    public void setAnalyze(int analyze) {
+        this.analyze = analyze;
     }
 
     public void setItemKeys(Map<String, String> itemKeys) {

@@ -77,9 +77,11 @@ public class TQCoverageUI extends VerticalLayout {
     ComboBox topic = new ComboBox();
     FooterRow footer;
     
+    TQListUI tqListUI = new TQListUI();
+    TQItemAnalysisUI tqItemAnalysis = new TQItemAnalysisUI();
+    
     private int syllabusId;
     private String topicStr;
-//    private int bloomsClassId;
     private int totalTestItems;
     private int curriculumId;
     private int teamTeachId;
@@ -89,8 +91,7 @@ public class TQCoverageUI extends VerticalLayout {
     }
     
     public TQCoverageUI() {
-        setSizeFull();
-        setMargin(true);      
+        setSizeFull();    
                            
         addComponent(buildTQCoverageForms());
         addComponent(grid);
@@ -123,7 +124,7 @@ public class TQCoverageUI extends VerticalLayout {
                         if(tq.calculateTotalPickItemsPerTopic(grid, itemId) > 
                                 CommonUtilities.convertStringToDouble(item.getItemProperty("Max Items").getValue().toString())){
                             item.getItemProperty(event.getPropertyId()).setValue(0);
-                            ShowErrorNotification.error("Runnint Total is greater than Max Items");
+                            ShowErrorNotification.error("Running Total is greater than Max Items");
                         } else {
                             item.getItemProperty("Running Total").setValue(tq.calculateTotalPickItemsPerTopic(grid, itemId));
                             footer.getCell("Running Total").setText(String.valueOf(tq.calculateRunningTotal(grid)));
@@ -414,7 +415,7 @@ public class TQCoverageUI extends VerticalLayout {
         coverage.setSyllabusId(getSyllabusId());
         coverage.setTotalItems(getTotalTestItems());
         
-        List<CellItem> cellItemIdList = tq.getItemIdByDiscriminationIndex(grid);
+        List<CellItem> cellItemIdList = tq.getItemIdByBloomClassId(grid);
         List<Integer> cellCaseIdList = new ArrayList<>();
         cellItemIdList.stream().map((ci) -> ccs.getCellCaseIdByCellItemId(ci.getCellItemId())).forEach((c) -> {
             cellCaseIdList.add(c.getCellCaseId());
@@ -458,22 +459,8 @@ public class TQCoverageUI extends VerticalLayout {
         boolean result = tq.insertNewTQCoverage(coverage, tqItems, cellCaseItemKey, grid);
         if(result){
             Notification.show("Successfully Created TQ Coverage!", Notification.Type.HUMANIZED_MESSAGE);
-            clearFieldsAfterSaving();
-            return;
-        }
-        
-//        Window pdf = new TQViewer(grid,
-//                (int) subject.getValue(), 
-//                getTotalTestItems());
-//        if(pdf.getParent() == null){
-//            UI.getCurrent().addWindow(pdf);
-//        }
-//        Window sub = new TQCoverageWindow(grid,
-//                (int) subject.getValue(), 
-//                getTotalTestItems());
-//        if(sub.getParent() == null){
-//            UI.getCurrent().addWindow(sub);
-//        }
+            clearFieldsAfterSaving();             
+        }        
     };    
         
     void populateGridRow(Item item){
