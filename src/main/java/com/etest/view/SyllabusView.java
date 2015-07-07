@@ -8,7 +8,6 @@ package com.etest.view;
 import com.etest.view.systemadministration.SyllabusMainUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -19,6 +18,7 @@ public class SyllabusView extends VerticalLayout implements View{
 
     public SyllabusView() {
         setWidth("100%");
+        addStyleName("background-image-layout");
         
         addComponent(new SyllabusMainUI());
     }

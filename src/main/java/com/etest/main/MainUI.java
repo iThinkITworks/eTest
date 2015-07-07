@@ -562,6 +562,7 @@ private boolean testMode = false;
         vlayout.setSizeFull();
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
+        vlayout.addStyleName("background-image-layout");
         
         final Window sub = new Window("", vlayout);
         sub.setSizeFull();

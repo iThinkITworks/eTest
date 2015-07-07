@@ -5,11 +5,9 @@
  */
 package com.etest.view;
 
-import com.etest.view.tq.TQCoverageUI;
 import com.etest.view.tq.TQMainUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -20,6 +18,7 @@ public class TQView extends VerticalLayout implements View {
 
     public TQView() {
         setWidth("100%");
+        addStyleName("background-image-layout");
                 
         addComponent(new TQMainUI());
     }

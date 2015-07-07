@@ -20,6 +20,7 @@ public class CurriculumView extends VerticalLayout implements View {
     
     public CurriculumView() {
         setWidth("100%");
+        addStyleName("background-image-layout");
                 
         addComponent(new CurriculumMainUI());
     }    

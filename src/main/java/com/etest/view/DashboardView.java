@@ -7,7 +7,6 @@ package com.etest.view;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 /**
@@ -18,10 +17,7 @@ public class DashboardView extends VerticalLayout implements View {
 
     public DashboardView() {
         setSizeFull();
-        
-        Label h1 = new Label("Dashboard View");
-        h1.addStyleName("h1");
-        addComponent(h1);
+        addStyleName("background-image-layout");
     }
 
     @Override

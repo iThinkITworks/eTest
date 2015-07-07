@@ -283,6 +283,14 @@
       font-size: 12px;
   }
   
+  .background-image-layout{
+      background: url(../img/etest.png);
+      -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+  }
+  
   // Need to use normal media queries because Responsive doesn't work for overlay elements just yet
   @media screen and (max-width: 480px) {
     .notifications.v-window {
