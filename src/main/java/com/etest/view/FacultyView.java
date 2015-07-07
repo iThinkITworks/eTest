@@ -18,7 +18,7 @@ public class FacultyView extends VerticalLayout implements View {
     
     public FacultyView() {
         setWidth("100%");
-        addStyleName("background-image-layout");
+//        addStyleName("background-image-layout");
         
         addComponent(new FacultyMainUI());
     }

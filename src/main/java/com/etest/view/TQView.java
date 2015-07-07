@@ -18,7 +18,7 @@ public class TQView extends VerticalLayout implements View {
 
     public TQView() {
         setWidth("100%");
-        addStyleName("background-image-layout");
+//        addStyleName("background-image-layout");
                 
         addComponent(new TQMainUI());
     }

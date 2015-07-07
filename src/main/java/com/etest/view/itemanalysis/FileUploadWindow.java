@@ -264,8 +264,10 @@ public class FileUploadWindow extends Window {
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
         
         double upperGroup = 0;   
+        double proportion;
         if(studentNoAndTotalScore.size() < 30){
             upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .5);
+            proportion = CommonUtilities.roundOffToTwoDecimal(studentNoAndTotalScore.size() * .5);
             int i = 1;
             Iterator iterator = sorted.iterator();
             if((studentNoAndTotalScore.size() % 2) != 0){
@@ -295,6 +297,7 @@ public class FileUploadWindow extends Window {
             }
         } else {
             upperGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .27);
+            proportion = CommonUtilities.roundOffToTwoDecimal(studentNoAndTotalScore.size() * .27);
             double lowerGroup = CommonUtilities.roundingDownToWholeNumber(studentNoAndTotalScore.size() * .73);
             int i = 0;
             Iterator iterator = sorted.iterator();
@@ -311,7 +314,7 @@ public class FileUploadWindow extends Window {
             }
         }    
         
-        groupTotalForProportion = upperGroup;
+        groupTotalForProportion = proportion;
     }
     
     int getTqCoverageId(){

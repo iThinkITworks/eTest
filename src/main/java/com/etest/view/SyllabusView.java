@@ -18,7 +18,7 @@ public class SyllabusView extends VerticalLayout implements View{
 
     public SyllabusView() {
         setWidth("100%");
-        addStyleName("background-image-layout");
+//        addStyleName("background-image-layout");
         
         addComponent(new SyllabusMainUI());
     }

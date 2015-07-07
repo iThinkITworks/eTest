@@ -17,7 +17,7 @@ public class HousekeepingView extends VerticalLayout implements View {
 
     public HousekeepingView() {
         setSizeFull();
-        addStyleName("background-image-layout");
+//        addStyleName("background-image-layout");
     }
 
     @Override

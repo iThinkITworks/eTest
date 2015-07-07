@@ -18,7 +18,7 @@ public class SemestralTeamView extends VerticalLayout implements View {
 
     public SemestralTeamView() {
         setWidth("100%");
-        addStyleName("background-image-layout");
+//        addStyleName("background-image-layout");
         
         addComponent(new SemestralTeamUI());
     }
