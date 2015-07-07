@@ -75,4 +75,9 @@ public class CellItemServiceImpl implements CellItemService {
     public Map<String, Character> getOptionAnswer(int cellItemId) {
         return CellItemDAO.getOptionAnswer(cellItemId);
     }
+
+    @Override
+    public List<CellItem> getItemAnalysisResult(int tqCoverageId) {
+        return CellItemDAO.getItemAnalysisResult(tqCoverageId);
+    }
 }

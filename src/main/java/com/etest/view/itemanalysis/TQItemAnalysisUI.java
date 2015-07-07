@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.tq;
+package com.etest.view.itemanalysis;
 
 import com.etest.model.TQCoverage;
 import com.etest.service.CurriculumService;
@@ -11,7 +11,7 @@ import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.view.itemanalysis.FileUploadWindow;
-import com.etest.view.itemanalysis.ItemAnalysisDataTable;
+import com.etest.view.itemanalysis.ItemAnalysisDataTableProperties;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -20,77 +20,57 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import pl.exsio.plupload.manager.PluploadManager;
 
 /**
  *
  * @author jetdario
  */
-public class TQItemAnalysisUI extends VerticalLayout {
+public class TQItemAnalysisUI extends ItemAnalysisDataTableProperties {
 
     TQCoverageService tq = new TQCoverageServiceImpl();
     CurriculumService cs = new CurriculumServiceImpl();
     
     private int tqCoverageId = 0;
-    List<String> upperGroupStudentNo = new ArrayList<>();
-    List<String> lowerGroupStudentNo = new ArrayList<>();
-    List<Integer> itemIds;
-    Map<String, List<Character>> studentNoAndAnswer;
-    private double groupTotalForProportion = 0;
-    File excelFile;
     
-    Table table = new ItemAnalysisDataTable();
-    PluploadManager manager;
-    
-    public TQItemAnalysisUI() {
-        setWidth("100%");        
-        
-        addComponent(populateDataTable());
+    public TQItemAnalysisUI() {        
+        populateDataTable();
     }
         
     public Table populateDataTable(){
-        table.removeAllItems();
+        removeAllItems();
         int i = 0;
         for(TQCoverage t : tq.getAllTQCoverage()){   
             VerticalLayout v = new VerticalLayout();
             v.setWidth("100%");
             
             Button analyze = new Button();
-            analyze.setSizeFull();
+            analyze.setWidthUndefined();
             analyze.setData(t.getTqCoverageId());
             analyze.setCaption((t.getAnalyzed() == 0) ? "Unanalyze" : "Analyzed");
             analyze.setIcon(FontAwesome.BULLSEYE);
             analyze.addStyleName(ValoTheme.BUTTON_LINK);
             analyze.addStyleName(ValoTheme.BUTTON_TINY);
             analyze.addStyleName(ValoTheme.BUTTON_QUIET);
-            analyze.addStyleName("button-container");
-            analyze.addClickListener((Button.ClickEvent event) -> {                
-                tqCoverageId = (int) event.getButton().getData();
-                Window sub = new FileUploadWindow(tqCoverageId, event.getButton());
-                if(sub.getParent() == null){
-                    UI.getCurrent().addWindow(sub);
-                }
-            });           
+            analyze.addStyleName("button-container");      
+            analyze.setEnabled(t.getAnalyzed() == 0);
+            analyze.addClickListener(buttonClickListener);
             v.addComponent(analyze);
             v.setComponentAlignment(analyze, Alignment.MIDDLE_LEFT);
             
             Button view = new Button("View");
-            view.setSizeFull();
+            view.setWidthUndefined();
             view.setData(t.getTqCoverageId());
             view.setIcon(FontAwesome.VIDEO_CAMERA);
             view.addStyleName(ValoTheme.BUTTON_LINK);
             view.addStyleName(ValoTheme.BUTTON_TINY);
             view.addStyleName(ValoTheme.BUTTON_QUIET);
             view.addStyleName("button-container");
-            view.setVisible((t.getAnalyzed() == 0));
+            view.setVisible((t.getAnalyzed() != 0));
+            view.addClickListener(buttonClickListener);
             v.addComponent(view);
             v.setComponentAlignment(view, Alignment.MIDDLE_LEFT);
             
-            table.addItem(new Object[]{
+            addItem(new Object[]{
                 t.getExamTitle(), 
                 cs.getCurriculumById(t.getCurriculumId()).getSubject(), 
                 t.getDateCreated(), 
@@ -100,29 +80,30 @@ public class TQItemAnalysisUI extends VerticalLayout {
             }, i);
             i++;
         }
-        table.setPageLength(table.size()); 
-        table.setImmediate(true);
+        setPageLength(size()); 
         
-        return table;
+        return this;
     }
     
     int getTqCoverageId(){
         return tqCoverageId;
     }
     
-    List<String> getUpperGroupStudentNo(){
-        return upperGroupStudentNo;
-    }
-    
-    List<String> getLowerGroupStudentNo(){
-        return lowerGroupStudentNo;
-    }
-    
-    Map<String, List<Character>> getStudentNoAndAnswer(){
-        return studentNoAndAnswer;
-    }
-    
-    double getGroupTotalForProportion(){
-        return groupTotalForProportion;
-    }
+    Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
+        Window sub;
+        if(event.getButton().getCaption().equals("View")){
+            sub = new ItemAnalysisViewResultWindow((int) event.getButton().getData());
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        } else {
+            sub = new FileUploadWindow((int) event.getButton().getData(), event.getButton());
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+            sub.addWindowModeChangeListener((Window.WindowModeChangeEvent event1) -> {
+                populateDataTable();
+            });
+        }
+    };
 }

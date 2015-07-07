@@ -12,7 +12,6 @@ import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.etest.view.tq.TQItemAnalysisUI;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -68,6 +67,7 @@ public class FileUploadWindow extends Window {
     
     Grid grid;
     Button analyze;
+    Button view;
     
     public FileUploadWindow(int tqCoverageId, 
             Button analyze) {

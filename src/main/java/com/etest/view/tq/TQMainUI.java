@@ -5,6 +5,7 @@
  */
 package com.etest.view.tq;
 
+import com.etest.view.itemanalysis.TQItemAnalysisUI;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;

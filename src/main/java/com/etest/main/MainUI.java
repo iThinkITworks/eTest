@@ -1,6 +1,6 @@
 package com.etest.main;
 
-import com.etest.view.tq.TQItemAnalysisUI;
+import com.etest.view.itemanalysis.TQItemAnalysisUI;
 import com.etest.view.CellCaseView;
 import com.etest.view.SyllabusView;
 import com.etest.view.HousekeepingView;

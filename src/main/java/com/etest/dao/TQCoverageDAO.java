@@ -869,14 +869,13 @@ public class TQCoverageDAO {
                                 pstmt.setDouble(1, CommonUtilities.convertStringToDouble(item.getItemProperty("difficulty index").getValue().toString()));
                                 pstmt.setDouble(2, CommonUtilities.convertStringToDouble(item.getItemProperty("discrimination index").getValue().toString()));
                                 pstmt.setInt(3, 1);
-                                pstmt.executeUpdate();
-                                
-                                pstmt = conn.prepareStatement("UPDATE tq_coverage SET "
-                                        + "Analyzed = 1 "
-                                        + "WHERE TqCoverageID = "+tqCoverageId+" ");
-                                pstmt.executeUpdate();
-                            }
+                                pstmt.executeUpdate();                                
+                            }                            
                         }
+                        pstmt = conn.prepareStatement("UPDATE tq_coverage SET "
+                                + "Analyzed = 1 "
+                                + "WHERE TqCoverageID = "+tqCoverageId+" ");
+                        pstmt.executeUpdate();
                     }                    
                 }
             }         

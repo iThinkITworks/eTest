@@ -17,10 +17,9 @@ import java.util.Date;
 public class TQListTableProperties extends Table {
 
     public TQListTableProperties() {
-        setWidth("90%");
+        setWidth("80%");
         setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
-//        setStyleName("wordwrap-table");
         setImmediate(true);
         
         addContainerProperty("Exam Title", String.class, null);

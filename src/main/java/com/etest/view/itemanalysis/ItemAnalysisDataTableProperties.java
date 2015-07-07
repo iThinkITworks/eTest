@@ -15,14 +15,13 @@ import java.util.Date;
  *
  * @author jetdario
  */
-public class ItemAnalysisDataTable extends Table {
+public class ItemAnalysisDataTableProperties extends Table {
     
-    public ItemAnalysisDataTable() {
+    public ItemAnalysisDataTableProperties() {
         setWidth("80%");
         setSelectable(false);
         addStyleName(ValoTheme.TABLE_SMALL);
         setImmediate(true);
-        setSelectable(true);
         
         addContainerProperty("Exam Title", String.class, null);
         addContainerProperty("Subject", String.class, null);
@@ -36,7 +35,7 @@ public class ItemAnalysisDataTable extends Table {
         setColumnAlignment("Total Items", Align.CENTER);
         setColumnAlignment("remarks", Align.CENTER);
         
-        setColumnWidth("remarks", 120);
+        setColumnWidth("remarks", 100);
     }
     
 }

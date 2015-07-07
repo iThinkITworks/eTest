@@ -39,4 +39,6 @@ public interface CellItemService {
             int bloomsClassId);
     
     public Map<String, Character> getOptionAnswer(int cellItemId);
+    
+    public List<CellItem> getItemAnalysisResult(int tqCoverageId);
 }

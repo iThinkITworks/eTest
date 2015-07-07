@@ -19,7 +19,6 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
-import java.util.List;
 
 /**
  *
@@ -94,6 +93,7 @@ public class TQListUI extends TQListTableProperties{
             }, i);
             i++;
         }
+        setPageLength(size());
         
         return this;
     }

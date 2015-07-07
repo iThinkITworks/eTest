@@ -5,6 +5,7 @@
  */
 package com.etest.view.tq;
 
+import com.etest.view.itemanalysis.TQItemAnalysisUI;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.common.CurriculumPropertyChangeListener;

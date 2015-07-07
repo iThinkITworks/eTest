@@ -436,4 +436,38 @@ public class CellItemDAO {
         
         return option;
     }
+
+    public static List<CellItem> getItemAnalysisResult(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<CellItem> cellItemlist = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM item_analysis_view "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            while(rs.next()){
+                CellItem ci = new CellItem();
+                ci.setCellItemId(CommonUtilities.convertStringToInt(rs.getString("CellItemID")));
+                ci.setDifficultIndex(CommonUtilities.convertStringToDouble(rs.getString("DifficultIndex")));
+                ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
+                cellItemlist.add(ci);
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {            
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return cellItemlist;
+    }
 }
