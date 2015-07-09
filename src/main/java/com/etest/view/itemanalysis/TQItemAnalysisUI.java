@@ -90,18 +90,17 @@ public class TQItemAnalysisUI extends ItemAnalysisDataTableProperties {
     }
     
     Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
-        Window sub;
         if(event.getButton().getCaption().equals("View")){
-            sub = new ItemAnalysisViewResultWindow((int) event.getButton().getData());
+            Window sub = new ItemAnalysisViewResultWindow((int) event.getButton().getData());
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
         } else {
-            sub = new FileUploadWindow((int) event.getButton().getData(), event.getButton());
+            Window sub = new FileUploadWindow((int) event.getButton().getData());
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
-            sub.addWindowModeChangeListener((Window.WindowModeChangeEvent event1) -> {
+            sub.addCloseListener((Window.CloseEvent e) -> {
                 populateDataTable();
             });
         }

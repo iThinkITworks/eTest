@@ -61,18 +61,18 @@ public class FileUploadWindow extends Window {
     List<String> lowerGroupStudentNo = new ArrayList<>();
     List<Integer> itemIds;
     Map<String, List<Character>> studentNoAndAnswer;
+    Map<String, Integer> studentNoAndTotalScore;
     private double groupTotalForProportion = 0;
     File excelFile;
     int totalItems;
     
     Grid grid;
-    Button analyze;
     Button view;
     
-    public FileUploadWindow(int tqCoverageId, 
-            Button analyze) {
+    TQItemAnalysisUI tqItemAnalysisUI = new TQItemAnalysisUI();
+    
+    public FileUploadWindow(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
-        this.analyze = analyze;
         
         setCaption("UPLOAD FILE");
         setWidth("700px");
@@ -112,6 +112,7 @@ public class FileUploadWindow extends Window {
             h.setWidth("100%");
             
             h.addComponent(viewTableProportion());
+            h.addComponent(viewStudentsTotalScore());
             h.addComponent(approveItemAnalysis());
             v.addComponent(h);
                                     
@@ -240,7 +241,7 @@ public class FileUploadWindow extends Window {
             }
             
             int totalScore = 0;
-            Map<String, Integer> studentNoAndTotalScore = new HashMap<>();
+            studentNoAndTotalScore = new HashMap<>();
             studentNoAndAnswer = new HashMap<>();
             int totalItems = 1;
             for(ItemAnalysis i : itemAnalysisList){
@@ -337,6 +338,10 @@ public class FileUploadWindow extends Window {
         return groupTotalForProportion;
     }
     
+    Map<String, Integer> getStudentNoAndTotalScore(){
+        return studentNoAndTotalScore;
+    }
+    
     Button viewTableProportion(){
         Button button = new Button("View Proportion Table");
         button.setWidthUndefined();
@@ -356,6 +361,19 @@ public class FileUploadWindow extends Window {
         return button;
     }
     
+    Button viewStudentsTotalScore(){
+        Button button = new Button("View Students Total Scores");
+        button.setWidthUndefined();
+        button.addStyleName(ValoTheme.BUTTON_LINK);
+        button.addClickListener((Button.ClickEvent event) -> {
+            Window sub = new StudentsTotalScoreWindow(getStudentNoAndTotalScore());
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+        return button;
+    }
+    
     Button approveItemAnalysis(){
         Button button = new Button("Approve Item Analysis");
         button.setWidthUndefined();
@@ -365,7 +383,6 @@ public class FileUploadWindow extends Window {
                     getTqCoverageId());
             if(result){
                 close();
-                analyze.setCaption("Analyze");
             }            
         });
         
