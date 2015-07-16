@@ -5,6 +5,7 @@
  */
 package com.etest.view.testbank;
 
+import com.etest.administrator.UserAccess;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.model.CellCase;
@@ -21,6 +22,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.RichTextArea;
 import com.vaadin.ui.TextArea;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -34,7 +37,7 @@ public class CellCaseWindow extends Window {
     ComboBox subject = CommonComboBox.getSubjectFromCurriculum("Select a Subject..");
     ComboBox topic = new ComboBox();
     TextArea caseTopic;
-    
+        
     private int cellCaseId;
     
     public CellCaseWindow(int cellCaseId) {
@@ -47,6 +50,8 @@ public class CellCaseWindow extends Window {
         
         setContent(buildForms());
         getContent().setHeightUndefined();
+        System.out.println("user type: "+VaadinSession.getCurrent().getAttribute("userType"));
+        System.out.println("access: "+UserAccess.approve());
     }
     
     FormLayout buildForms(){
@@ -94,13 +99,15 @@ public class CellCaseWindow extends Window {
         approve.setIcon(FontAwesome.THUMBS_UP);
         approve.addStyleName(ValoTheme.BUTTON_PRIMARY);
         approve.addStyleName(ValoTheme.BUTTON_SMALL);
+        approve.setEnabled(UserAccess.approve());
         approve.addClickListener(buttonClickListener);
         
         Button delete = new Button("DELETE");
         delete.setWidth("200px");
-        delete.setIcon(FontAwesome.ERASER);
+        delete.setIcon(FontAwesome.TRASH_O);
         delete.addStyleName(ValoTheme.BUTTON_PRIMARY);
         delete.addStyleName(ValoTheme.BUTTON_SMALL);
+        delete.setEnabled(UserAccess.delete());
         delete.addClickListener(buttonClickListener);
         
         if(getCellCaseId() != 0){
@@ -109,6 +116,7 @@ public class CellCaseWindow extends Window {
             topic.setValue(cc.getSyllabusId());
             caseTopic.setValue(cc.getCaseTopic());
                         
+            approve.setVisible(cc.getApprovalStatus() == 0);
             hlayout.addComponent(approve);
             hlayout.setComponentAlignment(approve, Alignment.MIDDLE_RIGHT);
             
@@ -142,17 +150,16 @@ public class CellCaseWindow extends Window {
             Notification.show("Select a Topic", Notification.Type.WARNING_MESSAGE);
             return;
         }
-        
-        CellCase c = new CellCase();
-        c.setSyllabusId((int) topic.getValue());
-        c.setCaseTopic(CommonUtilities.escapeSingleQuote(caseTopic.getValue().trim()));
-        c.setUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
-        c.setCellCaseId(getCellCaseId());
+                
+        CellCase cellCase = new CellCase();
+        cellCase.setSyllabusId((int) topic.getValue());
+        cellCase.setCaseTopic(CommonUtilities.escapeSingleQuote(caseTopic.getValue().trim()));
+        cellCase.setUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));        
         
         switch (event.getButton().getCaption()){
             case "SAVE": 
                 {
-                    boolean result = ccs.insertNewCellCase(c);
+                    boolean result = ccs.insertNewCellCase(cellCase);
                     if(result){
                         close();
                     }
@@ -160,14 +167,13 @@ public class CellCaseWindow extends Window {
                 }
             case "MODIFY":
                 {
-                    boolean result = ccs.modifyCellCase(c);
-                    if(result){
-                        close();
-                    }
+                    cellCase.setCellCaseId(getCellCaseId());
+                    Window sub = modifyCaseWindow(cellCase);
                     break;
                 }
             case "APPROVE":
                 {
+                    cellCase.setCellCaseId(getCellCaseId());
                     boolean result = ccs.approveCellCase(getCellCaseId());
                     if(result){
                         close();
@@ -184,4 +190,56 @@ public class CellCaseWindow extends Window {
             }
         }        
     };
+    
+    Window modifyCaseWindow(CellCase cellCase){
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);
+        
+        Window sub = new Window("MODIFY");
+        sub.setWidth("400px");
+        sub.setModal(true);
+        sub.center();
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
+        }
+        
+        ComboBox actionDone = new ComboBox();
+        actionDone.setWidth("70%");
+        actionDone.addStyleName(ValoTheme.COMBOBOX_SMALL);
+        actionDone.setNullSelectionAllowed(false);
+        actionDone.addItem("resolved");
+        actionDone.addItem("clarified");
+        actionDone.addItem("modified");
+        actionDone.setImmediate(true);
+        v.addComponent(actionDone);
+        
+        TextArea remarks = new TextArea("Remarks: ");
+        remarks.setWidth("100%");
+        remarks.setRows(3);
+        v.addComponent(remarks);
+        
+        Button modify = new Button("UPDATE");
+        modify.setWidth("70%");
+        modify.setIcon(FontAwesome.EDIT);
+        modify.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        modify.addStyleName(ValoTheme.BUTTON_SMALL);
+        modify.addClickListener((Button.ClickEvent event) -> {            
+            cellCase.setActionDone(actionDone.getValue().toString());
+            cellCase.setRemarks(remarks.getValue().trim());
+            boolean result = ccs.modifyCellCase(cellCase);
+            if(result){
+                Notification.show("Case has been Modified!", Notification.Type.TRAY_NOTIFICATION);
+                sub.close();
+                close();
+            }
+        });
+        v.addComponent(modify);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
 }

@@ -1,5 +1,6 @@
 package com.etest.main;
 
+import com.etest.administrator.UserAccess;
 import com.etest.view.itemanalysis.TQItemAnalysisUI;
 import com.etest.view.CellCaseView;
 import com.etest.view.SyllabusView;
@@ -161,30 +162,7 @@ private boolean testMode = false;
         navigator.addView("semestral-team", SemestralTeamView.class);
         navigator.addView("housekeeping", HousekeepingView.class);
         navigator.addView("cells", CellCaseView.class);
-//        navigator.addView("run-item-analysis", TQItemAnalysisUI.class);
-        navigator.addView("tq", TQView.class);
-        
-//        navigator.addView("common", CommonParts.class);
-//        navigator.addView("labels", Labels.class);
-//        navigator.addView("buttons-and-links", ButtonsAndLinks.class);
-//        navigator.addView("textfields", TextFields.class);
-//        navigator.addView("datefields", DateFields.class);
-//        navigator.addView("comboboxes", ComboBoxes.class);
-//        navigator.addView("checkboxes", CheckBoxes.class);
-//        navigator.addView("sliders", Sliders.class);
-//        navigator.addView("menubars", MenuBars.class);
-//        navigator.addView("panels", Panels.class);
-//        navigator.addView("trees", Trees.class);
-//        navigator.addView("tables", Tables.class);
-//        navigator.addView("splitpanels", SplitPanels.class);
-//        navigator.addView("tabs", Tabsheets.class);
-//        navigator.addView("accordions", Accordions.class);
-//        navigator.addView("colorpickers", ColorPickers.class);
-//        navigator.addView("selects", NativeSelects.class);
-//        navigator.addView("calendar", CalendarTest.class);
-//        navigator.addView("forms", Forms.class);
-//        navigator.addView("popupviews", PopupViews.class);
-//        navigator.addView("dragging", Dragging.class);
+        navigator.addView("tq", TQView.class);        
 
         final String f = Page.getCurrent().getUriFragment();
         if (f == null || f.equals("")) {
@@ -283,31 +261,8 @@ private boolean testMode = false;
         menuItems.put("semestral-team", "Semestral Team");
         menuItems.put("housekeeping", "Housekeeping");
         menuItems.put("cells", "Create/Modify/Approve Cells");
-//        menuItems.put("run-item-analysis", "Run Item Analysis");
         menuItems.put("tq", "Test Questionnaire");
         
-//        menuItems.put("common", "Dashboard");
-//        menuItems.put("labels", "Labels");
-//        menuItems.put("buttons-and-links", "Buttons & Links");
-//        menuItems.put("textfields", "Text Fields");
-//        menuItems.put("datefields", "Date Fields");
-//        menuItems.put("comboboxes", "Combo Boxes");
-//        menuItems.put("selects", "Selects");
-//        menuItems.put("checkboxes", "Check Boxes & Option Groups");
-//        menuItems.put("sliders", "Sliders & Progress Bars");
-//        menuItems.put("colorpickers", "Color Pickers");
-//        menuItems.put("menubars", "Menu Bars");
-//        menuItems.put("trees", "Trees");
-//        menuItems.put("tables", "Tables");
-//        menuItems.put("dragging", "Drag and Drop");
-//        menuItems.put("panels", "Panels");
-//        menuItems.put("splitpanels", "Split Panels");
-//        menuItems.put("tabs", "Tabs");
-//        menuItems.put("accordions", "Accordions");
-//        menuItems.put("popupviews", "Popup Views");
-//        menuItems.put("calendar", "Calendar");
-//        menuItems.put("forms", "Forms");
-
         final HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
         top.setDefaultComponentAlignment(Alignment.MIDDLE_LEFT);
@@ -557,7 +512,7 @@ private boolean testMode = false;
         
     };
 
-    private Window loginWindow(){        
+    private Window loginWindow(){   
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSizeFull();
         vlayout.setSpacing(true);
@@ -636,10 +591,11 @@ private boolean testMode = false;
                 }
                 
                 boolean result = userLoginService.loginResult(username.getValue(), password.getValue());
-                if(!result){                    
+                if(!result){           
+                    Notification.show("username and password do not matched", Notification.Type.WARNING_MESSAGE);
                     return;
                 } else {
-//                    sub.setClosable(true);
+                    VaadinSession.getCurrent().getAttribute("userType");
                     sub.close();
                 }
             }
@@ -665,14 +621,10 @@ private boolean testMode = false;
         return labels;
     }
     
-    Window.CloseListener loginWindowCloseListener = new Window.CloseListener() {
-
-        @Override
-        public void windowClose(Window.CloseEvent e) {
-            setContent(root);
-            root.setWidth("100%");
-            root.addMenu(buildMenu());
-            Notification.show("WELCOME "+VaadinSession.getCurrent().getAttribute("username"));
-        }
-    };
+    Window.CloseListener loginWindowCloseListener = (Window.CloseEvent e) -> {
+        setContent(root);
+        root.setWidth("100%");
+        root.addMenu(buildMenu());
+        Notification.show("WELCOME "+VaadinSession.getCurrent().getAttribute("username"));
+};
 }

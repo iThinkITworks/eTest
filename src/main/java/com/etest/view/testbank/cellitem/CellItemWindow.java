@@ -96,11 +96,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h1 = new HorizontalLayout();
         h1.setCaption("Option A:");
         h1.setWidth("100%");
+        h1.setSpacing(true);
+        
         optionA = new CommonTextField("add option A", null);
-        optionA.setWidth("450px");
+        optionA.setWidth("500px");
         h1.addComponent(optionA);
-        Button optionABtn = new CommonButton("UPDATE OPTION A");
-        optionABtn.setWidth("200px");
+        
+        Button optionABtn = new CommonButton("OPTION A");
+        optionABtn.setWidth("120px");
         optionABtn.addClickListener(updateOptionAndKeyListerner);         
         h1.addComponent(optionABtn);
         h1.setComponentAlignment(optionABtn, Alignment.MIDDLE_RIGHT);
@@ -109,11 +112,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h2 = new HorizontalLayout();
         h2.setCaption("Key A:");
         h2.setWidth("100%");
+        h2.setSpacing(true);
+        
         keyA = new CommonTextField("Enter a Key for Option A", null);
-        keyA.setWidth("450px");
+        keyA.setWidth("500px");
         h2.addComponent(keyA);
-        Button keyABtn = new CommonButton("UPDATE KEY A");
-        keyABtn.setWidth("200px");
+        
+        Button keyABtn = new CommonButton("KEY A");
+        keyABtn.setWidth("120px");
         keyABtn.addClickListener(updateOptionAndKeyListerner);
         h2.addComponent(keyABtn);
         h2.setComponentAlignment(keyABtn, Alignment.MIDDLE_RIGHT);
@@ -122,11 +128,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h3 = new HorizontalLayout();
         h3.setCaption("Option B:");
         h3.setWidth("100%");
+        h3.setSpacing(true);
+        
         optionB = new CommonTextField("add option B", null);
-        optionB.setWidth("450px");
+        optionB.setWidth("500px");
         h3.addComponent(optionB);
-        Button optionBBtn = new CommonButton("UPDATE OPTION B");
-        optionBBtn.setWidth("200px");
+        
+        Button optionBBtn = new CommonButton("OPTION B");
+        optionBBtn.setWidth("120px");
         optionBBtn.addClickListener(updateOptionAndKeyListerner);
         h3.addComponent(optionBBtn);
         h3.setComponentAlignment(optionBBtn, Alignment.MIDDLE_RIGHT);
@@ -135,11 +144,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h4 = new HorizontalLayout();
         h4.setCaption("Key B:");
         h4.setWidth("100%");
+        h4.setSpacing(true);
+        
         keyB = new CommonTextField("Enter a Key for Option B", null);
-        keyB.setWidth("450px");
+        keyB.setWidth("500px");
         h4.addComponent(keyB);
-        Button keyBBtn = new CommonButton("UPDATE KEY B");
-        keyBBtn.setWidth("200px");
+        
+        Button keyBBtn = new CommonButton("KEY B");
+        keyBBtn.setWidth("120px");
         keyBBtn.addClickListener(updateOptionAndKeyListerner);
         h4.addComponent(keyBBtn);
         h4.setComponentAlignment(keyBBtn, Alignment.MIDDLE_RIGHT);
@@ -148,11 +160,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h5 = new HorizontalLayout();
         h5.setCaption("Option C:");
         h5.setWidth("100%");
+        h5.setSpacing(true);
+        
         optionC = new CommonTextField("add option C", null);
-        optionC.setWidth("450px");
+        optionC.setWidth("500px");
         h5.addComponent(optionC);
-        Button optionCBtn = new CommonButton("UPDATE OPTION C");
-        optionCBtn.setWidth("200px");
+        
+        Button optionCBtn = new CommonButton("OPTION C");
+        optionCBtn.setWidth("120px");
         optionCBtn.addClickListener(updateOptionAndKeyListerner);
         h5.addComponent(optionCBtn);
         h5.setComponentAlignment(optionCBtn, Alignment.TOP_RIGHT);
@@ -161,11 +176,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h6 = new HorizontalLayout();
         h6.setCaption("Key C:");
         h6.setWidth("100%");
+        h6.setSpacing(true);
+        
         keyC = new CommonTextField("Enter a Key for Option C", null);
-        keyC.setWidth("450px");
+        keyC.setWidth("500px");
         h6.addComponent(keyC);
-        Button keyCBtn = new CommonButton("UPDATE KEY C");
-        keyCBtn.setWidth("200px");
+        
+        Button keyCBtn = new CommonButton("KEY C");
+        keyCBtn.setWidth("120px");
         keyCBtn.addClickListener(updateOptionAndKeyListerner);
         h6.addComponent(keyCBtn);
         h6.setComponentAlignment(keyCBtn, Alignment.MIDDLE_RIGHT);
@@ -174,11 +192,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h7 = new HorizontalLayout();
         h7.setCaption("Option D:");
         h7.setWidth("100%");
+        h7.setSpacing(true);
+        
         optionD = new CommonTextField("add option D", null);
-        optionD.setWidth("450px");
+        optionD.setWidth("500px");
         h7.addComponent(optionD);
-        Button optionDBtn = new CommonButton("UPDATE OPTION D");
-        optionDBtn.setWidth("200px");
+        
+        Button optionDBtn = new CommonButton("OPTION D");
+        optionDBtn.setWidth("120px");
         optionDBtn.addClickListener(updateOptionAndKeyListerner);
         h7.addComponent(optionDBtn);
         h7.setComponentAlignment(optionDBtn, Alignment.MIDDLE_RIGHT);
@@ -187,11 +208,14 @@ public class CellItemWindow extends Window {
         HorizontalLayout h8 = new HorizontalLayout();
         h8.setCaption("Key D:");
         h8.setWidth("100%");
+        h8.setSpacing(true);
+        
         keyD = new CommonTextField("Enter a Key for Option D", null);
-        keyD.setWidth("450px");
+        keyD.setWidth("500px");
         h8.addComponent(keyD);
-        Button keyDBtn = new CommonButton("UPDATE KEY D");
-        keyDBtn.setWidth("200px");
+        
+        Button keyDBtn = new CommonButton("KEY D");
+        keyDBtn.setWidth("120px");
         keyDBtn.addClickListener(updateOptionAndKeyListerner);
         h8.addComponent(keyDBtn);
         h8.setComponentAlignment(keyDBtn, Alignment.MIDDLE_RIGHT);

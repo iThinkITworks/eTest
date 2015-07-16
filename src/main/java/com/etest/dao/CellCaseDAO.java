@@ -9,12 +9,14 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.CellCase;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +120,7 @@ public class CellCaseDAO {
                 c.setUsername_(rs.getString("Author"));
                 c.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 c.setSyllabusId(CommonUtilities.convertStringToInt(rs.getString("SyllabusID")));
+                c.setApprovalStatus(CommonUtilities.convertStringToInt(rs.getString("ApprovalStatus")));
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -174,10 +177,13 @@ public class CellCaseDAO {
     
     public static boolean insertNewCellCase(CellCase c){
         Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
         PreparedStatement pstmt = null;
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("INSERT INTO cell_cases SET "
                     + "SyllabusID = ?, "
                     + "CaseTopic = ?, "
@@ -188,8 +194,34 @@ public class CellCaseDAO {
             pstmt.setInt(3, c.getUserId());
             pstmt.executeUpdate();
             
+            int cellCaseId = 0;            
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT last_insert_id() AS id FROM cell_cases ");
+            while(rs.next()){
+                cellCaseId = CommonUtilities.convertStringToInt(rs.getString("id"));
+            }
+            
+            pstmt = conn.prepareStatement("INSERT INTO case_log SET "
+                    + "cellCaseID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellCaseId);
+            pstmt.setInt(2, c.getUserId());
+            pstmt.setString(3, "insert new case");
+            pstmt.setString(4, "insert");
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -211,17 +243,39 @@ public class CellCaseDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE cell_cases SET "
                     + "SyllabusID = ?, "
-                    + "CaseTopic = ? "
+                    + "CaseTopic = ?, "
+                    + "ApprovalStatus = ? "
                     + "WHERE CellCaseID = ? ");
             pstmt.setInt(1, c.getSyllabusId());
             pstmt.setString(2, c.getCaseTopic());
-            pstmt.setInt(3, c.getCellCaseId());
+            pstmt.setInt(3, 0);
+            pstmt.setInt(4, c.getCellCaseId());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO case_log SET "
+                    + "cellCaseID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, c.getCellCaseId());
+            pstmt.setInt(2, c.getUserId());
+            pstmt.setString(3, c.getRemarks());
+            pstmt.setString(4, c.getActionDone());
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -243,6 +297,7 @@ public class CellCaseDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE cell_cases SET "
                     + "ApprovalStatus = ? "
                     + "WHERE CellCaseID = ? ");
@@ -250,8 +305,27 @@ public class CellCaseDAO {
             pstmt.setInt(2, cellCaseId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO case_log SET "
+                    + "cellCaseID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellCaseId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "approved case");
+            pstmt.setString(4, "approved");
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -278,6 +352,18 @@ public class CellCaseDAO {
                     + "WHERE CellCaseID = ? ");
             pstmt.setInt(1, 1);
             pstmt.setInt(2, cellCaseId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO case_log SET "
+                    + "cellCaseID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellCaseId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "delete case");
+            pstmt.setString(4, "delete");
             pstmt.executeUpdate();
             
             result = true;

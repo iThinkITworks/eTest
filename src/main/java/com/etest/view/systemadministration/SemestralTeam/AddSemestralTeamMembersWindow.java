@@ -46,28 +46,32 @@ public class AddSemestralTeamMembersWindow extends Window {
         this.teamTeachId = teamTeachId;
         
         setCaption("ADD TEAM MEMBERS");
-        setWidth("450px");
+        setWidth("600px");
         setModal(true);
         center();
         
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        
         facultyId = tts.getFacultyIdByTeamTeachId(teamTeachId);
-        setContent(buildForms());
-                
+        v.addComponent(buildForms());
+        
+        setContent(v);                
         getContent().setHeightUndefined();
     }
     
     FormLayout buildForms(){
         FormLayout form = new FormLayout();
         form.setWidth("100%");
-        form.setMargin(true);
         form.setSpacing(true);
         
         faculty = CommonComboBox.getAllFacultyExceptTeamLeader("Add Team Member.. ", getFacultyId());
-        faculty.setWidth("100%");
+        faculty.setWidth("60%");
         faculty.setIcon(FontAwesome.USER);
         form.addComponent(faculty);
         
-        addMemberBtn.setWidth("100%");
+        addMemberBtn.setWidth("60%");
         addMemberBtn.setIcon(FontAwesome.SAVE);
         addMemberBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         addMemberBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -104,7 +108,7 @@ public class AddSemestralTeamMembersWindow extends Window {
             hlayout.setWidth("100%");
             
             Button editPositionBtn = new Button("edit");
-            editPositionBtn.setWidth("100%");
+            editPositionBtn.setWidthUndefined();
             editPositionBtn.setData(tt.getFacultyId());
             editPositionBtn.setIcon(FontAwesome.EDIT);
             editPositionBtn.addStyleName(ValoTheme.BUTTON_LINK);
@@ -113,9 +117,9 @@ public class AddSemestralTeamMembersWindow extends Window {
             hlayout.addComponent(editPositionBtn);
             
             Button removeMemberBtn = new Button("del");
-            removeMemberBtn.setWidth("100%");  
+            removeMemberBtn.setWidthUndefined();  
             removeMemberBtn.setData(tt.getFacultyId());
-            removeMemberBtn.setIcon(FontAwesome.ERASER);
+            removeMemberBtn.setIcon(FontAwesome.TRASH_O);
             removeMemberBtn.addStyleName(ValoTheme.BUTTON_LINK);
             removeMemberBtn.addStyleName(ValoTheme.BUTTON_TINY);
             removeMemberBtn.addClickListener(modifyBtnClickListener);
@@ -136,11 +140,6 @@ public class AddSemestralTeamMembersWindow extends Window {
         }
         table.setPageLength(table.size());
         
-//        table.addItemClickListener((ItemClickEvent event) -> {
-//            Property itemProperty = event.getItem().getItemProperty("id");
-//            facultyIdFromTable = CommonUtilities.convertStringToInt(itemProperty.getValue().toString());
-//            
-//        });
         return table;
     }
     

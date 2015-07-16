@@ -17,6 +17,8 @@ public class CellCase extends Syllabus {
     private String caseTopic;
     private Date dateCreated;
     private int approvalStatus;
+    private String remarks;
+    private String actionDone;
 
     public int getCellCaseId() {
         return cellCaseId;
@@ -34,6 +36,14 @@ public class CellCase extends Syllabus {
         return approvalStatus;
     }
 
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public String getActionDone() {
+        return actionDone;
+    }
+
     public void setCellCaseId(int cellCaseId) {
         this.cellCaseId = cellCaseId;
     }
@@ -48,6 +58,14 @@ public class CellCase extends Syllabus {
 
     public void setApprovalStatus(int approvalStatus) {
         this.approvalStatus = approvalStatus;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public void setActionDone(String actionDone) {
+        this.actionDone = actionDone;
     }
     
 }
