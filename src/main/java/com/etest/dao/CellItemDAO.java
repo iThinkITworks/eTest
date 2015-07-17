@@ -8,8 +8,8 @@ package com.etest.dao;
 import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.CellItem;
-import com.etest.model.ItemKeys;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -217,6 +217,18 @@ public class CellItemDAO {
                 pstmt.executeUpdate();
             }
             
+            pstmt = conn.prepareStatement("INSERT INTO item_log SET "
+                    + "CellItemID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellItemId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "insert new item");
+            pstmt.setString(4, "insert");
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -247,6 +259,7 @@ public class CellItemDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE cell_items SET "
                     + "BloomsClassID = ?, "
                     + "Item = ? " 
@@ -256,8 +269,27 @@ public class CellItemDAO {
             pstmt.setInt(3, ci.getCellItemId());
             pstmt.executeUpdate();
                         
+            pstmt = conn.prepareStatement("INSERT INTO item_log SET "
+                    + "CellItemID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, ci.getCellItemId());
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, ci.getRemarks());
+            pstmt.setString(4, ci.getActionDone());
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -279,6 +311,7 @@ public class CellItemDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE cell_items SET "
                     + "ApproveStatus = ? "
                     + "WHERE CellItemID = ? ");
@@ -286,8 +319,27 @@ public class CellItemDAO {
             pstmt.setInt(2, cellItemId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO item_log SET "
+                    + "CellItemID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellItemId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "approved cell item");
+            pstmt.setString(4, "approved");
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -309,6 +361,7 @@ public class CellItemDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE cell_items SET "
                     + "CellItemStatus = ? "
                     + "WHERE CellItemID = ? ");
@@ -316,8 +369,27 @@ public class CellItemDAO {
             pstmt.setInt(2, cellItemId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO item_log SET "
+                    + "CellItemID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellItemId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "delete cell item");
+            pstmt.setString(4, "delete");
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

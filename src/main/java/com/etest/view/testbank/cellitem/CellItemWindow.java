@@ -8,7 +8,7 @@ package com.etest.view.testbank.cellitem;
 import com.etest.common.CommonButton;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
-import com.etest.global.ShowErrorNotification;
+import com.etest.model.CellCase;
 import com.etest.model.CellItem;
 import com.etest.service.CellItemService;
 import com.etest.service.ItemKeyService;
@@ -17,18 +17,18 @@ import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
-import com.vaadin.event.FieldEvents.TextChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import java.util.HashMap;
@@ -64,6 +64,7 @@ public class CellItemWindow extends Window {
     
     private boolean isStemChanged = false;
     private boolean isBloomsChanged = false;
+    private boolean isEdit = false;
         
     public CellItemWindow(int cellCaseId, int cellItemId) {
         this.cellCaseId = cellCaseId;
@@ -73,6 +74,10 @@ public class CellItemWindow extends Window {
         setWidth("800px");
         setModal(true);
         center();
+        
+        if(cellItemId != 0){
+            isEdit = true;
+        }
         
         setContent(buildForms());
     }
@@ -107,6 +112,7 @@ public class CellItemWindow extends Window {
         optionABtn.addClickListener(updateOptionAndKeyListerner);         
         h1.addComponent(optionABtn);
         h1.setComponentAlignment(optionABtn, Alignment.MIDDLE_RIGHT);
+        optionABtn.setVisible(isEdit());
         form.addComponent(h1); 
         
         HorizontalLayout h2 = new HorizontalLayout();
@@ -123,6 +129,7 @@ public class CellItemWindow extends Window {
         keyABtn.addClickListener(updateOptionAndKeyListerner);
         h2.addComponent(keyABtn);
         h2.setComponentAlignment(keyABtn, Alignment.MIDDLE_RIGHT);
+        keyABtn.setVisible(isEdit());
         form.addComponent(h2);               
         
         HorizontalLayout h3 = new HorizontalLayout();
@@ -139,6 +146,7 @@ public class CellItemWindow extends Window {
         optionBBtn.addClickListener(updateOptionAndKeyListerner);
         h3.addComponent(optionBBtn);
         h3.setComponentAlignment(optionBBtn, Alignment.MIDDLE_RIGHT);
+        optionBBtn.setVisible(isEdit());
         form.addComponent(h3);
         
         HorizontalLayout h4 = new HorizontalLayout();
@@ -155,6 +163,7 @@ public class CellItemWindow extends Window {
         keyBBtn.addClickListener(updateOptionAndKeyListerner);
         h4.addComponent(keyBBtn);
         h4.setComponentAlignment(keyBBtn, Alignment.MIDDLE_RIGHT);
+        keyBBtn.setVisible(isEdit());
         form.addComponent(h4);        
         
         HorizontalLayout h5 = new HorizontalLayout();
@@ -171,6 +180,7 @@ public class CellItemWindow extends Window {
         optionCBtn.addClickListener(updateOptionAndKeyListerner);
         h5.addComponent(optionCBtn);
         h5.setComponentAlignment(optionCBtn, Alignment.TOP_RIGHT);
+        optionCBtn.setVisible(isEdit());
         form.addComponent(h5);
         
         HorizontalLayout h6 = new HorizontalLayout();
@@ -187,6 +197,7 @@ public class CellItemWindow extends Window {
         keyCBtn.addClickListener(updateOptionAndKeyListerner);
         h6.addComponent(keyCBtn);
         h6.setComponentAlignment(keyCBtn, Alignment.MIDDLE_RIGHT);
+        keyCBtn.setVisible(isEdit());
         form.addComponent(h6);        
         
         HorizontalLayout h7 = new HorizontalLayout();
@@ -203,6 +214,7 @@ public class CellItemWindow extends Window {
         optionDBtn.addClickListener(updateOptionAndKeyListerner);
         h7.addComponent(optionDBtn);
         h7.setComponentAlignment(optionDBtn, Alignment.MIDDLE_RIGHT);
+        optionDBtn.setVisible(isEdit());
         form.addComponent(h7);  
                 
         HorizontalLayout h8 = new HorizontalLayout();
@@ -219,6 +231,7 @@ public class CellItemWindow extends Window {
         keyDBtn.addClickListener(updateOptionAndKeyListerner);
         h8.addComponent(keyDBtn);
         h8.setComponentAlignment(keyDBtn, Alignment.MIDDLE_RIGHT);
+        keyDBtn.setVisible(isEdit());
         form.addComponent(h8); 
                 
         HorizontalLayout h = new HorizontalLayout();
@@ -229,28 +242,28 @@ public class CellItemWindow extends Window {
         save.setIcon(FontAwesome.SAVE);
         save.addStyleName(ValoTheme.BUTTON_PRIMARY);
         save.addStyleName(ValoTheme.BUTTON_SMALL);
-        save.addClickListener(saveBtnClickListener);        
+        save.addClickListener(buttonClickListener);        
                 
         Button remove = new Button("REMOVE ITEM?");
         remove.setWidth("200px");
         remove.setIcon(FontAwesome.THUMBS_O_UP);
         remove.addStyleName(ValoTheme.BUTTON_PRIMARY);
         remove.addStyleName(ValoTheme.BUTTON_SMALL);
-        remove.addClickListener(removeBtnClickListener);
+        remove.addClickListener(buttonClickListener);
         
         Button approve = new Button("APPROVE ITEM?");
         approve.setWidth("200px");
         approve.setIcon(FontAwesome.THUMBS_O_UP);
         approve.addStyleName(ValoTheme.BUTTON_PRIMARY);
         approve.addStyleName(ValoTheme.BUTTON_SMALL);
-        approve.addClickListener(approveBtnClickListener);
+        approve.addClickListener(buttonClickListener);
         
         Button edit = new Button("UPDATE");
         edit.setWidth("200px");
         edit.setIcon(FontAwesome.SAVE);
         edit.addStyleName(ValoTheme.BUTTON_PRIMARY);
         edit.addStyleName(ValoTheme.BUTTON_SMALL);
-        edit.addClickListener(saveBtnClickListener);
+        edit.addClickListener(buttonClickListener);
                 
         if(getCellItemId() != 0){
             CellItem ci = cis.getCellItemById(getCellItemId());
@@ -335,7 +348,7 @@ public class CellItemWindow extends Window {
         return cellItemId;
     }
         
-    Button.ClickListener saveBtnClickListener = (Button.ClickEvent event) -> {
+    Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
         if(bloomsTaxonomy.getValue() == null){
             Notification.show("Bloom Class Required!", Notification.Type.WARNING_MESSAGE);
             return;
@@ -393,38 +406,56 @@ public class CellItemWindow extends Window {
         ci.setUserId(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
         ci.setItemKeys(keys);        
         
-        if(event.getButton().getCaption().equals("SAVE")){
-            boolean result = cis.insertNewCellItem(ci);
-            if(result){
-                close();
-            }
-        } else {    
-            ci.setCellItemId(getCellItemId());
-            if(isStemChanged || isBloomsChanged){
-                boolean result = cis.modifyCellItem(ci);
+        switch (event.getButton().getCaption()) {
+            case "SAVE":
+                {
+                    boolean result = cis.insertNewCellItem(ci);
+                    if(result){
+                        close();
+                    }       break;
+                }
+            case "REMOVE ITEM?":
+                {
+                    boolean result = cis.removeCellItem(getCellItemId());
+                    if(result){
+                        close();
+            }       break;
+                }
+            case "APPROVE ITEM?":
+            {
+                boolean result = cis.approveCellItem(getCellItemId());
                 if(result){
                     close();
+            }       break;
                 }
-            } else {
-                Notification.show("No changes was made in Item or Bloom's class.. ", Notification.Type.TRAY_NOTIFICATION);
-                close();
-            }            
-        }                
+            default:
+                ci.setCellItemId(getCellItemId());
+                if(isStemChanged || isBloomsChanged){
+                    Window sub = modifyCaseWindow(ci);
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
+                    }
+                } else {
+                    Notification.show("No changes was made in Item or Bloom's class.. ", Notification.Type.TRAY_NOTIFICATION);
+                    close();
+                }   
+                break;
+        }
     };
         
-    Button.ClickListener approveBtnClickListener = (Button.ClickEvent event) -> {
-        boolean result = cis.approveCellItem(cellItemId);
-        if(result){
-            close();
-        }
-    };
-    
-    Button.ClickListener removeBtnClickListener = (Button.ClickEvent event) -> {
-        boolean result = cis.removeCellItem(cellItemId);
-        if(result){
-            close();
-        }
-    };
+//    Button.ClickListener approveBtnClickListener = (Button.ClickEvent event) -> {
+//        boolean result = cis.approveCellItem(cellItemId);
+//        if(result){
+//            close();
+//        }
+//    };
+//    
+//    Button.ClickListener removeBtnClickListener = (Button.ClickEvent event) -> {
+//        boolean result = cis.removeCellItem(cellItemId);
+//        if(result){
+//            close();
+//        }
+//    };
     
     Button.ClickListener updateOptionAndKeyListerner = (Button.ClickEvent event) -> {
         switch(event.getButton().getCaption()){
@@ -594,4 +625,56 @@ public class CellItemWindow extends Window {
     void requiredAllOptions(){
         Notification.show("Fill up all  Options!", Notification.Type.WARNING_MESSAGE);
     }    
+    
+    boolean isEdit(){
+        return isEdit;
+    }
+    
+    Window modifyCaseWindow(CellItem ci){
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);
+        
+        Window sub = new Window("MODIFY");
+        sub.setWidth("400px");
+        sub.setModal(true);
+        sub.center();
+        if(sub.getParent() == null){
+            UI.getCurrent().addWindow(sub);
+        }
+        
+        ComboBox actionDone = new ComboBox();
+        actionDone.setWidth("70%");
+        actionDone.addStyleName(ValoTheme.COMBOBOX_SMALL);
+        actionDone.setNullSelectionAllowed(false);
+        actionDone.addItem("resolved");
+        actionDone.addItem("clarified");
+        actionDone.addItem("modified");
+        actionDone.setImmediate(true);
+        v.addComponent(actionDone);
+        
+        TextArea remarks = new TextArea("Remarks: ");
+        remarks.setWidth("100%");
+        remarks.setRows(3);
+        v.addComponent(remarks);
+        
+        Button modify = new Button("UPDATE");
+        modify.setWidth("70%");
+        modify.setIcon(FontAwesome.EDIT);
+        modify.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        modify.addStyleName(ValoTheme.BUTTON_SMALL);
+        modify.addClickListener((Button.ClickEvent event) -> {            
+            boolean result = cis.modifyCellItem(ci);
+            if(result){                
+                close();
+            }
+        });
+        v.addComponent(modify);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
 }
