@@ -105,9 +105,6 @@ public class FileUploadWindow extends Window {
                 return;
             }
             
-            readContentFromExcelFile(excelFile);                                            
-            Notification.show("Succesfully uploaded file: " + file.getName());
-            
             HorizontalLayout h = new HorizontalLayout();
             h.setWidth("100%");
             
@@ -116,7 +113,10 @@ public class FileUploadWindow extends Window {
             h.addComponent(approveItemAnalysis());
             v.addComponent(h);
                                     
-            v.addComponent(itemAnalysisGridPanel());            
+            v.addComponent(itemAnalysisGridPanel()); 
+            
+            readContentFromExcelFile(excelFile);                                            
+            Notification.show("Succesfully uploaded file: " + file.getName());                       
         });
         
         manager.getUploader().addErrorListener((PluploadError error) -> {

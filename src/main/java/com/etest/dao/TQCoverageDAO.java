@@ -105,6 +105,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 1 "
                                         + "AND Analyzed = 0 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -128,6 +129,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 1 "
                                         + "AND Analyzed = 1 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -151,6 +153,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 2 "
                                         + "AND Analyzed = 0 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -174,6 +177,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 2 "
                                         + "AND Analyzed = 1 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -197,6 +201,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 3 "
                                         + "AND Analyzed = 0 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -219,6 +224,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 3 "
                                         + "AND Analyzed = 1 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -242,6 +248,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 4 "
                                         + "AND Analyzed = 0 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -265,6 +272,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 4 "
                                         + "AND Analyzed = 1 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -288,6 +296,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 5 "
                                         + "AND Analyzed = 0 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -311,6 +320,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 5 "
                                         + "AND Analyzed = 1 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -334,6 +344,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 6 "
                                         + "AND Analyzed = 0 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -357,6 +368,7 @@ public class TQCoverageDAO {
                                         + "AND s.SyllabusID = '"+syllabusId+"' "
                                         + "AND BloomsClassID = 6 "
                                         + "AND Analyzed = 1 "
+                                        + "ORDER BY RAND() "
                                         + "LIMIT  "+limit+" ");
                                 while(rs.next()){
                                     CellItem ci = new CellItem();
@@ -488,7 +500,7 @@ public class TQCoverageDAO {
                     tqItems.setInt(2, t.getCellItemId());
                     tqItems.setInt(3, t.getItemKeyId());
                     tqItems.executeUpdate();
-                    
+                                        
                     int tqItemId = 0;
                     stmt = conn.createStatement();
                     rs = stmt.executeQuery("SELECT last_insert_id() AS TqCaseId FROM tq_cases ");
@@ -504,6 +516,14 @@ public class TQCoverageDAO {
                     tqAnswerKey.setInt(2, t.getItemNo());
                     tqAnswerKey.setString(3, t.getAnswer());
                     tqAnswerKey.executeUpdate();
+                    
+                    tqItems = conn.prepareStatement("INSERT INTO key_log_use SET "
+                            + "ItemKeyID = ?, "
+                            + "DateUsed = now(), "
+                            + "TqCoverageID = ? ");
+                    tqItems.setInt(1, t.getItemKeyId());
+                    tqItems.setInt(2, tqCoverageId);
+                    tqItems.executeUpdate();
                 }
             }            
                         

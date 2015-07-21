@@ -201,11 +201,8 @@ public class CellCaseWindow extends Window {
         sub.setWidth("400px");
         sub.setModal(true);
         sub.center();
-        if(sub.getParent() == null){
-            UI.getCurrent().addWindow(sub);
-        }
         
-        ComboBox actionDone = new ComboBox();
+        ComboBox actionDone = new ComboBox("Action: ");
         actionDone.setWidth("70%");
         actionDone.addStyleName(ValoTheme.COMBOBOX_SMALL);
         actionDone.setNullSelectionAllowed(false);
@@ -225,7 +222,17 @@ public class CellCaseWindow extends Window {
         modify.setIcon(FontAwesome.EDIT);
         modify.addStyleName(ValoTheme.BUTTON_PRIMARY);
         modify.addStyleName(ValoTheme.BUTTON_SMALL);
-        modify.addClickListener((Button.ClickEvent event) -> {            
+        modify.addClickListener((Button.ClickEvent event) -> { 
+            if(remarks.getValue() == null || remarks.getValue().trim().isEmpty()){
+                Notification.show("Add remarks!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
+            if(actionDone.getValue() == null){
+                Notification.show("Add action!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
             cellCase.setActionDone(actionDone.getValue().toString());
             cellCase.setRemarks(remarks.getValue().trim());
             boolean result = ccs.modifyCellCase(cellCase);

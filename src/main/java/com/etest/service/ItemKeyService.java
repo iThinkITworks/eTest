@@ -39,7 +39,9 @@ public interface ItemKeyService {
             int cellItemId, 
             String keyValue, 
             String answer, 
-            boolean isOptionKeyExist);
+            boolean isOptionKeyExist, 
+            String actionDone, 
+            String remarks);
     
     public boolean removeItemKey(int itemKeyId);
     

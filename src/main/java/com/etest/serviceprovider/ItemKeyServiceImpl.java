@@ -69,12 +69,16 @@ public class ItemKeyServiceImpl implements ItemKeyService {
             int cellItemId, 
             String keyValue, 
             String answer, 
-            boolean isOptionKeyExist) {
+            boolean isOptionKeyExist, 
+            String actionDone, 
+            String remarks) {
         return ItemKeyDAO.modifyItemKey(itemKeyId, 
                 cellItemId, 
                 keyValue, 
                 answer, 
-                isOptionKeyExist);
+                isOptionKeyExist, 
+                actionDone, 
+                remarks);
     }
 
     @Override

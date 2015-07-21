@@ -294,7 +294,6 @@ public class CellItemWindow extends Window {
              */
             optionB.setValue(ci.getOptionB()); 
             isOptionBKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionB());
-//            if(k.isKeyExist(getCellItemId(), ci.getOptionB())){
             if(isOptionBKeyExist){
                 keyB.setValue(k.getItemKey(getCellItemId(), ci.getOptionB()));                
             }
@@ -305,7 +304,6 @@ public class CellItemWindow extends Window {
              */
             optionC.setValue(ci.getOptionC());   
             isOptionCKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionC());
-//            if(k.isKeyExist(getCellItemId(), ci.getOptionC())){
             if(isOptionCKeyExist){    
                 keyC.setValue(k.getItemKey(getCellItemId(), ci.getOptionC()));                
             }
@@ -316,7 +314,6 @@ public class CellItemWindow extends Window {
              */
             optionD.setValue(ci.getOptionD());
             isOptionDKeyExist = k.isKeyExist(getCellItemId(), ci.getOptionD());
-//            if(k.isKeyExist(getCellItemId(), ci.getOptionD())){
             if(isOptionDKeyExist){
                 keyD.setValue(k.getItemKey(getCellItemId(), ci.getOptionD()));                
             }
@@ -431,7 +428,7 @@ public class CellItemWindow extends Window {
             default:
                 ci.setCellItemId(getCellItemId());
                 if(isStemChanged || isBloomsChanged){
-                    Window sub = modifyCaseWindow(ci);
+                    Window sub = modifyCellItemWindow(ci);
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
@@ -442,24 +439,10 @@ public class CellItemWindow extends Window {
                 break;
         }
     };
-        
-//    Button.ClickListener approveBtnClickListener = (Button.ClickEvent event) -> {
-//        boolean result = cis.approveCellItem(cellItemId);
-//        if(result){
-//            close();
-//        }
-//    };
-//    
-//    Button.ClickListener removeBtnClickListener = (Button.ClickEvent event) -> {
-//        boolean result = cis.removeCellItem(cellItemId);
-//        if(result){
-//            close();
-//        }
-//    };
-    
+            
     Button.ClickListener updateOptionAndKeyListerner = (Button.ClickEvent event) -> {
         switch(event.getButton().getCaption()){
-            case "UPDATE OPTION A": {
+            case "OPTION A": {
                 if(optionA.getValue() == null || 
                         optionA.getValue().trim().isEmpty()){
                     Notification.show("Option A is Empty!", Notification.Type.WARNING_MESSAGE);
@@ -476,7 +459,7 @@ public class CellItemWindow extends Window {
                 break;
             } 
             
-            case "UPDATE KEY A": {
+            case "KEY A": {
                 if(keyA.getValue() == null || 
                         keyA.getValue().trim().isEmpty()){
                     if(isOptionAKeyExist){
@@ -486,19 +469,27 @@ public class CellItemWindow extends Window {
                         }
                     }
                 } else {
-                    boolean result = k.modifyItemKey((int) keyA.getData(), 
-                            getCellItemId(),                             
+                    Window sub = modifyKeyWindow((int) keyA.getData(), 
+                            getCellItemId(), 
                             keyA.getValue().trim(), 
                             optionA.getValue().trim(), 
                             isOptionAKeyExist);
-                    if(result){
-                        Notification.show("Key A SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
                     }
+//                    boolean result = k.modifyItemKey((int) keyA.getData(), 
+//                            getCellItemId(),                             
+//                            keyA.getValue().trim(), 
+//                            optionA.getValue().trim(), 
+//                            isOptionAKeyExist);
+//                    if(result){
+//                        Notification.show("Key A SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+//                    }
                 }
                 break;
             }
             
-            case "UPDATE OPTION B": {
+            case "OPTION B": {
                 if(optionB.getValue() == null || 
                         optionB.getValue().trim().isEmpty()){
                     Notification.show("Option B is Empty!", Notification.Type.WARNING_MESSAGE);
@@ -515,7 +506,7 @@ public class CellItemWindow extends Window {
                 break;
             } 
             
-            case "UPDATE KEY B": {
+            case "KEY B": {
                 if(keyB.getValue() == null || 
                         keyB.getValue().trim().isEmpty()){
                     if(isOptionBKeyExist){
@@ -525,19 +516,27 @@ public class CellItemWindow extends Window {
                         }
                     }
                 } else {
-                    boolean result = k.modifyItemKey((int) keyB.getData(), 
-                            getCellItemId(),                             
+                    Window sub = modifyKeyWindow((int) keyB.getData(), 
+                            getCellItemId(), 
                             keyB.getValue().trim(), 
                             optionB.getValue().trim(), 
                             isOptionBKeyExist);
-                    if(result){
-                        Notification.show("Key B SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
                     }
+//                    boolean result = k.modifyItemKey((int) keyB.getData(), 
+//                            getCellItemId(),                             
+//                            keyB.getValue().trim(), 
+//                            optionB.getValue().trim(), 
+//                            isOptionBKeyExist);
+//                    if(result){
+//                        Notification.show("Key B SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+//                    }
                 }
                 break;
             }
             
-            case "UPDATE OPTION C": {
+            case "OPTION C": {
                 if(optionC.getValue() == null || 
                         optionC.getValue().trim().isEmpty()){
                     Notification.show("Option C is Empty!", Notification.Type.WARNING_MESSAGE);
@@ -554,7 +553,7 @@ public class CellItemWindow extends Window {
                 break;
             } 
             
-            case "UPDATE KEY C": {
+            case "KEY C": {
                 if(keyC.getValue() == null || 
                         keyC.getValue().trim().isEmpty()){
                     if(isOptionCKeyExist){
@@ -564,19 +563,27 @@ public class CellItemWindow extends Window {
                         }
                     }
                 } else {
-                    boolean result = k.modifyItemKey((int) keyC.getData(), 
-                            getCellItemId(),                             
+                    Window sub = modifyKeyWindow((int) keyC.getData(), 
+                            getCellItemId(), 
                             keyC.getValue().trim(), 
                             optionC.getValue().trim(), 
                             isOptionCKeyExist);
-                    if(result){
-                        Notification.show("Key C SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
                     }
+//                    boolean result = k.modifyItemKey((int) keyC.getData(), 
+//                            getCellItemId(),                             
+//                            keyC.getValue().trim(), 
+//                            optionC.getValue().trim(), 
+//                            isOptionCKeyExist);
+//                    if(result){
+//                        Notification.show("Key C SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+//                    }
                 }
                 break;
             }
             
-            case "UPDATE OPTION D": {
+            case "OPTION D": {
                 if(optionD.getValue() == null || 
                         optionD.getValue().trim().isEmpty()){
                     Notification.show("Option D is Empty!", Notification.Type.WARNING_MESSAGE);
@@ -593,7 +600,7 @@ public class CellItemWindow extends Window {
                 break;
             } 
             
-            case "UPDATE KEY D": {
+            case "KEY D": {
                 if(keyD.getValue() == null || 
                         keyD.getValue().trim().isEmpty()){
                     if(isOptionDKeyExist){
@@ -603,14 +610,22 @@ public class CellItemWindow extends Window {
                         }
                     }
                 } else {
-                    boolean result = k.modifyItemKey((int) keyD.getData(), 
-                            getCellItemId(),                             
+                    Window sub = modifyKeyWindow((int) keyD.getData(), 
+                            getCellItemId(), 
                             keyD.getValue().trim(), 
                             optionD.getValue().trim(), 
                             isOptionDKeyExist);
-                    if(result){
-                        Notification.show("Key D SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+                    if(sub.getParent() == null){
+                        UI.getCurrent().addWindow(sub);
                     }
+//                    boolean result = k.modifyItemKey((int) keyD.getData(), 
+//                            getCellItemId(),                             
+//                            keyD.getValue().trim(), 
+//                            optionD.getValue().trim(), 
+//                            isOptionDKeyExist);
+//                    if(result){
+//                        Notification.show("Key D SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+//                    }
                 }
                 break;
             }
@@ -630,7 +645,7 @@ public class CellItemWindow extends Window {
         return isEdit;
     }
     
-    Window modifyCaseWindow(CellItem ci){
+    Window modifyCellItemWindow(CellItem ci){
         VerticalLayout v = new VerticalLayout();
         v.setWidth("100%");
         v.setMargin(true);
@@ -640,11 +655,8 @@ public class CellItemWindow extends Window {
         sub.setWidth("400px");
         sub.setModal(true);
         sub.center();
-        if(sub.getParent() == null){
-            UI.getCurrent().addWindow(sub);
-        }
         
-        ComboBox actionDone = new ComboBox();
+        ComboBox actionDone = new ComboBox("Action: ");
         actionDone.setWidth("70%");
         actionDone.addStyleName(ValoTheme.COMBOBOX_SMALL);
         actionDone.setNullSelectionAllowed(false);
@@ -664,10 +676,89 @@ public class CellItemWindow extends Window {
         modify.setIcon(FontAwesome.EDIT);
         modify.addStyleName(ValoTheme.BUTTON_PRIMARY);
         modify.addStyleName(ValoTheme.BUTTON_SMALL);
-        modify.addClickListener((Button.ClickEvent event) -> {            
+        modify.addClickListener((Button.ClickEvent event) -> {    
+            if(remarks.getValue() == null || remarks.getValue().trim().isEmpty()){
+                Notification.show("Add remarks!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
+            if(actionDone.getValue() == null){
+                Notification.show("Add action!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
+            ci.setRemarks(remarks.getValue().trim());
+            ci.setActionDone(actionDone.getValue().toString());
             boolean result = cis.modifyCellItem(ci);
-            if(result){                
+            if(result){  
+                sub.close();
                 close();
+            }
+        });
+        v.addComponent(modify);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
+
+    Window modifyKeyWindow(int itemKeyId, 
+            int cellItemId, 
+            String keyValue, 
+            String optionValue, 
+            boolean isOptionKeyExist){
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);
+        
+        Window sub = new Window("MODIFY");
+        sub.setWidth("400px");
+        sub.setModal(true);
+        sub.center();
+        
+        ComboBox actionDone = new ComboBox("Action: ");
+        actionDone.setWidth("70%");
+        actionDone.addStyleName(ValoTheme.COMBOBOX_SMALL);
+        actionDone.setNullSelectionAllowed(false);
+        actionDone.addItem("resolved");
+        actionDone.addItem("clarified");
+        actionDone.addItem("modified");
+        actionDone.setImmediate(true);
+        v.addComponent(actionDone);
+        
+        TextArea remarks = new TextArea("Remarks: ");
+        remarks.setWidth("100%");
+        remarks.setRows(3);
+        v.addComponent(remarks);
+        
+        Button modify = new Button("UPDATE");
+        modify.setWidth("70%");
+        modify.setIcon(FontAwesome.EDIT);
+        modify.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        modify.addStyleName(ValoTheme.BUTTON_SMALL);
+        modify.addClickListener((Button.ClickEvent event) -> {    
+            if(remarks.getValue() == null || remarks.getValue().trim().isEmpty()){
+                Notification.show("Add remarks!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
+            if(actionDone.getValue() == null){
+                Notification.show("Add action!", Notification.Type.WARNING_MESSAGE);
+                return;
+            }
+            
+            boolean result = k.modifyItemKey(itemKeyId, 
+                    cellItemId,                             
+                    keyValue, 
+                    optionValue, 
+                    isOptionKeyExist, 
+                    remarks.getValue().trim(), 
+                    actionDone.getValue().toString());
+            if(result){
+                Notification.show("Key SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
+                sub.close();
             }
         });
         v.addComponent(modify);

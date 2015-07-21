@@ -215,6 +215,25 @@ public class CellItemDAO {
                 pstmt.setString(2, key.toString());
                 pstmt.setString(3, value.toString());
                 pstmt.executeUpdate();
+                
+                int itemKeyId = 0;            
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("SELECT last_insert_id() AS id FROM item_keys ");
+                while(rs.next()){
+                    itemKeyId = CommonUtilities.convertStringToInt(rs.getString("id"));
+                }
+                
+                pstmt = conn.prepareStatement("INSERT INTO key_log SET "
+                        + "ItemKeyID = ?, "
+                        + "UserID = ?, "
+                        + "Remarks = ?, "
+                        + "DateRemarked = now(), "
+                        + "ActionDone = ? ");
+                pstmt.setInt(1, itemKeyId);
+                pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+                pstmt.setString(3, "insert new item key");
+                pstmt.setString(4, "insert");
+                pstmt.executeUpdate();
             }
             
             pstmt = conn.prepareStatement("INSERT INTO item_log SET "

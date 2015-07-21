@@ -284,10 +284,6 @@ public class TQCoverageUI extends VerticalLayout {
         return teamTeachId;
     }
     
-//    int getBloomsClassId(){
-//        return bloomsClassId;
-//    }
-    
     Window getPickWindow(Item item, 
             String propertyId){
         Window sub = new Window("Field Value: ");

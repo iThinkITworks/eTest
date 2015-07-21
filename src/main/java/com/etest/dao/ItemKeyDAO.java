@@ -9,6 +9,7 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.ItemKeys;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -295,16 +296,15 @@ public class ItemKeyDAO {
             int cellItemId, 
             String keyValue, 
             String answer, 
-            boolean isOptionKeyExist){
+            boolean isOptionKeyExist, 
+            String actionDone, 
+            String remarks){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;
         boolean result = false;
-        
-        System.out.println("key: "+keyValue);
-        System.out.println("itemKeyId: "+itemKeyId);
-        System.out.println("optionKeyExist: "+isOptionKeyExist);
-        
+                
         try {
+            conn.setAutoCommit(false);
             if(isOptionKeyExist){
                 pstmt = conn.prepareStatement("UPDATE item_keys SET "
                         + "ItemKey = '"+keyValue.replace("'", "\\'")+"' "
@@ -319,10 +319,32 @@ public class ItemKeyDAO {
                 pstmt.setString(2, keyValue);
                 pstmt.setString(3, answer);
                 pstmt.executeUpdate();
+                
+                remarks = "insert new item key";
+                actionDone = "insert";
             }
             
+            pstmt = conn.prepareStatement("INSERT INTO key_log SET "
+                    + "ItemKeyID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, itemKeyId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, remarks);
+            pstmt.setString(4, actionDone);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -344,12 +366,32 @@ public class ItemKeyDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("DELETE FROM item_keys "
                     + "WHERE ItemKeyID = "+itemKeyId+" ");
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO key_log SET "
+                    + "ItemKeyID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, itemKeyId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "delete item key");
+            pstmt.setString(4, "delete");
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
