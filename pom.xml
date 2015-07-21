@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.etest</groupId>
-	<artifactId>etest</artifactId>
+	<artifactId>su</artifactId>
 	<packaging>war</packaging>
-	<version>1.0</version>
+	<version>etest</version>
 	<name>etest</name>
 
 	<properties>
