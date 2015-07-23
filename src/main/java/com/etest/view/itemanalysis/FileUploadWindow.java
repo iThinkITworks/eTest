@@ -288,7 +288,7 @@ public class FileUploadWindow extends Window {
                                 @Override
                                 public void run() {
                                     if(totalItems < itemAnalysisList.size()){
-                                        analyze.setValue("Analyzing data.. "+((int)((current/totalData)*100))+"%");
+                                        analyze.setValue("Analyzing data.. "+CommonUtilities.roundOffToTwoDecimal((current/totalData)*100)+"%");
                                         current++;
                                     } else {
                                         analyze.setValue("Data analyzed... 100%");
