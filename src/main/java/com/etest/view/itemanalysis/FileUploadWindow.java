@@ -21,12 +21,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.ProgressBar;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +44,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import pl.exsio.plupload.Plupload;
 import pl.exsio.plupload.PluploadError;
 import pl.exsio.plupload.PluploadFile;
 import pl.exsio.plupload.manager.PluploadManager;
@@ -52,6 +55,7 @@ import pl.exsio.plupload.manager.PluploadManager;
  */
 public class FileUploadWindow extends Window {
 
+    VerticalLayout v = new VerticalLayout();
     TQCoverageService tq = new TQCoverageServiceImpl();
     CurriculumService cs = new CurriculumServiceImpl();
     
@@ -63,14 +67,15 @@ public class FileUploadWindow extends Window {
     Map<String, List<Character>> studentNoAndAnswer;
     Map<String, Integer> studentNoAndTotalScore;
     private double groupTotalForProportion = 0;
-    File excelFile;
+    File excelFile;    
     int totalItems;
     
     Grid grid;
     Button view;
-    
-    TQItemAnalysisUI tqItemAnalysisUI = new TQItemAnalysisUI();
-    
+    Label analyze = new Label();
+    private double current;
+    private double totalData;
+        
     public FileUploadWindow(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
         
@@ -79,8 +84,7 @@ public class FileUploadWindow extends Window {
         setHeight("100%");
         setModal(true);
         center();
-        
-        VerticalLayout v = new VerticalLayout();
+                
         v.setWidth("100%");
         v.setMargin(true);
         v.setSpacing(true);
@@ -104,19 +108,9 @@ public class FileUploadWindow extends Window {
                 Notification.show("Convert Excel File from .xlsx to .xls",Notification.Type.ERROR_MESSAGE);
                 return;
             }
-            
-            HorizontalLayout h = new HorizontalLayout();
-            h.setWidth("100%");
-            
-            h.addComponent(viewTableProportion());
-            h.addComponent(viewStudentsTotalScore());
-            h.addComponent(approveItemAnalysis());
-            v.addComponent(h);
-                                    
-            v.addComponent(itemAnalysisGridPanel()); 
-            
-            readContentFromExcelFile(excelFile);                                            
-            Notification.show("Succesfully uploaded file: " + file.getName());                       
+                                 
+            current = 1;
+            readContentFromExcelFile(excelFile);
         });
         
         manager.getUploader().addErrorListener((PluploadError error) -> {
@@ -124,8 +118,43 @@ public class FileUploadWindow extends Window {
                  + error.getMessage() + " (" + error.getType() + ")",
                  Notification.Type.ERROR_MESSAGE);
         }); 
+            
+        manager.getUploader().addUploadStartListener(new Plupload.UploadStartListener() {
+
+            @Override
+            public void onUploadStart() {
+                analyze.setValue("Process Item Analysis... 0%");
+                v.addComponent(analyze);
+            }
+        });
         
-        v.addComponent(manager);
+        manager.getUploader().addUploadStopListener(new Plupload.UploadStopListener() {
+
+            @Override
+            public void onUploadStop() {
+                //TODO
+            }
+        });
+        
+//        manager.getUploader().addUploadCompleteListener(new Plupload.UploadCompleteListener() {
+//
+//            @Override
+//            public void onUploadComplete() {
+//                v.removeComponent(status);
+//                
+//                HorizontalLayout h = new HorizontalLayout();
+//                h.setWidth("100%");
+//
+//                h.addComponent(viewTableProportion());
+//                h.addComponent(viewStudentsTotalScore());
+//                h.addComponent(approveItemAnalysis());
+//                v.addComponent(h);
+//
+//                v.addComponent(itemAnalysisGridPanel());
+//            }
+//        });
+        
+        v.addComponent(manager);   
         
         setContent(v);
     }
@@ -150,7 +179,7 @@ public class FileUploadWindow extends Window {
         return grid;
     }
     
-    void readContentFromExcelFile(File excelFile){            
+    void readContentFromExcelFile(File excelFile){ 
         try {
             POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(excelFile));
             HSSFWorkbook wb = new HSSFWorkbook(fs);
@@ -197,7 +226,7 @@ public class FileUploadWindow extends Window {
             List<ItemAnalysis> itemAnalysisList = new ArrayList<>();
             List<Character> answer;
             ItemAnalysis itemAnalysis = null;
-                        
+             
             for(int c = 0; c < cols; c++){
                 itemAnalysis = new ItemAnalysis();
                 answer = new ArrayList<>();
@@ -239,28 +268,81 @@ public class FileUploadWindow extends Window {
                 totalItems = 0;
                 return;
             }
-            
-            int totalScore = 0;
+                        
             studentNoAndTotalScore = new HashMap<>();
             studentNoAndAnswer = new HashMap<>();
-            int totalItems = 1;
-            for(ItemAnalysis i : itemAnalysisList){
-                studentNoAndTotalScore.put(i.getStudentNumber(), ItemAnalysisInterpretation.getTotalScoresOfAllStudent(tqCoverageId, i.getAnswer()));
-                studentNoAndAnswer.put(i.getStudentNumber(), i.getAnswer());
-                totalItems++;
-            }
+            totalItems = 1;
+            new Thread(){
+                
+                @Override
+                public void run(){
+                    totalData = itemAnalysisList.size();
+                    for(ItemAnalysis i : itemAnalysisList){
+                        try {
+                            Thread.sleep(50);
+                            studentNoAndTotalScore.put(i.getStudentNumber(), ItemAnalysisInterpretation.getTotalScoresOfAllStudent(tqCoverageId, i.getAnswer()));
+                            studentNoAndAnswer.put(i.getStudentNumber(), i.getAnswer());
+                            
+                            getUI().access(new Runnable(){
+
+                                @Override
+                                public void run() {
+                                    if(totalItems < itemAnalysisList.size()){
+                                        analyze.setValue("Analyzing data.. "+((int)((current/totalData)*100))+"%");
+                                        current++;
+                                    } else {
+                                        analyze.setValue("Data analyzed... 100%");
+                                        getLowerAndUpperGroupStudent(studentNoAndTotalScore);
             
-            getLowerAndUpperGroupStudent(studentNoAndTotalScore);
+                                        HorizontalLayout h = new HorizontalLayout();
+                                        h.setWidth("100%");
+
+                                        h.addComponent(viewTableProportion());
+                                        h.addComponent(viewStudentsTotalScore());
+                                        h.addComponent(approveItemAnalysis());
+                                        v.addComponent(h);
+
+                                        v.addComponent(itemAnalysisGridPanel());
+                                    }
+                                }
+                            
+                            });
+                            
+                            totalItems++;
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(FileUploadWindow.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                
+            }.start();
+            UI.getCurrent().setPollInterval(500);
+//            for(ItemAnalysis i : itemAnalysisList){
+//                studentNoAndTotalScore.put(i.getStudentNumber(), ItemAnalysisInterpretation.getTotalScoresOfAllStudent(tqCoverageId, i.getAnswer()));
+//                studentNoAndAnswer.put(i.getStudentNumber(), i.getAnswer());
+//                totalItems++;
+//            }
             
+//            getLowerAndUpperGroupStudent(studentNoAndTotalScore);
+//            
+//            HorizontalLayout h = new HorizontalLayout();
+//            h.setWidth("100%");
+//
+//            h.addComponent(viewTableProportion());
+//            h.addComponent(viewStudentsTotalScore());
+//            h.addComponent(approveItemAnalysis());
+//            v.addComponent(h);
+//
+//            v.addComponent(itemAnalysisGridPanel());
         } catch (IOException ex) {
             Logger.getLogger(TQItemAnalysisUI.class.getName()).log(Level.SEVERE, null, ex);
-        }        
+        }       
     }
     
     public void getLowerAndUpperGroupStudent(Map<String, Integer> studentNoAndTotalScore){
 //        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
 //                    .sorted(Map.Entry.comparingByValue());
-        
+        System.out.println("test this");
         Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
         
