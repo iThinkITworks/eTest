@@ -5,7 +5,8 @@
  */
 package com.etest.view.tq;
 
-import com.etest.view.itemanalysis.TQItemAnalysisUI;
+import com.etest.view.tq.itemanalysis.TQItemAnalysisUI;
+import com.etest.view.tq.reports.ReportMainUI;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
@@ -41,6 +42,13 @@ public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeList
         v.setCaption("Item Analysis");
         v.setWidth("100%");
         v.addComponent(tqItemAnalysis.populateDataTable());
+        v.setMargin(true);        
+        addComponent(v);
+        
+        v = new VerticalLayout();
+        v.setCaption("Reports");
+        v.setWidth("100%");
+        v.addComponent(new ReportMainUI());
         v.setMargin(true);        
         addComponent(v);
         

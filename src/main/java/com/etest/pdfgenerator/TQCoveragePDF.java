@@ -203,37 +203,37 @@ public class TQCoveragePDF implements StreamSource {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
     
-    String extractText(String html){
-    final ArrayList<String> list = new ArrayList<String>();
-
-    ParserDelegator parserDelegator = new ParserDelegator();
-    ParserCallback parserCallback;
-        parserCallback = new ParserCallback() {
-            @Override
-            public void handleText(final char[] data, final int pos) {
-                list.add(new String(data));
-            }
-            @Override
-            public void handleStartTag(Tag tag, MutableAttributeSet attribute, int pos) { }
-            @Override
-            public void handleEndTag(Tag t, final int pos) {  }
-            @Override
-            public void handleSimpleTag(Tag t, MutableAttributeSet a, final int pos) { }
-            @Override
-            public void handleComment(final char[] data, final int pos) { }
-            @Override
-            public void handleError(final java.lang.String errMsg, final int pos) { }
-        };
-        try {
-            parserDelegator.parse(new StringReader(html), parserCallback, true);
-        } catch (IOException ex) {
-            Logger.getLogger(TQCoveragePDF.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-    String text = "";
-
-    text = list.stream().map((s) -> " " + s).reduce(text, String::concat);
-
-    return text;
-}
+//    String extractText(String html){
+//        final ArrayList<String> list = new ArrayList<String>();
+//
+//        ParserDelegator parserDelegator = new ParserDelegator();
+//        ParserCallback parserCallback;
+//            parserCallback = new ParserCallback() {
+//                @Override
+//                public void handleText(final char[] data, final int pos) {
+//                    list.add(new String(data));
+//                }
+//                @Override
+//                public void handleStartTag(Tag tag, MutableAttributeSet attribute, int pos) { }
+//                @Override
+//                public void handleEndTag(Tag t, final int pos) {  }
+//                @Override
+//                public void handleSimpleTag(Tag t, MutableAttributeSet a, final int pos) { }
+//                @Override
+//                public void handleComment(final char[] data, final int pos) { }
+//                @Override
+//                public void handleError(final java.lang.String errMsg, final int pos) { }
+//            };
+//            try {
+//                parserDelegator.parse(new StringReader(html), parserCallback, true);
+//            } catch (IOException ex) {
+//                Logger.getLogger(TQCoveragePDF.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//
+//        String text = "";
+//
+//        text = list.stream().map((s) -> " " + s).reduce(text, String::concat);
+//
+//        return text;
+//    }
 }

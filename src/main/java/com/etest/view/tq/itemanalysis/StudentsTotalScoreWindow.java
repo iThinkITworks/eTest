@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.itemanalysis;
+package com.etest.view.tq.itemanalysis;
 
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.ui.Grid;

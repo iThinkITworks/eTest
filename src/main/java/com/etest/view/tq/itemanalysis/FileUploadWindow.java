@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.itemanalysis;
+package com.etest.view.tq.itemanalysis;
 
 import com.etest.global.ShowErrorNotification;
 import com.etest.model.ItemAnalysis;
@@ -135,24 +135,6 @@ public class FileUploadWindow extends Window {
                 //TODO
             }
         });
-        
-//        manager.getUploader().addUploadCompleteListener(new Plupload.UploadCompleteListener() {
-//
-//            @Override
-//            public void onUploadComplete() {
-//                v.removeComponent(status);
-//                
-//                HorizontalLayout h = new HorizontalLayout();
-//                h.setWidth("100%");
-//
-//                h.addComponent(viewTableProportion());
-//                h.addComponent(viewStudentsTotalScore());
-//                h.addComponent(approveItemAnalysis());
-//                v.addComponent(h);
-//
-//                v.addComponent(itemAnalysisGridPanel());
-//            }
-//        });
         
         v.addComponent(manager);   
         
@@ -317,23 +299,6 @@ public class FileUploadWindow extends Window {
                 
             }.start();
             UI.getCurrent().setPollInterval(500);
-//            for(ItemAnalysis i : itemAnalysisList){
-//                studentNoAndTotalScore.put(i.getStudentNumber(), ItemAnalysisInterpretation.getTotalScoresOfAllStudent(tqCoverageId, i.getAnswer()));
-//                studentNoAndAnswer.put(i.getStudentNumber(), i.getAnswer());
-//                totalItems++;
-//            }
-            
-//            getLowerAndUpperGroupStudent(studentNoAndTotalScore);
-//            
-//            HorizontalLayout h = new HorizontalLayout();
-//            h.setWidth("100%");
-//
-//            h.addComponent(viewTableProportion());
-//            h.addComponent(viewStudentsTotalScore());
-//            h.addComponent(approveItemAnalysis());
-//            v.addComponent(h);
-//
-//            v.addComponent(itemAnalysisGridPanel());
         } catch (IOException ex) {
             Logger.getLogger(TQItemAnalysisUI.class.getName()).log(Level.SEVERE, null, ex);
         }       
@@ -342,7 +307,7 @@ public class FileUploadWindow extends Window {
     public void getLowerAndUpperGroupStudent(Map<String, Integer> studentNoAndTotalScore){
 //        Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
 //                    .sorted(Map.Entry.comparingByValue());
-        System.out.println("test this");
+        
         Stream<Map.Entry<String, Integer>> sorted = studentNoAndTotalScore.entrySet().stream()
                     .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()));
         

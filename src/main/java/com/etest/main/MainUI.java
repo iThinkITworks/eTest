@@ -1,7 +1,7 @@
 package com.etest.main;
 
 import com.etest.administrator.UserAccess;
-import com.etest.view.itemanalysis.TQItemAnalysisUI;
+import com.etest.view.tq.itemanalysis.TQItemAnalysisUI;
 import com.etest.view.CellCaseView;
 import com.etest.view.SyllabusView;
 import com.etest.view.HousekeepingView;

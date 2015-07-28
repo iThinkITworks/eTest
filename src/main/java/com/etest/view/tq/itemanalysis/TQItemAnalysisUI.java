@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.itemanalysis;
+package com.etest.view.tq.itemanalysis;
 
 import com.etest.model.TQCoverage;
 import com.etest.service.CurriculumService;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
-import com.etest.view.itemanalysis.FileUploadWindow;
-import com.etest.view.itemanalysis.ItemAnalysisDataTableProperties;
+import com.etest.view.tq.itemanalysis.FileUploadWindow;
+import com.etest.view.tq.itemanalysis.ItemAnalysisDataTableProperties;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
