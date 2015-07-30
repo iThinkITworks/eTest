@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author jetdario
  */
-public interface InventoryOfCasesReportService {
+public interface InventoryReportService {
     
     public List<InventoryOfCasesReport> getInventoryOfCases();
     
@@ -23,4 +23,8 @@ public interface InventoryOfCasesReportService {
     public int getTotalCellItemsByCellCaseId(List<Integer> cellCaseIdList);
     
     public List<Integer> getListOfCellCaseIdBySyllabusId(List<Integer> syllabusIdList);
+    
+    public int getTotalItemsByBloomsTaxonomy(List<Integer> cellCaseIdList, 
+            int bloomsClassId);
+    
 }

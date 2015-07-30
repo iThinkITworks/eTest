@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  *
  * @author jetdario
  */
-public class ReportsDAO {
+public class InventoryReportDAO {
     
     SyllabusService ss = new SyllabusServiceImpl();
     
@@ -44,13 +44,13 @@ public class ReportsDAO {
                 InventoryOfCasesReport report = new InventoryOfCasesReport();
                 report.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 report.setSubject(rs.getString("CurrSubject"));
-                report.setDescriptiveTitle(rs.getString("DescriptiveTitle"));  
+                report.setDescriptiveTitle(rs.getString("DescriptiveTitle"));                
                 reportList.add(report);
             }            
             
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -58,7 +58,7 @@ public class ReportsDAO {
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -80,7 +80,7 @@ public class ReportsDAO {
             }
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -88,7 +88,7 @@ public class ReportsDAO {
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -112,7 +112,7 @@ public class ReportsDAO {
             }                    
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -120,7 +120,7 @@ public class ReportsDAO {
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }  
         
@@ -144,7 +144,7 @@ public class ReportsDAO {
             }                    
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -152,7 +152,7 @@ public class ReportsDAO {
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }  
         
@@ -176,7 +176,7 @@ public class ReportsDAO {
             }            
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-            Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 stmt.close();
@@ -184,10 +184,45 @@ public class ReportsDAO {
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
-                Logger.getLogger(ReportsDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         return cellCaseIdList;
+    }
+    
+    public static int getTotalItemsByBloomsTaxonomy(List<Integer> cellCaseIdList, 
+            int bloomsClassId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int totalItems = 0;
+        
+        try {
+            for(Integer i : cellCaseIdList){
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("SELECT COUNT(*) AS totalItems FROM cell_items "
+                        + "WHERE CellItemStatus = 0 "
+                        + "AND CellCaseID = "+i+" "
+                        + "AND BloomsClassID = "+bloomsClassId+" ");
+                while(rs.next()){
+                    totalItems = totalItems + CommonUtilities.convertStringToInt(rs.getString("totalItems"));
+                }
+            }            
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(InventoryReportDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return totalItems;
     }
 }

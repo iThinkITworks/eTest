@@ -5,40 +5,47 @@
  */
 package com.etest.serviceprovider;
 
-import com.etest.dao.ReportsDAO;
+import com.etest.dao.InventoryReportDAO;
 import com.etest.model.InventoryOfCasesReport;
-import com.etest.service.InventoryOfCasesReportService;
+import com.etest.service.InventoryReportService;
 import java.util.List;
 
 /**
  *
  * @author jetdario
  */
-public class InventoryOfCasesReportServiceImpl implements InventoryOfCasesReportService {
+public class InventoryReportServiceImpl implements InventoryReportService {
 
     @Override
     public List<InventoryOfCasesReport> getInventoryOfCases() {
-        return ReportsDAO.getInventoryOfCases();
+        return InventoryReportDAO.getInventoryOfCases();
     }
 
     @Override
     public List<Integer> getListOfSyllabusIdByCurriculumId(int curriculumId) {
-        return ReportsDAO.getListOfSyllabusIdByCurriculumId(curriculumId);
+        return InventoryReportDAO.getListOfSyllabusIdByCurriculumId(curriculumId);
     }
 
     @Override
     public int getTotalCellCasesBySyllabus(List<Integer> syllabusIdList) {
-        return ReportsDAO.getTotalCellCasesBySyllabus(syllabusIdList);
+        return InventoryReportDAO.getTotalCellCasesBySyllabus(syllabusIdList);
     }
 
     @Override
     public int getTotalCellItemsByCellCaseId(List<Integer> cellCaseIdList) {
-        return ReportsDAO.getTotalCellItemsByCellCaseId(cellCaseIdList);
+        return InventoryReportDAO.getTotalCellItemsByCellCaseId(cellCaseIdList);
     }
 
     @Override
     public List<Integer> getListOfCellCaseIdBySyllabusId(List<Integer> syllabusIdList) {
-        return ReportsDAO.getListOfCellCaseIdBySyllabusId(syllabusIdList);
+        return InventoryReportDAO.getListOfCellCaseIdBySyllabusId(syllabusIdList);
+    }
+
+    @Override
+    public int getTotalItemsByBloomsTaxonomy(List<Integer> cellCaseIdList, 
+            int bloomsClassId) {
+        return InventoryReportDAO.getTotalItemsByBloomsTaxonomy(cellCaseIdList, 
+                bloomsClassId);
     }
     
 }
