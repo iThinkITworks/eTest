@@ -373,8 +373,8 @@ public class CellItemWindow extends Window {
             keys.put(CommonUtilities.escapeSingleQuote(keyA.getValue().trim()), 
                     CommonUtilities.escapeSingleQuote(optionA.getValue().trim()));
         }
-        
-        if(keyA.getValue().trim().isEmpty()){
+                
+        if(keyB.getValue().trim().isEmpty()){
         } else {
             keys.put(CommonUtilities.escapeSingleQuote(keyB.getValue().trim()), 
                     CommonUtilities.escapeSingleQuote(optionB.getValue().trim()));
@@ -477,14 +477,6 @@ public class CellItemWindow extends Window {
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
-//                    boolean result = k.modifyItemKey((int) keyA.getData(), 
-//                            getCellItemId(),                             
-//                            keyA.getValue().trim(), 
-//                            optionA.getValue().trim(), 
-//                            isOptionAKeyExist);
-//                    if(result){
-//                        Notification.show("Key A SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
-//                    }
                 }
                 break;
             }
@@ -524,14 +516,6 @@ public class CellItemWindow extends Window {
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
-//                    boolean result = k.modifyItemKey((int) keyB.getData(), 
-//                            getCellItemId(),                             
-//                            keyB.getValue().trim(), 
-//                            optionB.getValue().trim(), 
-//                            isOptionBKeyExist);
-//                    if(result){
-//                        Notification.show("Key B SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
-//                    }
                 }
                 break;
             }
@@ -571,14 +555,6 @@ public class CellItemWindow extends Window {
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
-//                    boolean result = k.modifyItemKey((int) keyC.getData(), 
-//                            getCellItemId(),                             
-//                            keyC.getValue().trim(), 
-//                            optionC.getValue().trim(), 
-//                            isOptionCKeyExist);
-//                    if(result){
-//                        Notification.show("Key C SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
-//                    }
                 }
                 break;
             }
@@ -618,14 +594,6 @@ public class CellItemWindow extends Window {
                     if(sub.getParent() == null){
                         UI.getCurrent().addWindow(sub);
                     }
-//                    boolean result = k.modifyItemKey((int) keyD.getData(), 
-//                            getCellItemId(),                             
-//                            keyD.getValue().trim(), 
-//                            optionD.getValue().trim(), 
-//                            isOptionDKeyExist);
-//                    if(result){
-//                        Notification.show("Key D SUCCESSFULLY modified", Notification.Type.TRAY_NOTIFICATION);
-//                    }
                 }
                 break;
             }

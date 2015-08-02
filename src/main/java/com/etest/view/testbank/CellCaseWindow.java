@@ -50,8 +50,8 @@ public class CellCaseWindow extends Window {
         
         setContent(buildForms());
         getContent().setHeightUndefined();
-        System.out.println("user type: "+VaadinSession.getCurrent().getAttribute("userType"));
-        System.out.println("access: "+UserAccess.approve());
+//        System.out.println("user type: "+VaadinSession.getCurrent().getAttribute("userType"));
+//        System.out.println("access: "+UserAccess.approve());
     }
     
     FormLayout buildForms(){
