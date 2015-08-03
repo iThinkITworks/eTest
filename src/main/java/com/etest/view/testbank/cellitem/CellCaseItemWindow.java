@@ -48,6 +48,7 @@ public class CellCaseItemWindow extends Window {
                 
         populateDataTable();
         VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
         v.setMargin(true);
         v.addComponent(buildForms());
         
@@ -62,8 +63,20 @@ public class CellCaseItemWindow extends Window {
                 
         CellCase cc = ccs.getCellCaseById(getCellCaseId());
         Panel panel = new Panel();
+        panel.setWidth("100%");
         panel.addStyleName(ValoTheme.PANEL_BORDERLESS);
-        panel.setContent(new Label("<b>CASE</b>: "+cc.getCaseTopic(), ContentMode.HTML));
+        
+        Label caseLabel = new Label();
+        caseLabel.setCaption("CASE: ");
+        caseLabel.setStyleName("bold-font-style");
+        caseLabel.setWidth("80px");
+        
+        Label caseTopic = new Label();
+        caseTopic.setValue(caseLabel.getCaption()+cc.getCaseTopic());
+        caseTopic.setContentMode(ContentMode.RAW);
+        caseTopic.addStyleName("wrapline");
+        
+        panel.setContent(caseTopic);
         form.addComponent(panel);
         
         form.addComponent(table);

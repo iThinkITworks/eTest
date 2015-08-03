@@ -241,10 +241,13 @@
    overflow: hidden;
   }
   
-  .wordwrap-grid {
-      white-space: normal;
-      overflow: hidden;
-  }
+    .v-label-wrapline{
+        /*word-wrap: break-word;  IE  */
+        /*white-space: -moz-pre-wrap;  Firefox */
+        white-space: pre-wrap;
+        /*white-space: -moz-pre-wrap;  Firefox */
+        /*overflow: hidden; */
+    }
   
   .button-container:hover{
     background-color: #fff;
@@ -285,6 +288,10 @@
   
   .grid-row-font-size {
       font-size: 12px;
+  }
+  
+  .bold-font-style{
+      font-style: bold;
   }
   
   .background-image-layout{

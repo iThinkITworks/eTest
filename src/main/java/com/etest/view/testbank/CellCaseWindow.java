@@ -182,9 +182,9 @@ public class CellCaseWindow extends Window {
                 }
             default: 
             {
-                boolean result = ccs.removeCellCase(getCellCaseId());
-                if(result){
-                    close();
+                Window sub = deleteCaseWindow();
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
                 }
                 break;
             }
@@ -243,6 +243,35 @@ public class CellCaseWindow extends Window {
             }
         });
         v.addComponent(modify);
+        
+        sub.setContent(v);
+        sub.getContent().setHeightUndefined();
+        
+        return sub;
+    }
+
+    Window deleteCaseWindow(){
+        Window sub = new Window("DELETE");
+        sub.setWidth("250px");
+        sub.setModal(true);
+        sub.center();
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        
+        Button delete = new Button("DELETE CASE?");
+        delete.setWidth("100%");
+        delete.setImmediate(true);
+        delete.addClickListener((Button.ClickEvent event) -> {
+            boolean result = ccs.removeCellCase(getCellCaseId());
+            if(result){
+                sub.close();
+                close();
+            }
+        });
+        
+        v.addComponent(delete);
         
         sub.setContent(v);
         sub.getContent().setHeightUndefined();
