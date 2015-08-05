@@ -429,16 +429,21 @@ public class TQCoverageUI extends VerticalLayout {
             for(CellItem ci : cellItemIdList){                      
                 if((int)cellCaseId == ccs.getCellCaseIdByCellItemId(ci.getCellItemId()).getCellCaseId()){
                     keyList = k.getItemKeyIdsByCellItemId(ci.getCellItemId());
+                    
                     if(keyList.isEmpty()){
                         ShowErrorNotification.error("No Item Key was found for STEM: \n"
                                 +cis.getCellItemById(ci.getCellItemId()).getItem());
                         return;
                     }
+                    
                     TQAnswerKey tqAnswerKey = new TQAnswerKey();
                     tqAnswerKey.setCellItemId(ci.getCellItemId());
-                    tqAnswerKey.setItemKeyId(keyList.get(0));
+//                    tqAnswerKey.setItemKeyId(keyList.get(0));
+                    int itemKeyId = k.getItemKeyIdFromKeyLogUse(ci.getCellItemId());
+                    tqAnswerKey.setItemKeyId(itemKeyId);
                     tqAnswerKey.setItemNo(itemNo);
-                    tqAnswerKey.setAnswer(k.getAnswerByItemKeyId(keyList.get(0)));
+//                    tqAnswerKey.setAnswer(k.getAnswerByItemKeyId(keyList.get(0)));
+                    tqAnswerKey.setAnswer(k.getAnswerByItemKeyId(itemKeyId));
                     tqAnswerKeyList.add(tqAnswerKey);
                     
                     itemNo++;                   

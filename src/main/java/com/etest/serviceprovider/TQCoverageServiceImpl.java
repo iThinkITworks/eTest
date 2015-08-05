@@ -238,11 +238,7 @@ public class TQCoverageServiceImpl implements TQCoverageService {
             int inputItems) {
         if(maxItems > inputItems){
             return false;
-        } else if (maxItems < inputItems){
-            return false;
-        } else {
-            return true;
-        }
+        } else return maxItems >= inputItems;
     }
 
     @Override

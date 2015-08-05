@@ -8,6 +8,7 @@ package com.etest.dao;
 import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.ItemKeys;
+import com.etest.model.KeyLogUse;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
@@ -88,6 +89,38 @@ public class ItemKeyDAO {
         }
         
         return keyList;
+    }
+    
+    public static int getItemKeyIdFromKeyLogUse(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int itemKeyId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT i.ItemKeyID AS ItemKeyID FROM key_log_use k "
+                    + "INNER JOIN item_keys i ON k.ItemKeyID = i.ItemKeyID "
+                    + "WHERE i.CellItemID = "+cellItemId+" AND UsedItemKey = 0 "
+                    + "ORDER BY DateUsed ASC LIMIT 1 ");
+            while(rs.next()){
+                itemKeyId = CommonUtilities.convertStringToInt(rs.getString("ItemKeyID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return itemKeyId;
     }
     
     public static List<ItemKeys> getItemKeysByCellItemId(int cellItemId){
@@ -472,5 +505,149 @@ public class ItemKeyDAO {
         }
         
         return answer;
+    }
+
+    public static boolean isItemKeyInKeyLogUse(int itemKeyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS itemKey FROM key_log_use "
+                    + "WHERE ItemKeyID = "+itemKeyId+" AND UsedItemKey = 0 ");
+            while(rs.next()){
+                if(!rs.getString("itemKey").equals("0")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+
+    public static String getItemKeyById(int itemKeyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String key = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT ItemKey FROM item_keys "
+                    + "WHERE ItemKeyID = "+itemKeyId+" ");
+            while(rs.next()){
+                key = CommonUtilities.escapeSingleQuote(rs.getString("ItemKey"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return key;
+    }
+    
+    public static KeyLogUse markUsedItemKey(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        int keyLogUseId = 0;
+        boolean result = false;
+        KeyLogUse k = new KeyLogUse();
+        
+        try {
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT k.KeyLogUseID AS KeyLogUseID FROM key_log_use k "
+                    + "INNER JOIN item_keys i ON k.ItemKeyID = i.ItemKeyID "
+                    + "WHERE i.CellItemID = "+cellItemId+" AND k.UsedItemKey = 0 "
+                    + "ORDER BY DateUsed ASC LIMIT 1");
+            while(rs.next()){
+                keyLogUseId = CommonUtilities.convertStringToInt(rs.getString("KeyLogUseID"));                
+            }
+            
+            pstmt = conn.prepareStatement("UPDATE key_log_use "
+                                + "SET UsedItemKey = 1 "
+                                + "WHERE KeyLogUseID = "+keyLogUseId+" ");
+            pstmt.executeUpdate();
+            
+            k.setKeyLogUseId(keyLogUseId);
+            k.setUsedItemKey(1);
+            
+            conn.commit();
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex1.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return k;
+    }
+    
+    public static boolean revertMarkedUsedItemKey(int keyLogUseID){
+        Connection conn = DBConnection.connectToDB();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE key_log_use "
+                    + "SET UsedItemKey = 0"
+                    + "WHERE KeyLogUseID = "+keyLogUseID+" ");
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                pstmt.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ItemKeyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }

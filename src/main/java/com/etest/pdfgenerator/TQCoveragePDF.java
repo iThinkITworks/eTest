@@ -33,18 +33,12 @@ import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.text.MutableAttributeSet;
-import javax.swing.text.html.HTML.Tag;
-import javax.swing.text.html.HTMLEditorKit.ParserCallback;
-import javax.swing.text.html.parser.ParserDelegator;
 
 /**
  *
@@ -103,7 +97,8 @@ public class TQCoveragePDF implements StreamSource {
                     }
 
                     Label stem = new Label();            
-                    stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", keyList.get(0)));
+//                    stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", keyList.get(0)));
+                    stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", k.getItemKeyById(itemKeyId)));
                     stem.setContentMode(ContentMode.HTML);
                     document.add(new Paragraph(stem.getValue()));
 

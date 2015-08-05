@@ -12,7 +12,9 @@ import com.etest.model.TQAnswerKey;
 import com.etest.model.TQCoverage;
 import com.etest.model.TQItems;
 import com.etest.model.TopicCoverage;
+import com.etest.service.ItemKeyService;
 import com.etest.service.SyllabusService;
+import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
@@ -38,6 +40,7 @@ import java.util.logging.Logger;
 public class TQCoverageDAO {
     
     SyllabusService ss = new SyllabusServiceImpl();
+    ItemKeyService k = new ItemKeyServiceImpl();
     
     public static int getBloomsClassId(String bloomsClass){
         Connection conn = DBConnection.connectToDB();
@@ -516,7 +519,7 @@ public class TQCoverageDAO {
                     tqAnswerKey.setInt(2, t.getItemNo());
                     tqAnswerKey.setString(3, t.getAnswer());
                     tqAnswerKey.executeUpdate();
-                    
+                                        
                     tqItems = conn.prepareStatement("INSERT INTO key_log_use SET "
                             + "ItemKeyID = ?, "
                             + "DateUsed = now(), "
@@ -524,6 +527,14 @@ public class TQCoverageDAO {
                     tqItems.setInt(1, t.getItemKeyId());
                     tqItems.setInt(2, tqCoverageId);
                     tqItems.executeUpdate();
+                    
+                    if(ItemKeyDAO.isItemKeyInKeyLogUse(t.getItemKeyId())){
+                        tqItems = conn.prepareStatement("UPDATE key_log_use "
+                                + "SET UsedItemKey = 1 "
+                                + "WHERE ItemKeyID = "+t.getItemKeyId()+" "
+                                + "ORDER BY DateUsed ASC LIMIT 1 ");
+                        tqItems.executeUpdate();
+                    }
                 }
             }            
                         

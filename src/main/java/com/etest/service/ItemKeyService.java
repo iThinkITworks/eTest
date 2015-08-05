@@ -6,6 +6,7 @@
 package com.etest.service;
 
 import com.etest.model.ItemKeys;
+import com.etest.model.KeyLogUse;
 import java.util.List;
 
 /**
@@ -54,4 +55,14 @@ public interface ItemKeyService {
     public List<Integer> getItemKeyIdsByCellItemId(int cellItemId);
     
     public String getAnswerByItemKeyId(int itemKeyId);
+    
+    public int getItemKeyIdFromKeyLogUse(int cellItemId);
+    
+    public boolean isItemKeyInKeyLogUse(int itemKeyId);
+    
+    public String getItemKeyById(int itemKeyId);
+    
+    public KeyLogUse markUsedItemKey(int cellItemId);
+    
+    public boolean revertMarkedUsedItemKey(int keyLogUseID);
 }

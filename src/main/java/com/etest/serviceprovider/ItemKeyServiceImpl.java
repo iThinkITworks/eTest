@@ -7,6 +7,7 @@ package com.etest.serviceprovider;
 
 import com.etest.dao.ItemKeyDAO;
 import com.etest.model.ItemKeys;
+import com.etest.model.KeyLogUse;
 import com.etest.service.ItemKeyService;
 import java.util.List;
 
@@ -108,6 +109,58 @@ public class ItemKeyServiceImpl implements ItemKeyService {
     @Override
     public String getAnswerByItemKeyId(int itemKeyId) {
         return ItemKeyDAO.getAnswerByItemKeyId(itemKeyId);
+    }
+
+    @Override
+    public int getItemKeyIdFromKeyLogUse(int cellItemId) {
+        int itemKeyId = 0;
+        List<ItemKeys> keyList = getItemKeysByCellItemId(cellItemId);
+        
+        if(keyList.size() > 1){
+            int i = 0;
+            for(ItemKeys k : keyList){
+                i++;
+                
+                if(!isItemKeyInKeyLogUse(k.getItemKeyId())){
+                    itemKeyId = k.getItemKeyId(); 
+                    break;
+                } 
+                
+                if(i == keyList.size()){
+                    itemKeyId = ItemKeyDAO.getItemKeyIdFromKeyLogUse(cellItemId);
+                    
+                    KeyLogUse key = markUsedItemKey(cellItemId);
+                    if(key.getUsedItemKey() == 0){
+                        revertMarkedUsedItemKey(key.getKeyLogUseId());
+                    }
+                    break;
+                }
+            }
+        } else {
+            itemKeyId = keyList.get(0).getItemKeyId();
+        }
+           
+        return itemKeyId;
+    }
+
+    @Override
+    public boolean isItemKeyInKeyLogUse(int itemKeyId) {
+        return ItemKeyDAO.isItemKeyInKeyLogUse(itemKeyId);
+    }
+
+    @Override
+    public String getItemKeyById(int itemKeyId) {
+        return ItemKeyDAO.getItemKeyById(itemKeyId);
+    }
+
+    @Override
+    public KeyLogUse markUsedItemKey(int cellItemId) {
+        return ItemKeyDAO.markUsedItemKey(cellItemId);
+    }
+
+    @Override
+    public boolean revertMarkedUsedItemKey(int keyLogUseID) {
+        return ItemKeyDAO.revertMarkedUsedItemKey(keyLogUseID);
     }
     
 }

@@ -87,7 +87,8 @@ public class TQCoverageWindow extends Window {
                 }
                 
                 stem = new Label();            
-                stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", keyList.get(0)));
+//                stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", keyList.get(0)));
+                stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", k.getItemKeyById(itemKeyId)));
                 stem.setContentMode(ContentMode.HTML);
                 form.addComponent(stem);
                 
