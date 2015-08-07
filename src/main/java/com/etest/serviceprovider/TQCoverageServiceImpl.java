@@ -325,4 +325,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
                 tqCoverageId);
     }
 
+    @Override
+    public String getTqCoverageTicketNo(int tqCoverageId) {
+        return TQCoverageDAO.getTqCoverageTicketNo(tqCoverageId);
+    }
+
 }

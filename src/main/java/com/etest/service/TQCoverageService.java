@@ -93,4 +93,6 @@ public interface TQCoverageService {
     
     public boolean saveItemAnalysis(Grid grid, 
             int tqCoverageId);
+    
+    public String getTqCoverageTicketNo(int tqCoverageId);
 }

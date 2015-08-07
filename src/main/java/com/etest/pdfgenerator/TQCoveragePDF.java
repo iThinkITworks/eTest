@@ -22,8 +22,11 @@ import com.etest.serviceprovider.TeamTeachServiceImpl;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -73,6 +76,14 @@ public class TQCoveragePDF implements StreamSource {
             document = new Document(PageSize.A4, 50, 50, 50, 50);
             PdfWriter.getInstance(document, outputStream);
             document.open();
+            
+            Font content = FontFactory.getFont("Times-Roman", 10);
+            
+            Paragraph ticketNo = new Paragraph();
+            ticketNo.setSpacingAfter(30f);
+            ticketNo.setAlignment(Element.ALIGN_RIGHT);
+            ticketNo.add(new Phrase("TQ Ticket #: "+tq.getTqCoverageTicketNo(getTQCoverageId()), content));
+            document.add(ticketNo);
             
             int itemNo = 1;
             Map<Integer, Map<Integer, Integer>> tqCoverage = tq.getTQCoverage(getTQCoverageId());

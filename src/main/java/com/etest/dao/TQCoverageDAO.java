@@ -936,4 +936,33 @@ public class TQCoverageDAO {
         
         return result;
     }
+    
+    public static String getTqCoverageTicketNo(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String ticketNo = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT get_tq_ticket_no("+tqCoverageId+") AS TqCoverageTicketNo ");
+            while(rs.next()){
+                ticketNo = rs.getString("TqCoverageTicketNo");
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return ticketNo;
+    }
 }
