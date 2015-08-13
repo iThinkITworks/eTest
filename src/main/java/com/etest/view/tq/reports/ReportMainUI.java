@@ -7,7 +7,9 @@ package com.etest.view.tq.reports;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -45,7 +47,6 @@ public class ReportMainUI extends VerticalLayout {
             //TODO
             if(reportList.getValue().equals("Test Questionnaire")){
                 v.removeAllComponents();
-//                v.addComponent(buildComponentTQ());
             } else  if (reportList.getValue().equals("Inventory of Cases")){
                 v.removeAllComponents();
                 v.setHeight("500px");
@@ -60,5 +61,26 @@ public class ReportMainUI extends VerticalLayout {
         
         addComponent(g);    
         addComponent(v);
+        addComponent(buildReportComponent());
     }    
+    
+    Component buildReportComponent(){
+        TabSheet t = new TabSheet();
+        t.setWidth("100%");
+        
+        VerticalLayout v = new VerticalLayout();
+        v.setCaption("Online Queries");
+        v.setWidth("100%");
+        v.setMargin(true);
+        t.addComponent(v);
+        
+        v = new VerticalLayout();
+        v.setCaption("Report Generator");
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.addComponent(new ReportGeneratorUI());
+        t.addComponent(v);        
+        
+        return t;
+    }
 }

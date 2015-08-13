@@ -965,4 +965,44 @@ public class TQCoverageDAO {
         
         return ticketNo;
     }
+
+    public static List<TQCoverage> getApprovedTqCoverageByCurriculumId(int curriculumId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        List<TQCoverage> tqCoverageList = new ArrayList<>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM tq_coverage "
+                    + "WHERE Status = 1 "
+                    + "AND CurriculumID = "+curriculumId+" ");
+            while(rs.next()){
+                TQCoverage tqc = new TQCoverage();
+                tqc.setTqCoverageId(CommonUtilities.convertStringToInt(rs.getString("TqCoverageID")));
+                tqc.setExamTitle(rs.getString("ExamTitle"));
+                tqc.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
+                tqc.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("DateCreated")));
+                tqc.setTotalHoursCoverage(CommonUtilities.convertStringToDouble(rs.getString("TotalHoursCoverage")));
+                tqc.setTotalItems(CommonUtilities.convertStringToInt(rs.getString("TotalItems")));
+                tqc.setStatus(CommonUtilities.convertStringToInt(rs.getString("Status")));
+                tqc.setAnalyzed(CommonUtilities.convertStringToInt(rs.getString("Analyzed")));
+                tqCoverageList.add(tqc);
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return tqCoverageList;
+    }
 }

@@ -16,6 +16,7 @@ import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.facultyServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.themes.ValoTheme;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -89,7 +90,7 @@ public class CommonComboBox {
             i.getItemProperty("y").setValue(entry.getValue());
         }
         
-        select.addStyleName("small");
+        select.addStyleName(ValoTheme.COMBOBOX_SMALL);
         select.setImmediate(true);
         return select;
     }
@@ -212,4 +213,6 @@ public class CommonComboBox {
         select.setImmediate(true);
         return select;
     }
+    
+    
 }

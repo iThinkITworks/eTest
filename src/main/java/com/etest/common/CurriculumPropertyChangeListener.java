@@ -5,15 +5,13 @@
  */
 package com.etest.common;
 
-import com.etest.model.Syllabus;
 import com.etest.service.CurriculumService;
 import com.etest.service.SyllabusService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
-import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Notification;
+import java.lang.reflect.Field;
 
 /**
  *
@@ -39,7 +37,7 @@ public class CurriculumPropertyChangeListener extends ComboBox implements Proper
     public void valueChange(Property.ValueChangeEvent event) {
         if(event.getProperty().getValue() == null){            
         } else {
-            CommonCascadeComboBox.getSubjectFromCurriculum(getTopic(), (int) event.getProperty().getValue());
+            CommonCascadeComboBox.getTopicFromCurriculum(getTopic(), (int) event.getProperty().getValue());
         }
         
     }
