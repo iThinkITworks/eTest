@@ -1005,4 +1005,36 @@ public class TQCoverageDAO {
         
         return tqCoverageList;
     }
+    
+    public static boolean isTQCoverageAnalyzed(int tqCoverageId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT Analyzed FROM tq_coverage "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" ");
+            while(rs.next()){
+                if(rs.getString("Analyzed").equals("1")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TQCoverageDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
 }

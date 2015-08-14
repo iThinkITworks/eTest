@@ -59,8 +59,8 @@ public class ReportMainUI extends VerticalLayout {
         });
         g.addComponent(button, 1, 0);
         
-        addComponent(g);    
-        addComponent(v);
+//        addComponent(g);    
+//        addComponent(v);
         addComponent(buildReportComponent());
     }    
     

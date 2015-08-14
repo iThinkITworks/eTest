@@ -330,4 +330,9 @@ public class TQCoverageServiceImpl implements TQCoverageService {
         return TQCoverageDAO.getTqCoverageTicketNo(tqCoverageId);
     }
 
+    @Override
+    public boolean isTQCoverageAnalyzed(int tqCoverageId) {
+        return TQCoverageDAO.isTQCoverageAnalyzed(tqCoverageId);
+    }
+
 }

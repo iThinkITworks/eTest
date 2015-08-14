@@ -95,4 +95,6 @@ public interface TQCoverageService {
             int tqCoverageId);
     
     public String getTqCoverageTicketNo(int tqCoverageId);
+    
+    public boolean isTQCoverageAnalyzed(int tqCoverageId);
 }
