@@ -5,12 +5,12 @@
  */
 package com.etest.view.tq.reports;
 
+import com.etest.pdfgenerator.SummaryReportViewer;
 import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
+import com.etest.pdfgenerator.ItemAnalysisReportViewer;
 import com.etest.pdfgenerator.TQViewer;
-import com.etest.service.CellItemService;
 import com.etest.service.TQCoverageService;
-import com.etest.serviceprovider.CellItemServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.view.tq.itemanalysis.ItemAnalysisViewResultWindow;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -18,7 +18,6 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
@@ -46,8 +45,7 @@ public class ReportGeneratorUI extends VerticalLayout {
     ComboBox searchApproveTq2 = new ComboBox();
     
     OptionGroup reportType3 = new OptionGroup();
-    CheckBox summaryCaseItems = new CheckBox();
-    CheckBox summaryItemGroup = new CheckBox();
+    OptionGroup testBankInventory = new OptionGroup();
     
     boolean report1 = false;
     boolean report2 = false;
@@ -56,7 +54,6 @@ public class ReportGeneratorUI extends VerticalLayout {
     public ReportGeneratorUI() {
         setWidth("100%");
         setSpacing(true);
-//        setMargin(true);
                 
         searchSubject1.addValueChangeListener(dropDownChangeListener);
         searchSubject1.setEnabled(false);
@@ -130,15 +127,13 @@ public class ReportGeneratorUI extends VerticalLayout {
         v.setWidth("100%");
         v.setSpacing(true);
         
-        summaryCaseItems.setCaption("Summary: Case vs Items");
-        summaryCaseItems.setEnabled(false);
-        summaryCaseItems.setImmediate(true);
-        v.addComponent(summaryCaseItems);
+        testBankInventory.addItem("Summary: Case vs Items");
+        testBankInventory.addItem("Summary: Items Group according to the Revised Blooms Taxonomy");
+        testBankInventory.setImmediate(true);
+        testBankInventory.select("Summary: Case vs Items");
         
-        summaryItemGroup.setCaption("Summary: Items Group according to the Revised Blooms Taxonomy");
-        summaryItemGroup.setEnabled(false);
-        summaryItemGroup.setImmediate(true);
-        v.addComponent(summaryItemGroup);
+        testBankInventory.setEnabled(false);
+        v.addComponent(testBankInventory);
         
         v3.addComponent(reportType3);
         v3.setExpandRatio(reportType3, 1);
@@ -211,14 +206,25 @@ public class ReportGeneratorUI extends VerticalLayout {
                 return;
             }
             
-            Window sub = new ItemAnalysisViewResultWindow((int) searchApproveTq2.getValue());
+//            Window sub = new ItemAnalysisViewResultWindow((int) searchApproveTq2.getValue());
+            Window sub = new ItemAnalysisReportViewer((int) searchApproveTq2.getValue());
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }
         } 
         
         if (report3) {
-            
+            if(testBankInventory.getValue().equals("Summary: Case vs Items")){
+                Window sub = new SummaryReportViewer(testBankInventory.getValue().toString());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+            } else {
+                Window sub = new SummaryReportViewer(testBankInventory.getValue().toString());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+            }
         }
     };
     
@@ -229,8 +235,7 @@ public class ReportGeneratorUI extends VerticalLayout {
         searchSubject2.setEnabled(!bol);
         searchApproveTq2.setEnabled(!bol);
 
-        summaryCaseItems.setEnabled(!bol);
-        summaryItemGroup.setEnabled(!bol);
+        testBankInventory.setEnabled(!bol);
         
         report1 = true;
         report2 = false;
@@ -244,8 +249,7 @@ public class ReportGeneratorUI extends VerticalLayout {
         searchSubject2.setEnabled(bol);
         searchApproveTq2.setEnabled(bol);
 
-        summaryCaseItems.setEnabled(!bol);
-        summaryItemGroup.setEnabled(!bol);
+        testBankInventory.setEnabled(!bol);
         
         report1 = false;
         report2 = true;
@@ -259,8 +263,7 @@ public class ReportGeneratorUI extends VerticalLayout {
         searchSubject2.setEnabled(!bol);
         searchApproveTq2.setEnabled(!bol);
 
-        summaryCaseItems.setEnabled(bol);
-        summaryItemGroup.setEnabled(bol);
+        testBankInventory.setEnabled(bol);
         
         report1 = false;
         report2 = false;

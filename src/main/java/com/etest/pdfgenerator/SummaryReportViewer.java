@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.tq.reports;
+package com.etest.pdfgenerator;
 
 import com.etest.pdfgenerator.InventoryCasesReportPDF;
 import com.etest.pdfgenerator.InventoryItemsReportPDF;
@@ -20,25 +20,31 @@ import com.vaadin.ui.Window;
  *
  * @author jetdario
  */
-public class ReportViewer extends Panel {
+public class SummaryReportViewer extends Window {
 
-    public ReportViewer(String reportType) {
-        setHeight("100%");
-        setCaption(reportType);
+    public SummaryReportViewer(String summaryType) {
+        setCaption(summaryType);        
+        setWidth("900px");
+        setHeight("600px");
+        center();
                 
         StreamResource resource; //= new StreamResource(new InventoryCasesReportPDF(), "InventoryOfCases.pdf");   
-        if(reportType.equals("Inventory of Cases")){
+        if(summaryType.equals("Summary: Case vs Items")){
             resource = new StreamResource(new InventoryCasesReportPDF(), "InventoryOfCases.pdf");            
         } else {
             resource = new StreamResource(new InventoryItemsReportPDF(), "InventoryOfItems.pdf");
         }       
         resource.setMIMEType("application/pdf"); 
                 
+        VerticalLayout v = new VerticalLayout();
+        v.setSizeFull();
         Embedded e = new Embedded();
         e.setSource(resource);
         e.setSizeFull();
         e.setType(Embedded.TYPE_BROWSER);
-        setContent(e);    
+        v.addComponent(e);
+        
+        setContent(v);    
     }
     
 }

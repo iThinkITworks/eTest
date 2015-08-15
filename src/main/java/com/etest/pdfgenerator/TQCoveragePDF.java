@@ -77,13 +77,7 @@ public class TQCoveragePDF implements StreamSource {
             PdfWriter.getInstance(document, outputStream);
             document.open();
             
-            Font content = FontFactory.getFont("Times-Roman", 10);
-            
-            Paragraph ticketNo = new Paragraph();
-            ticketNo.setSpacingAfter(30f);
-            ticketNo.setAlignment(Element.ALIGN_RIGHT);
-            ticketNo.add(new Phrase("TQ Ticket #: "+tq.getTqCoverageTicketNo(getTQCoverageId()), content));
-            document.add(ticketNo);
+            Font content = FontFactory.getFont("Times-Roman", 10);            
             
             int itemNo = 1;
             Map<Integer, Map<Integer, Integer>> tqCoverage = tq.getTQCoverage(getTQCoverageId());
@@ -162,6 +156,13 @@ public class TQCoveragePDF implements StreamSource {
             }         
             
             document.newPage();
+            
+            Paragraph ticketNo = new Paragraph();
+            ticketNo.setSpacingAfter(30f);
+            ticketNo.setAlignment(Element.ALIGN_LEFT);
+            ticketNo.add(new Phrase("TQ Ticket #: "+tq.getTqCoverageTicketNo(getTQCoverageId()), content));
+            document.add(ticketNo);
+            
             document.add(new Paragraph("Answer Key: "));
                         
             itemNo = 1;

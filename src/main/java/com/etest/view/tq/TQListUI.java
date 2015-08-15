@@ -62,25 +62,25 @@ public class TQListUI extends TQListTableProperties{
             v.addComponent(approve);
             v.setComponentAlignment(approve, Alignment.MIDDLE_LEFT);
             
-            Button print = new Button("print");
-            print.setSizeFull();
-            print.setData(t.getTqCoverageId());  
-            print.setIcon(FontAwesome.PRINT);
-            print.addStyleName(ValoTheme.BUTTON_LINK);
-            print.addStyleName(ValoTheme.BUTTON_TINY);
-            print.addStyleName(ValoTheme.BUTTON_QUIET);
-            print.addStyleName("button-container");
-            print.addClickListener(remarksBtnClickListener);
-            v.addComponent(print);
-            v.setComponentAlignment(print, Alignment.MIDDLE_LEFT);
+//            Button print = new Button("print");
+//            print.setSizeFull();
+//            print.setData(t.getTqCoverageId());  
+//            print.setIcon(FontAwesome.PRINT);
+//            print.addStyleName(ValoTheme.BUTTON_LINK);
+//            print.addStyleName(ValoTheme.BUTTON_TINY);
+//            print.addStyleName(ValoTheme.BUTTON_QUIET);
+//            print.addStyleName("button-container");
+//            print.addClickListener(remarksBtnClickListener);
+//            v.addComponent(print);
+//            v.setComponentAlignment(print, Alignment.MIDDLE_LEFT);
             
             if(t.getStatus() == 0){ 
                 approve.setIcon(FontAwesome.THUMBS_DOWN); 
-                print.setVisible(false);
+//                print.setVisible(false);
             }
             else { 
                 approve.setIcon(FontAwesome.THUMBS_UP); 
-                print.setVisible(true);
+//                print.setVisible(true);
             } 
             
             addItem(new Object[]{

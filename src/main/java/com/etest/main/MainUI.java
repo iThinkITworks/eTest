@@ -529,15 +529,15 @@ private boolean testMode = false;
         vlayout.setComponentAlignment(loginForm, Alignment.MIDDLE_CENTER);
         sub.setContent(vlayout);
         
-        Notification notification = new Notification(
-                "Welcome to eTest Generator");
-        notification
-                .setDescription("<span>This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.</span> <span>Close this <b>Notification</b> to continue.</span>");
-        notification.setHtmlContentAllowed(true);
-        notification.setStyleName("tray dark small closable login-help");
-        notification.setPosition(Position.BOTTOM_CENTER);
-        notification.show(Page.getCurrent());
-        notification.setDelayMsec(-1);
+//        Notification notification = new Notification(
+//                "Welcome to eTest Generator");
+//        notification
+//                .setDescription("<span>This application is not real, it only demonstrates an application built with the <a href=\"https://vaadin.com\">Vaadin framework</a>.</span> <span>Close this <b>Notification</b> to continue.</span>");
+//        notification.setHtmlContentAllowed(true);
+//        notification.setStyleName("tray dark small closable login-help");
+//        notification.setPosition(Position.BOTTOM_CENTER);
+//        notification.show(Page.getCurrent());
+//        notification.setDelayMsec(-1);
         
         return sub;
     }
@@ -613,7 +613,7 @@ private boolean testMode = false;
         welcome.addStyleName(ValoTheme.LABEL_COLORED);
         labels.addComponent(welcome);
 
-        Label title = new Label("eTest Dashboard");
+        Label title = new Label("eTest Generator");
         title.setSizeUndefined();
         title.addStyleName(ValoTheme.LABEL_H3);
         title.addStyleName(ValoTheme.LABEL_LIGHT);

@@ -5,6 +5,7 @@
  */
 package com.etest.view.tq.reports;
 
+import com.etest.pdfgenerator.SummaryReportViewer;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -50,11 +51,11 @@ public class ReportMainUI extends VerticalLayout {
             } else  if (reportList.getValue().equals("Inventory of Cases")){
                 v.removeAllComponents();
                 v.setHeight("500px");
-                v.addComponent(new ReportViewer(reportList.getValue().toString()));
+                v.addComponent(new SummaryReportViewer(reportList.getValue().toString()));
             } else {
                 v.removeAllComponents();
                 v.setHeight("500px");
-                v.addComponent(new ReportViewer(reportList.getValue().toString()));
+                v.addComponent(new SummaryReportViewer(reportList.getValue().toString()));
             }
         });
         g.addComponent(button, 1, 0);

@@ -7,7 +7,6 @@ package com.etest.pdfgenerator;
 
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.Grid;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -15,20 +14,18 @@ import com.vaadin.ui.Window;
  *
  * @author jetdario
  */
-public class TQViewer extends Window {
+public class ItemAnalysisReportViewer extends Window {
 
-    Grid grid = new Grid();    
-    private final int tqCoverageId;
+    private int tqCoverageId;
     
-    public TQViewer(int tqCoverageId) {
+    public ItemAnalysisReportViewer(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
         
-//        setSizeFull();
         setWidth("900px");
         setHeight("600px");
         center();
                 
-        StreamResource resource = new StreamResource(new TQCoveragePDF(getTQCoverageId()), "TQ.pdf");
+        StreamResource resource = new StreamResource(new ItemAnalysisReportPDF(getTqCoverageId()), "ItemAnalysis.pdf");
         resource.setMIMEType("application/pdf");       
 
         VerticalLayout v = new VerticalLayout();
@@ -42,7 +39,7 @@ public class TQViewer extends Window {
         setContent(v);
     }
     
-    int getTQCoverageId(){
+    int getTqCoverageId(){
         return tqCoverageId;
     }
 }
