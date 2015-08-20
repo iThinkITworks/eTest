@@ -46,7 +46,7 @@ public class ReportGeneratorUI extends VerticalLayout {
     
     OptionGroup reportType3 = new OptionGroup();
     OptionGroup testBankInventory = new OptionGroup();
-    
+        
     boolean report1 = false;
     boolean report2 = false;
     boolean report3 = false;
@@ -55,6 +55,18 @@ public class ReportGeneratorUI extends VerticalLayout {
         setWidth("100%");
         setSpacing(true);
                 
+        Label lineSeparator1 = new Label();
+        lineSeparator1.setContentMode(ContentMode.HTML);
+        lineSeparator1.setStyleName("line-separator");
+        
+        Label lineSeparator2 = new Label();
+        lineSeparator2.setContentMode(ContentMode.HTML);
+        lineSeparator2.setStyleName("line-separator");
+        
+        Label lineSeparator3 = new Label();
+        lineSeparator3.setContentMode(ContentMode.HTML);
+        lineSeparator3.setStyleName("line-separator");
+        
         searchSubject1.addValueChangeListener(dropDownChangeListener);
         searchSubject1.setEnabled(false);
         searchApproveTq1.setWidth("100%");
@@ -88,7 +100,8 @@ public class ReportGeneratorUI extends VerticalLayout {
         
         addComponent(g1);
         
-        addComponent(new Label("<HR>", ContentMode.HTML));
+//        addComponent(new Label("<HR>", ContentMode.HTML));
+        addComponent(lineSeparator1);
         
         GridLayout g2 = new GridLayout(3, 1);
         g2.setWidth("70%");
@@ -109,7 +122,8 @@ public class ReportGeneratorUI extends VerticalLayout {
         
         addComponent(g2);
         
-        addComponent(new Label("<HR>", ContentMode.HTML));
+//        addComponent(new Label("<HR>", ContentMode.HTML));
+        addComponent(lineSeparator2);
         
         GridLayout g3 = new GridLayout(3, 1);
         g3.setWidth("70%");
@@ -139,12 +153,11 @@ public class ReportGeneratorUI extends VerticalLayout {
         v3.setExpandRatio(reportType3, 1);
         g3.addComponent(v3, 0, 0);
         g3.setComponentAlignment(v3, Alignment.TOP_LEFT);
-        g3.addComponent(v, 1, 0);
-        
-        
+        g3.addComponent(v, 1, 0);                
         addComponent(g3);
         
-        addComponent(new Label("<HR>", ContentMode.HTML));
+//        addComponent(new Label("<HR>", ContentMode.HTML));
+        addComponent(lineSeparator3);
         
         Button button = new Button("Calculate & Generate");
         button.addClickListener(reportBtnClickListener);

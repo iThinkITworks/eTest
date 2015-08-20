@@ -13,7 +13,6 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -42,25 +41,29 @@ public class OnlineQueriesUI extends VerticalLayout {
     ComboBox searchSubject2 = CommonComboBox.getSubjectFromCurriculum("Search Subject");
     ComboBox searchTest2 = new ComboBox();
     
+    boolean graphicalInventoryReport = false;
+    boolean itemAnalysisReport = false;
+    
     public OnlineQueriesUI() {
         setWidth("100%");
         setSpacing(true);
                 
-        addComponent(buildForms());        
-    }
-    
-    FormLayout buildForms(){
-        FormLayout f = new FormLayout();
-        f.setMargin(true);
-        f.setSpacing(true);
-        f.addStyleName("light");
+        Label lineSeparator1 = new Label();
+        lineSeparator1.setContentMode(ContentMode.HTML);
+        lineSeparator1.setStyleName("line-separator");
         
-        GridLayout topGrid = new GridLayout(3, 4);
-        topGrid.setWidth("70%");
+        Label lineSeparator2 = new Label();
+        lineSeparator2.setContentMode(ContentMode.HTML);
+        lineSeparator2.setStyleName("line-separator");
+        
+        disableAllComponents(false);
+        
+        GridLayout topGrid = new GridLayout(3, 1);
+        topGrid.setWidth("800px");
         topGrid.setSpacing(true);
         
         VerticalLayout top = new VerticalLayout();
-        top.setWidth("150px");
+        top.setWidth("166px");
         
         graphicalInventory.addItem("Graphical Inventory");
         graphicalInventory.setWidth("300px");
@@ -79,38 +82,50 @@ public class OnlineQueriesUI extends VerticalLayout {
         
         graphicalInventoryGroup.addItem(subjectProportionedCaption.getCaption());
         graphicalInventoryGroup.setWidth("400px");
-//        graphicalInventoryGroup.addValueChangeListener(secondLevelTopOptionListener);
+        graphicalInventoryGroup.addValueChangeListener(secondLevelTopOptionListener);
         graphicalInventoryGroup.setImmediate(true);
-
-        searchSubject1.addValueChangeListener(dropDownChangeListener);
-        searchSubject1.setEnabled(false);
-        searchTest1.setWidth("100%");
-        searchTest1.setInputPrompt("Search Approved TQ");
-        searchTest1.setEnabled(false);
-        searchTest1.addStyleName(ValoTheme.COMBOBOX_SMALL);
         
         topGrid.addComponent(top, 0, 0);
-        topGrid.addComponent(graphicalInventoryGroup, 1, 0, 2, 0);
-        topGrid.addComponent(searchSubject1, 1, 2);
-        topGrid.addComponent(searchTest1, 2, 2);
+        topGrid.addComponent(graphicalInventoryGroup, 1, 0, 2, 0);        
+        addComponent(topGrid);
         
-        f.addComponent(topGrid);
+        GridLayout midGrid = new GridLayout(3, 1);
+        midGrid.setWidth("720px");
+        midGrid.setSpacing(true);
         
-        GridLayout bottomGrid = new GridLayout(3, 4);
-        bottomGrid.setWidth("70%");
+        Label label = new Label();
+        label.setWidth("235px");
+        midGrid.addComponent(label, 0, 0);
+        
+        searchSubject1.setInputPrompt("Search Subject");
+        searchSubject1.setWidth("225px");
+        searchSubject1.addValueChangeListener(dropDownChangeListener);
+        searchSubject1.setEnabled(false);
+        searchTest1.setWidth("225px");
+        searchTest1.setInputPrompt("Search Test");
+        searchTest1.setEnabled(false);
+        searchTest1.addStyleName(ValoTheme.COMBOBOX_SMALL);
+        midGrid.addComponent(searchSubject1, 1, 0);
+        midGrid.addComponent(searchTest1, 2, 0);
+        addComponent(midGrid);
+        
+        addComponent(lineSeparator1);
+        
+        GridLayout bottomGrid = new GridLayout(3, 3);
+        bottomGrid.setWidth("800px");
         bottomGrid.setSpacing(true);
         
         VerticalLayout bottom = new VerticalLayout();
-        bottom.setWidth("192px");
+        bottom.setWidth("235px");
         
         itemAnalysis.addItem("Item Analysis");
-        itemAnalysis.setWidth("300px");
+        itemAnalysis.setWidth("310px");
         bottom.addComponent(itemAnalysis);
         itemAnalysis.addValueChangeListener(firstLevelOptionListener);
         itemAnalysis.setImmediate(true);
         
         graphicalView.addItem("Graphical View");
-        graphicalView.setWidth("240px");
+        graphicalView.setWidth("210px");
         graphicalView.addValueChangeListener(secondLevelBottomOptionListener);
         graphicalView.setImmediate(true);
         
@@ -122,16 +137,20 @@ public class OnlineQueriesUI extends VerticalLayout {
         graphicalViewGroup.addItem("Difficulty Index of a Subject's Test");
         graphicalViewGroup.addItem("Discrimination Index of a Subject's Test");
         graphicalViewGroup.setWidth("300px");
+        graphicalViewGroup.addValueChangeListener(thirdLevelBottomOptionListener);
         graphicalViewGroup.setImmediate(true);
         
         tabularViewGroup.addItem("Summary: All Tests of a Subject");
         tabularViewGroup.addItem("Critical values of a test");
+        tabularViewGroup.addValueChangeListener(thirdLevelBottomOptionListener);
         tabularViewGroup.setImmediate(true);
         
+        searchSubject2.setInputPrompt("Search Subject");
+        searchSubject2.setWidth("225px");
         searchSubject2.addValueChangeListener(dropDownChangeListener);
         searchSubject2.setEnabled(false);
-        searchTest2.setWidth("100%");
-        searchTest2.setInputPrompt("Search Approved TQ");
+        searchTest2.setWidth("225px");
+        searchTest2.setInputPrompt("Search Test");
         searchTest2.setEnabled(false);
         searchTest2.addStyleName(ValoTheme.COMBOBOX_SMALL);
         
@@ -142,21 +161,23 @@ public class OnlineQueriesUI extends VerticalLayout {
         bottomGrid.addComponent(tabularViewGroup, 2, 1);
         bottomGrid.addComponent(searchSubject2, 1, 2);
         bottomGrid.addComponent(searchTest2, 2, 2);
-        f.addComponent(bottomGrid);
+        addComponent(bottomGrid);
+        
+        addComponent(lineSeparator2);
         
         HorizontalLayout h = new HorizontalLayout();
         h.setWidth("100%");
         h.setMargin(true);
-        
-        Button button = new Button("Calculate & View");
-        button.setWidth("300px");
-        h.addComponent(button);
-        h.setComponentAlignment(button, Alignment.MIDDLE_LEFT);
-        f.addComponent(h);
-        
-        return f;
+                
+        Button calculateAndViewBtn = new Button("Calculate & View");
+        calculateAndViewBtn.setWidth("300px");
+        calculateAndViewBtn.addClickListener(buttonClickListener);
+        h.addComponent(calculateAndViewBtn);
+        h.setComponentAlignment(calculateAndViewBtn, Alignment.MIDDLE_LEFT);
+        addComponent(calculateAndViewBtn);
+          
     }
-    
+        
     ValueChangeListener firstLevelOptionListener = (ValueChangeEvent event) -> {
         if(event.getProperty().getValue() == null){            
         } else if (event.getProperty().getValue().equals("Graphical Inventory")){
@@ -165,14 +186,24 @@ public class OnlineQueriesUI extends VerticalLayout {
             tabularView.clear();
             graphicalViewGroup.clear();
             tabularViewGroup.clear();
-            enableTopOptionGroup(true);
+            enableTopLevel2OptionGroup(true);
+            enableBottomLevel3Component(false);
+            graphicalInventoryReport = true;
+            itemAnalysisReport = false;
         } else {
             graphicalInventory.clear();
             graphicalInventoryGroup.clear();
-            enableBottomOptionGroup(true);
+            enableBottomLevel2OptionGroup(true);
+            enableTopLevel3Component(false);
+            graphicalInventoryReport = false;
+            itemAnalysisReport = true;
         }
     };
         
+    ValueChangeListener secondLevelTopOptionListener = (ValueChangeEvent event) -> {
+        enableTopLevel3Component(true);
+    };
+    
     ValueChangeListener secondLevelBottomOptionListener = (ValueChangeEvent event) -> {
         if(event.getProperty().getValue() == null){            
         } else if(event.getProperty().getValue().equals("Graphical View")){
@@ -186,37 +217,58 @@ public class OnlineQueriesUI extends VerticalLayout {
         }
     };
     
+    ValueChangeListener thirdLevelBottomOptionListener = (ValueChangeEvent event) -> {
+        if(event.getProperty().getValue() == null){            
+        } else {
+            enableBottomLevel3Component(true);
+        }
+    };
+    
     ValueChangeListener dropDownChangeListener = (ValueChangeEvent event) -> {
         if(event.getProperty().getValue() == null){
         } else {
             if(searchSubject1.isEnabled()){
                 CommonCascadeComboBox.getApprovedTqFromCurriculum(searchTest1, (int) event.getProperty().getValue());
-            }            
+            } 
+            
+            if (searchSubject2.isEnabled()){
+                CommonCascadeComboBox.getApprovedTqFromCurriculum(searchTest2, (int) event.getProperty().getValue());
+            }             
         }
     };
     
-    void enableTopOptionGroup(boolean bol){
+    Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
+        if(isGraphicalInventoryReport()){
+            System.out.println("Graphical Inventory Report");
+        } 
+        
+        if(isItemAnalysisReport()){
+            System.out.println("Item Analysis Report");
+        }
+    };
+    
+    void enableTopLevel2OptionGroup(boolean bol){
         graphicalInventoryGroup.setEnabled(bol);
-        searchSubject1.setEnabled(bol);
-        searchTest1.setEnabled(bol);
         
         graphicalView.setEnabled(!bol);
         tabularView.setEnabled(!bol);
         graphicalViewGroup.setEnabled(!bol);
         tabularViewGroup.setEnabled(!bol);
-        searchSubject2.setEnabled(!bol);
-        searchTest2.setEnabled(!bol);
     }
     
-    void enableBottomOptionGroup(boolean bol){
+    void enableTopLevel3Component(boolean bol){
+        searchSubject1.setEnabled(bol);
+        searchTest1.setEnabled(bol);
+    }
+    
+    void enableBottomLevel2OptionGroup(boolean bol){
         graphicalInventoryGroup.setEnabled(!bol);
-        searchSubject1.setEnabled(!bol);
-        searchTest1.setEnabled(!bol);
         
         graphicalView.setEnabled(bol);
         tabularView.setEnabled(bol);
-        graphicalViewGroup.setEnabled(bol);
-        tabularViewGroup.setEnabled(bol);
+    }
+        
+    void enableBottomLevel3Component(boolean bol){
         searchSubject2.setEnabled(bol);
         searchTest2.setEnabled(bol);
     }
@@ -229,5 +281,21 @@ public class OnlineQueriesUI extends VerticalLayout {
     void enableTabularViewGroup(boolean bol){
         graphicalViewGroup.setEnabled(!bol);
         tabularViewGroup.setEnabled(bol);
+    }
+    
+    void disableAllComponents(boolean bol){
+        graphicalInventoryGroup.setEnabled(bol);
+        graphicalView.setEnabled(bol);
+        tabularView.setEnabled(bol);
+        graphicalViewGroup.setEnabled(bol);
+        tabularViewGroup.setEnabled(bol);
+    }
+    
+    boolean isGraphicalInventoryReport(){
+        return graphicalInventoryReport;
+    }
+    
+    boolean isItemAnalysisReport(){
+        return itemAnalysisReport;
     }
 }

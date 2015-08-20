@@ -294,6 +294,13 @@
       font-style: bold;
   }
   
+  .line-separator {
+    height: 1px;
+    color: #d3d3d3;
+    background-color: #d3d3d3;
+    border: none;
+  }
+    
   .background-image-layout{
       background: url(../img/etest.png);
       -webkit-background-size: cover;
