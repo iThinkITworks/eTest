@@ -7,6 +7,7 @@ package com.etest.view.tq.reports;
 
 import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
+import com.etest.view.tq.charts.GraphicalInventoryChart;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -17,7 +18,9 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.OptionGroup;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -240,6 +243,10 @@ public class OnlineQueriesUI extends VerticalLayout {
     Button.ClickListener buttonClickListener = (Button.ClickEvent event) -> {
         if(isGraphicalInventoryReport()){
             System.out.println("Graphical Inventory Report");
+            Window sub = new GraphicalInventoryChart();
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
         } 
         
         if(isItemAnalysisReport()){

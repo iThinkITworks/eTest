@@ -3,5 +3,78 @@
 
 /* Import and include this mixin into your project theme to include the addon themes */
 @mixin addons {
+    .wordwrap-table .v-table-cell-wrapper {
+   /* Do not specify any margins, paddings or borders here */
+   white-space: normal;
+   overflow: hidden;
+  }
+  
+    .v-label-wrapline{
+        /*word-wrap: break-word;  IE  */
+        /*white-space: -moz-pre-wrap;  Firefox */
+        white-space: pre-wrap;
+        /*white-space: -moz-pre-wrap;  Firefox */
+        /*overflow: hidden; */
+    }
+  
+  .button-container:hover{
+    background-color: #fff;
+  }
+    
+  .button-background {
+    background-color: #fff;
+  }
+  
+  .align-left-button .v-button{
+      text-align: left;
+  }
+  
+  .label-padding {
+    padding-top: 5px;
+    padding-bottom: 5px; 
+    /* padding-left: 3px; */      
+    /* padding-right: 3px; */
+  }
+      
+  .selected-row .v-table tr.v-selected.v-selected {
+    background-color: #000;
+    color: #fff;
+  }
+  
+  .align-right {
+    text-align: right;
+  }
+    
+  .align-center {
+    text-align: center;
+    font-size: 12px;
+  }
+  
+  .align-center-only {
+    text-align: center;
+  }
+  
+  .grid-row-font-size {
+      font-size: 12px;
+  }
+  
+  .bold-font-style{
+      font-style: bold;
+  }
+  
+  .line-separator {
+    height: 1px;
+    color: #d3d3d3;
+    background-color: #d3d3d3;
+    border: none;
+  }
+    
+  .background-image-layout{
+      background: url(../img/etest.png);
+      -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+  }
 }
 

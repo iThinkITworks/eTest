@@ -1,7 +1,5 @@
 package com.etest.main;
 
-import com.etest.administrator.UserAccess;
-import com.etest.view.tq.itemanalysis.TQItemAnalysisUI;
 import com.etest.view.CellCaseView;
 import com.etest.view.SyllabusView;
 import com.etest.view.HousekeepingView;
@@ -13,7 +11,6 @@ import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
 import com.etest.view.TQView;
-import com.etest.view.testbank.*;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -21,6 +18,7 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.annotations.Widgetset;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.HierarchicalContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.event.Action;
@@ -35,7 +33,6 @@ import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.server.VaadinSession;
-import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -47,6 +44,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
+import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
@@ -66,6 +64,7 @@ import javax.servlet.ServletException;
  *
  */
 @Theme("dashboard")
+//@Theme("tests-valo-dark")
 @Widgetset("com.etest.main.MyAppWidgetset")
 public class MainUI extends UI {
 private boolean testMode = false;
@@ -83,6 +82,7 @@ private boolean testMode = false;
     
     private static LinkedHashMap<String, String> themeVariants = new LinkedHashMap<String, String>();
     static {
+        themeVariants.put("dashboard", "Dashboard");
         themeVariants.put("tests-valo", "Default");
         themeVariants.put("tests-valo-blueprint", "Blueprint");
         themeVariants.put("tests-valo-dark", "Dark");
@@ -108,6 +108,7 @@ private boolean testMode = false;
     protected void init(final VaadinRequest request) {
 //        setTheme("dashboard");
         setImmediate(true);
+        
         setLocale(Locale.US);
 
 //        Responsive.makeResponsive(this);
@@ -381,26 +382,26 @@ private boolean testMode = false;
         return menu;
     }
     
-//    private Component createThemeSelect() {
-//        final NativeSelect ns = new NativeSelect();
-//        ns.setNullSelectionAllowed(false);
-//        ns.setId("themeSelect");
-//        ns.addContainerProperty("caption", String.class, "");
-//        ns.setItemCaptionPropertyId("caption");
-//        for (final String identifier : themeVariants.keySet()) {
-//            ns.addItem(identifier).getItemProperty("caption")
-//                    .setValue(themeVariants.get(identifier));
-//        }
-//
-//        ns.setValue("tests-valo");
-//        ns.addValueChangeListener(new Property.ValueChangeListener() {
-//            @Override
-//            public void valueChange(final Property.ValueChangeEvent event) {
-//                setTheme((String) ns.getValue());
-//            }
-//        });
-//        return ns;
-//    }
+    private Component createThemeSelect() {
+        final NativeSelect ns = new NativeSelect();
+        ns.setNullSelectionAllowed(false);
+        ns.setId("themeSelect");
+        ns.addContainerProperty("caption", String.class, "");
+        ns.setItemCaptionPropertyId("caption");
+        for (final String identifier : themeVariants.keySet()) {
+            ns.addItem(identifier).getItemProperty("caption")
+                    .setValue(themeVariants.get(identifier));
+        }
+
+        ns.setValue("tests-valo");
+        ns.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(final Property.ValueChangeEvent event) {
+                setTheme((String) ns.getValue());
+            }
+        });
+        return ns;
+    }
 
     static Action.Handler actionHandler = new Action.Handler() {
         private final Action ACTION_ONE = new Action("Action One");
@@ -440,8 +441,7 @@ private boolean testMode = false;
         container.addContainerProperty(CAPTION_PROPERTY, String.class, null);
         container.addContainerProperty(ICON_PROPERTY, Resource.class, null);
         container.addContainerProperty(INDEX_PROPERTY, Integer.class, null);
-        container
-                .addContainerProperty(DESCRIPTION_PROPERTY, String.class, null);
+        container.addContainerProperty(DESCRIPTION_PROPERTY, String.class, null);
         for (int i = 1; i < size + 1; i++) {
             final Item item = container.addItem(i);
             item.getItemProperty(CAPTION_PROPERTY).setValue(
@@ -595,6 +595,7 @@ private boolean testMode = false;
                     Notification.show("username and password do not matched", Notification.Type.WARNING_MESSAGE);
                     return;
                 } else {
+//                    setTheme("tests-valo-flatdark");
                     VaadinSession.getCurrent().getAttribute("userType");
                     sub.close();
                 }
