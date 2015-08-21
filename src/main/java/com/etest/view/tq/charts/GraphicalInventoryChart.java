@@ -5,6 +5,12 @@
  */
 package com.etest.view.tq.charts;
 
+import com.etest.model.Curriculum;
+import com.etest.service.CurriculumService;
+import com.etest.service.ReportService;
+import com.etest.serviceprovider.CurriculumServiceImpl;
+import com.etest.serviceprovider.ReportServiceImpl;
+import com.etest.utilities.CommonUtilities;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
@@ -20,18 +26,29 @@ import org.vaadin.addon.JFreeChartWrapper;
  */
 public class GraphicalInventoryChart extends Window {
 
+    CurriculumService cs = new CurriculumServiceImpl();
+    ReportService rs = new ReportServiceImpl();
+    
     public GraphicalInventoryChart() {
         setModal(true);
         
         Panel panel = new Panel();
         
         DefaultPieDataset dataset = new DefaultPieDataset();
-        dataset.setValue("Category 1", 43.2);
-        dataset.setValue("Category 2", 27.9);
-        dataset.setValue("Category 3", 79.5);
+        for(Curriculum c : cs.getAllCurriculum()){
+            dataset.setValue(c.getSubject()+" ("+calculatePercentageOfItemsPerSubject(
+                    rs.getTotalItems(), 
+                    rs.getTotalItemsBySubject(c.getCurriculumId()))+"%)", 
+                    calculatePercentageOfItemsPerSubject(rs.getTotalItems(), 
+                            rs.getTotalItemsBySubject(c.getCurriculumId())));
+        }
         
-        JFreeChart chart = ChartFactory.createPieChart("Sample Pie Chart", dataset, true, true, false);
+//        dataset.setValue("Category 1", 43.2);
+//        dataset.setValue("Category 2", 27.9);
+//        dataset.setValue("Category 3", 79.5);
         
+        JFreeChart chart = ChartFactory.createPieChart("All Subjects", dataset, true, false, false);
+                
         JFreeChartWrapper wrapper = new JFreeChartWrapper(chart){
             
             @Override
@@ -52,4 +69,8 @@ public class GraphicalInventoryChart extends Window {
         center();
     }
     
+    double calculatePercentageOfItemsPerSubject(int totalItems, int totalItemsPerSubject){
+        return CommonUtilities.roundOffToTwoDecimal(((double)totalItemsPerSubject/totalItems)*100);
+    }
+        
 }

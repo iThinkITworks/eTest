@@ -204,7 +204,13 @@ public class OnlineQueriesUI extends VerticalLayout {
     };
         
     ValueChangeListener secondLevelTopOptionListener = (ValueChangeEvent event) -> {
-        enableTopLevel3Component(true);
+        if(event.getProperty().getValue() == null){            
+        } else if (event.getProperty().getValue().equals("All Subjects")) {
+            enableTopLevel3Component(false);
+        } else {
+            enableTopLevel3Component(true);
+        }
+        
     };
     
     ValueChangeListener secondLevelBottomOptionListener = (ValueChangeEvent event) -> {
@@ -221,7 +227,9 @@ public class OnlineQueriesUI extends VerticalLayout {
     };
     
     ValueChangeListener thirdLevelBottomOptionListener = (ValueChangeEvent event) -> {
-        if(event.getProperty().getValue() == null){            
+        if(event.getProperty().getValue() == null){              
+        } else if (event.getProperty().getValue().equals("Summary: All Tests of a Subject")) {
+            searchTest2.setEnabled(false);
         } else {
             enableBottomLevel3Component(true);
         }
