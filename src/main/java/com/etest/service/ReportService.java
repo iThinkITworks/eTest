@@ -11,8 +11,13 @@ package com.etest.service;
  */
 public interface ReportService {
     
+    public int getTotalCases();
+    
     public int getTotalItems();
+    
+    public int getTotalCasesBySubject(int curriculumId);
     
     public int getTotalItemsBySubject(int curriculumId);
     
+    public int getTotalItemsByBloomsCass(int curriculumId, int bloomsClassId);
 }
