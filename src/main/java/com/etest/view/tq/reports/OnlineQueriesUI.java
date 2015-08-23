@@ -9,6 +9,7 @@ import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
 import com.etest.view.tq.charts.GraphicalInventoryBarChart;
 import com.etest.view.tq.charts.GraphicalInventoryPieChart;
+import com.etest.view.tq.charts.ItemAnalysisGraphicalViewAll;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -216,6 +217,7 @@ public class OnlineQueriesUI extends VerticalLayout {
     ValueChangeListener thirdLevelBottomOptionListener = (ValueChangeEvent event) -> {
         if(event.getProperty().getValue() == null){              
         } else if (event.getProperty().getValue().equals("Summary: All Tests of a Subject")) {
+            searchSubject2.setEnabled(true);
             searchTest.setEnabled(false);
         } else {
             enableBottomLevel3Component(true);
@@ -254,7 +256,20 @@ public class OnlineQueriesUI extends VerticalLayout {
         } 
         
         if(isItemAnalysisReport()){
-            System.out.println("Item Analysis Report");
+            if(graphicalViewGroup.getValue() == null){
+            } else if(graphicalViewGroup.getValue().equals("Summary: All Tests of a Subject")){
+                if(searchSubject2.getValue() == null){
+                    Notification.show("Select a Subject", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
+                Window sub = new ItemAnalysisGraphicalViewAll((int) searchSubject2.getValue());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+            } else {
+                
+            }            
         }
     };
     

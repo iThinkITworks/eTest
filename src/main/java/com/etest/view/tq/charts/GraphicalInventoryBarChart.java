@@ -11,7 +11,6 @@ import com.etest.service.ReportService;
 import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.ReportServiceImpl;
 import com.etest.utilities.CommonUtilities;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.awt.Color;
@@ -74,17 +73,17 @@ public class GraphicalInventoryBarChart extends Window {
             }
         }        
         
-        JFreeChartWrapper wrapper = new JFreeChartWrapper(chart){
-            
-            @Override
-            public void attach(){
-                super.attach();
-                setResource("src", getSource());
-            }
-            
-        };
+//        JFreeChartWrapper wrapper = new JFreeChartWrapper(chart){
+//            
+//            @Override
+//            public void attach(){
+//                super.attach();
+//                setResource("src", getSource());
+//            }
+//            
+//        };
         
-        v.addComponent(wrapper);
+        v.addComponent(new ReportChartWrapper(chart, null, null));
         v.setWidthUndefined();
         v.setHeightUndefined();
         

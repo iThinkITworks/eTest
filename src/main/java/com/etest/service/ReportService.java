@@ -20,4 +20,10 @@ public interface ReportService {
     public int getTotalItemsBySubject(int curriculumId);
     
     public int getTotalItemsByBloomsCass(int curriculumId, int bloomsClassId);
+    
+    public int getTotalAnalyzedItemsBySubject(int curriculumId);
+    
+    public int getTotalItemByDiscriminationIndex(int curriculumId, double index1, double index2);
+    
+    public int getTotalItemByDifficultyIndex(int curriculumId, double index1, double index2);
 }

@@ -64,17 +64,17 @@ public class GraphicalInventoryPieChart extends Window {
                 true, 
                 false);
                 
-        JFreeChartWrapper wrapper = new JFreeChartWrapper(chart){
-            
-            @Override
-            public void attach(){
-                super.attach();
-                setResource("src", getSource());
-            }
-            
-        };
+//        JFreeChartWrapper wrapper = new JFreeChartWrapper(chart){
+//            
+//            @Override
+//            public void attach(){
+//                super.attach();
+//                setResource("src", getSource());
+//            }
+//            
+//        };
         
-        v.addComponent(wrapper);
+        v.addComponent(new ReportChartWrapper(chart, null, null));
         v.setWidthUndefined();
         v.setHeightUndefined();
         
