@@ -10,6 +10,7 @@ import com.etest.common.CommonComboBox;
 import com.etest.view.tq.charts.GraphicalInventoryBarChart;
 import com.etest.view.tq.charts.GraphicalInventoryPieChart;
 import com.etest.view.tq.charts.ItemAnalysisGraphicalViewAll;
+import com.etest.view.tq.charts.SubjectLineChartWindow;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -267,8 +268,26 @@ public class OnlineQueriesUI extends VerticalLayout {
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }
-            } else {
+            } else if (graphicalViewGroup.getValue().equals("Difficulty Index of a Subject's Test")){ 
+                if(searchSubject2.getValue() == null || searchTest.getValue() == null){
+                    Notification.show("Select a Subject/Test", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
                 
+                Window sub = new SubjectLineChartWindow((int) searchTest.getValue(), "difficult");
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+            } else if (graphicalViewGroup.getValue().equals("Discrimination Index of a Subject's Test")){
+                if(searchSubject2.getValue() == null || searchTest.getValue() == null){
+                    Notification.show("Select a Subject/Test", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
+                Window sub = new SubjectLineChartWindow((int) searchTest.getValue(), "discrimination");
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
             }            
         }
     };

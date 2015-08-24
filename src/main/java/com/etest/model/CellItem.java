@@ -28,6 +28,7 @@ public class CellItem extends CellCase {
     private Date dateCreated; 
     private int analyze;
     private Map<String, String> itemKeys;
+    private int itemNo;
 
     public int getCellItemId() {
         return cellItemId;
@@ -81,6 +82,10 @@ public class CellItem extends CellCase {
         return itemKeys;
     }
 
+    public int getItemNo(){
+        return itemNo;
+    }
+    
     public void setCellItemId(int cellItemId) {
         this.cellItemId = cellItemId;
     }
@@ -133,4 +138,7 @@ public class CellItem extends CellCase {
         this.itemKeys = itemKeys;
     }
     
+    public void setItemNo(int itemNo){
+        this.itemNo = itemNo;
+    }
 }

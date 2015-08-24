@@ -541,6 +541,7 @@ public class CellItemDAO {
             while(rs.next()){
                 CellItem ci = new CellItem();
                 ci.setCellItemId(CommonUtilities.convertStringToInt(rs.getString("CellItemID")));
+                ci.setItemNo(CommonUtilities.convertStringToInt(rs.getString("ItemNo")));
                 ci.setDifficultIndex(CommonUtilities.convertStringToDouble(rs.getString("DifficultIndex")));
                 ci.setDiscriminationIndex(CommonUtilities.convertStringToDouble(rs.getString("DiscriminationIndex")));
                 cellItemlist.add(ci);
