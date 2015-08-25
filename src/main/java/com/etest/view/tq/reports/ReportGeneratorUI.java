@@ -12,7 +12,6 @@ import com.etest.pdfgenerator.ItemAnalysisReportViewer;
 import com.etest.pdfgenerator.TQViewer;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
-import com.etest.view.tq.itemanalysis.ItemAnalysisViewResultWindow;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.shared.ui.label.ContentMode;
@@ -53,6 +52,7 @@ public class ReportGeneratorUI extends VerticalLayout {
     
     public ReportGeneratorUI() {
         setWidth("100%");
+        setMargin(true);
         setSpacing(true);
                 
         Label lineSeparator1 = new Label();
@@ -100,7 +100,6 @@ public class ReportGeneratorUI extends VerticalLayout {
         
         addComponent(g1);
         
-//        addComponent(new Label("<HR>", ContentMode.HTML));
         addComponent(lineSeparator1);
         
         GridLayout g2 = new GridLayout(3, 1);
@@ -122,7 +121,6 @@ public class ReportGeneratorUI extends VerticalLayout {
         
         addComponent(g2);
         
-//        addComponent(new Label("<HR>", ContentMode.HTML));
         addComponent(lineSeparator2);
         
         GridLayout g3 = new GridLayout(3, 1);
@@ -219,7 +217,6 @@ public class ReportGeneratorUI extends VerticalLayout {
                 return;
             }
             
-//            Window sub = new ItemAnalysisViewResultWindow((int) searchApproveTq2.getValue());
             Window sub = new ItemAnalysisReportViewer((int) searchApproveTq2.getValue());
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);

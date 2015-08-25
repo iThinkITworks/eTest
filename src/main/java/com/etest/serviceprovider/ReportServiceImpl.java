@@ -246,7 +246,7 @@ public class ReportServiceImpl implements ReportService {
                     + "WHERE c.CurriculumStatus = 0 "
                     + "AND c.CurriculumID = "+curriculumId+" "
                     + "AND ci.Analyzed = 1 "
-                    + "AND (ci.DiscriminationIndex = "+index1+" OR ci.DiscriminationIndex < "+index2+") ");
+                    + "AND (ci.DiscriminationIndex >= "+index1+" AND ci.DiscriminationIndex < "+index2+") ");
             while(rs.next()){
                 totalItems = CommonUtilities.convertStringToInt(rs.getString("TotalItems"));
             }
@@ -283,7 +283,40 @@ public class ReportServiceImpl implements ReportService {
                     + "WHERE c.CurriculumStatus = 0 "
                     + "AND c.CurriculumID = "+curriculumId+" "
                     + "AND ci.Analyzed = 1 "
-                    + "AND (ci.DifficultIndex = "+index1+" OR ci.DifficultIndex <= "+index2+") ");
+                    + "AND (ci.DifficultIndex >= "+index1+" AND ci.DifficultIndex <= "+index2+") ");
+            while(rs.next()){
+                totalItems = CommonUtilities.convertStringToInt(rs.getString("TotalItems"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ReportServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ReportServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return totalItems;
+    }
+
+    @Override
+    public int getTQCriticalIndexValue(int tqCoverageId, String dbColumn, double index1, double index2) {
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int totalItems = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS TotalItems FROM "
+                    + "item_analysis_view  "
+                    + "WHERE TqCoverageID = "+tqCoverageId+" "
+                    + "AND ("+dbColumn+" >= "+index1+" AND "+dbColumn+" <= "+index2+") ");
             while(rs.next()){
                 totalItems = CommonUtilities.convertStringToInt(rs.getString("TotalItems"));
             }

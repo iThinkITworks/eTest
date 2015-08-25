@@ -10,6 +10,8 @@ import com.etest.service.UsersService;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
+import com.etest.view.OnlineQueriesView;
+import com.etest.view.ReportGeneratorView;
 import com.etest.view.TQView;
 import javax.servlet.annotation.WebServlet;
 
@@ -125,9 +127,9 @@ private boolean testMode = false;
 
         if (getPage().getWebBrowser().isIE()
                 && getPage().getWebBrowser().getBrowserMajorVersion() == 9) {
-            menu.setWidth("200px");
+            menu.setWidth("250px");
         } else {
-            menu.setWidth("300px");
+            menu.setWidth("320px");
         }
         // Show .v-app-loading valo-menu-badge
         // try {
@@ -164,6 +166,8 @@ private boolean testMode = false;
         navigator.addView("housekeeping", HousekeepingView.class);
         navigator.addView("cells", CellCaseView.class);
         navigator.addView("tq", TQView.class);        
+        navigator.addView("online-queries", OnlineQueriesView.class);
+        navigator.addView("report-generator", ReportGeneratorView.class);
 
         final String f = Page.getCurrent().getUriFragment();
         if (f == null || f.equals("")) {
@@ -261,8 +265,10 @@ private boolean testMode = false;
         menuItems.put("syllabus", "Syllabus");
         menuItems.put("semestral-team", "Semestral Team");
         menuItems.put("housekeeping", "Housekeeping");
-        menuItems.put("cells", "Create/Modify/Approve Cells");
-        menuItems.put("tq", "Test Questionnaire");
+        menuItems.put("cells", "Cell Management");
+        menuItems.put("tq", "TQ Management");
+        menuItems.put("online-queries", "Online Queries");
+        menuItems.put("report-generator", "Report Generator");
         
         final HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
@@ -288,7 +294,7 @@ private boolean testMode = false;
         menu.addComponent(showMenu);
 
         final Label title = new Label(
-                "<h3>Siliman<strong> University</strong></h3>", ContentMode.HTML);
+                "<h3><strong>Siliman University</strong> College of Nursing</h3>", ContentMode.HTML);
         title.setSizeUndefined();
         top.addComponent(title);
         top.setExpandRatio(title, 1);
@@ -308,6 +314,7 @@ private boolean testMode = false;
         menu.addComponent(settings);
 
         menuItemsLayout.setPrimaryStyleName("valo-menuitems");
+        menuItemsLayout.setWidth("100%");
         menu.addComponent(menuItemsLayout);
 
         Label label = null;
@@ -329,37 +336,13 @@ private boolean testMode = false;
                 menuItemsLayout.addComponent(label);
             }
             
-//            if (item.getKey().equals("labels")) {
-//                label = new Label("eTest Modules", ContentMode.HTML);
-//                label.setPrimaryStyleName("valo-menu-subtitle");
-//                label.addStyleName("h4");
-//                label.setSizeUndefined();
-//                menuItemsLayout.addComponent(label);
-//            }
-//            
-//            if (item.getKey().equals("panels")) {
-//                label.setValue(label.getValue()
-//                        + " <span class=\"valo-menu-badge\">" + count
-//                        + "</span>");
-//                count = 0;
-//                label = new Label("Community", ContentMode.HTML);
-//                label.setPrimaryStyleName("valo-menu-subtitle");
-//                label.addStyleName("h4");
-//                label.setSizeUndefined();
-//                menuItemsLayout.addComponent(label);
-//            }
-//            
-//            if (item.getKey().equals("forms")) {
-//                label.setValue(label.getValue()
-//                        + " <span class=\"valo-menu-badge\">" + count
-//                        + "</span>");
-//                count = 0;
-//                label = new Label("Other", ContentMode.HTML);
-//                label.setPrimaryStyleName("valo-menu-subtitle");
-//                label.addStyleName("h4");
-//                label.setSizeUndefined();
-//                menuItemsLayout.addComponent(label);
-//            }
+            if (item.getKey().equals("online-queries")) {
+                label = new Label("Report Management", ContentMode.HTML);
+                label.setPrimaryStyleName("valo-menu-subtitle");
+                label.addStyleName("h4");
+                label.setSizeUndefined();
+                menuItemsLayout.addComponent(label);
+            }
             
             final Button b = new Button(item.getValue(), (final ClickEvent event) -> {
                 navigator.navigateTo(item.getKey());
@@ -373,6 +356,7 @@ private boolean testMode = false;
             b.setHtmlContentAllowed(true);
             b.setPrimaryStyleName("valo-menu-item");
             b.setIcon(testIcon.get());
+            b.setWidth("100%");
             menuItemsLayout.addComponent(b);
             count++;
         }

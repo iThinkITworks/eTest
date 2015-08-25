@@ -7,6 +7,9 @@ package com.etest.view.tq.reports;
 
 import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
+import com.etest.pdfgenerator.TQCriticalIndexViewer;
+import com.etest.service.TQCoverageService;
+import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.view.tq.charts.GraphicalInventoryBarChart;
 import com.etest.view.tq.charts.GraphicalInventoryPieChart;
 import com.etest.view.tq.charts.ItemAnalysisGraphicalViewAll;
@@ -33,6 +36,8 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 public class OnlineQueriesUI extends VerticalLayout {
 
+    TQCoverageService tq = new TQCoverageServiceImpl();
+    
     OptionGroup graphicalInventory = new OptionGroup();  
     OptionGroup graphicalInventoryGroup= new OptionGroup();   
     
@@ -52,6 +57,7 @@ public class OnlineQueriesUI extends VerticalLayout {
     
     public OnlineQueriesUI() {
         setWidth("100%");
+        setMargin(true);
         setSpacing(true);
                 
         Label lineSeparator1 = new Label();
@@ -274,6 +280,11 @@ public class OnlineQueriesUI extends VerticalLayout {
                     return;
                 }
                 
+                if(!tq.isTQCoverageAnalyzed((int) searchTest.getValue())){
+                    Notification.show("TQ was not yet analyzed", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
                 Window sub = new SubjectLineChartWindow((int) searchTest.getValue(), "difficult");
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
@@ -284,11 +295,39 @@ public class OnlineQueriesUI extends VerticalLayout {
                     return;
                 }
                 
+                if(!tq.isTQCoverageAnalyzed((int) searchTest.getValue())){
+                    Notification.show("TQ was not yet analyzed", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
                 Window sub = new SubjectLineChartWindow((int) searchTest.getValue(), "discrimination");
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }
-            }            
+            }         
+            
+            if(tabularViewGroup.getValue() == null){                
+            } else if(tabularViewGroup.getValue().equals("Summary: All Tests of a Subject")) {
+                if(searchSubject2.getValue() == null){
+                    Notification.show("Select a Subject/Test", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+            } else {
+                if(searchSubject2.getValue() == null || searchTest.getValue() == null){
+                    Notification.show("Select a Subject/Test", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
+                if(!tq.isTQCoverageAnalyzed((int) searchTest.getValue())){
+                    Notification.show("TQ was not yet analyzed", Notification.Type.WARNING_MESSAGE);
+                    return;
+                }
+                
+                Window sub = new TQCriticalIndexViewer((int) searchTest.getValue());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
+            }
         }
     };
     

@@ -26,4 +26,6 @@ public interface ReportService {
     public int getTotalItemByDiscriminationIndex(int curriculumId, double index1, double index2);
     
     public int getTotalItemByDifficultyIndex(int curriculumId, double index1, double index2);
+    
+    public int getTQCriticalIndexValue(int tqCoverageId, String dbColumn, double index1, double index2);
 }

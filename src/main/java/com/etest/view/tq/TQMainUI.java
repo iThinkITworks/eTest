@@ -44,12 +44,12 @@ public class TQMainUI extends TabSheet implements TabSheet.SelectedTabChangeList
         v.setMargin(true);        
         addComponent(v);
         
-        v = new VerticalLayout();
-        v.setCaption("Reports");
-        v.setWidth("100%");
-        v.addComponent(new ReportMainUI());
-        v.setMargin(true);        
-        addComponent(v);
+//        v = new VerticalLayout();
+//        v.setCaption("Reports");
+//        v.setWidth("100%");
+//        v.addComponent(new ReportMainUI());
+//        v.setMargin(true);        
+//        addComponent(v);
         
         addSelectedTabChangeListener(this);
     }
