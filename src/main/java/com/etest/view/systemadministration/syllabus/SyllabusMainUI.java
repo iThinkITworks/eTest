@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.view.systemadministration;
+package com.etest.view.systemadministration.syllabus;
 
 import com.etest.model.Syllabus;
 import com.etest.service.CurriculumService;
@@ -74,28 +74,28 @@ public class SyllabusMainUI extends VerticalLayout {
         table.removeAllItems();
         int i = 0;
         for(Syllabus s: ss.getAllSyllabus()){
-            HorizontalLayout h = new HorizontalLayout();
-            h.setWidth("100%");
+            VerticalLayout v = new VerticalLayout();
+            v.setWidth("100%");
             
             Button edit = new Button("edit");
-            edit.setWidth("100%");
+            edit.setWidthUndefined();
             edit.setData(s.getSyllabusId());
             edit.setIcon(FontAwesome.PENCIL);
             edit.addStyleName(ValoTheme.BUTTON_LINK);
             edit.addStyleName(ValoTheme.BUTTON_TINY);
             edit.addStyleName("button-container");
             edit.addClickListener(buttonClickListener);
-            h.addComponent(edit);
+            v.addComponent(edit);
             
             Button delete = new Button("del");
-            delete.setWidth("100%");
+            delete.setWidthUndefined();
             delete.setData(s.getSyllabusId());
             delete.setIcon(FontAwesome.TRASH_O);
             delete.addStyleName(ValoTheme.BUTTON_LINK);
             delete.addStyleName(ValoTheme.BUTTON_TINY);
             delete.addStyleName("button-container");
             delete.addClickListener(buttonClickListener);
-            h.addComponent(delete);
+            v.addComponent(delete);
             
             Label descriptiveTitle = new Label(s.getTopic(),ContentMode.HTML);
             descriptiveTitle.setStyleName("label-padding");
@@ -110,7 +110,7 @@ public class SyllabusMainUI extends VerticalLayout {
                 s.getTopicNo(), 
                 topic, 
                 s.getEstimatedTime(), 
-                h
+                v
             }, i);
             i++;
         }

@@ -12,7 +12,10 @@ import com.etest.valo.*;
 import com.etest.view.DashboardView;
 import com.etest.view.OnlineQueriesView;
 import com.etest.view.ReportGeneratorView;
+import com.etest.view.ReportManagementView;
+import com.etest.view.SystemAdministrationView;
 import com.etest.view.TQView;
+import com.etest.view.TestBankView;
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
@@ -159,15 +162,18 @@ private boolean testMode = false;
         navigator = new Navigator(this, viewDisplay);
 
         navigator.addView("dashboard", DashboardView.class);
-        navigator.addView("curriculum", CurriculumView.class);
-        navigator.addView("faculty-member", FacultyView.class);
-        navigator.addView("syllabus", SyllabusView.class);
-        navigator.addView("semestral-team", SemestralTeamView.class);
-        navigator.addView("housekeeping", HousekeepingView.class);
-        navigator.addView("cells", CellCaseView.class);
-        navigator.addView("tq", TQView.class);        
-        navigator.addView("online-queries", OnlineQueriesView.class);
-        navigator.addView("report-generator", ReportGeneratorView.class);
+        navigator.addView("system-administration", SystemAdministrationView.class);
+        navigator.addView("test-bank", TestBankView.class);
+        navigator.addView("report", ReportManagementView.class);
+//        navigator.addView("curriculum", CurriculumView.class);
+//        navigator.addView("faculty-member", FacultyView.class);
+//        navigator.addView("syllabus", SyllabusView.class);
+//        navigator.addView("semestral-team", SemestralTeamView.class);
+//        navigator.addView("housekeeping", HousekeepingView.class);
+//        navigator.addView("cells", CellCaseView.class);
+//        navigator.addView("tq", TQView.class);        
+//        navigator.addView("online-queries", OnlineQueriesView.class);
+//        navigator.addView("report-generator", ReportGeneratorView.class);
 
         final String f = Page.getCurrent().getUriFragment();
         if (f == null || f.equals("")) {
@@ -260,15 +266,18 @@ private boolean testMode = false;
     CssLayout buildMenu() {
         // Add items
         menuItems.put("dashboard", "Dashboard");
-        menuItems.put("curriculum", "Curriculum");
-        menuItems.put("faculty-member", "Faculty Member");
-        menuItems.put("syllabus", "Syllabus");
-        menuItems.put("semestral-team", "Semestral Team");
-        menuItems.put("housekeeping", "Housekeeping");
-        menuItems.put("cells", "Cell Management");
-        menuItems.put("tq", "TQ Management");
-        menuItems.put("online-queries", "Online Queries");
-        menuItems.put("report-generator", "Report Generator");
+        menuItems.put("system-administration", "System Administration");
+        menuItems.put("test-bank", "Test Bank");
+        menuItems.put("report", "Report Management");
+//        menuItems.put("curriculum", "Curriculum");
+//        menuItems.put("faculty-member", "Faculty Member");
+//        menuItems.put("syllabus", "Syllabus");
+//        menuItems.put("semestral-team", "Semestral Team");
+//        menuItems.put("housekeeping", "Housekeeping");
+//        menuItems.put("cells", "Cell Management");
+//        menuItems.put("tq", "TQ Management");
+//        menuItems.put("online-queries", "Online Queries");
+//        menuItems.put("report-generator", "Report Generator");
         
         final HorizontalLayout top = new HorizontalLayout();
         top.setWidth("100%");
@@ -316,33 +325,38 @@ private boolean testMode = false;
         menuItemsLayout.setPrimaryStyleName("valo-menuitems");
         menuItemsLayout.setWidth("100%");
         menu.addComponent(menuItemsLayout);
-
+        
         Label label = null;
         int count = -1;
         for (final Map.Entry<String, String> item : menuItems.entrySet()) {
-            if (item.getKey().equals("curriculum")) {
-                label = new Label("System Administration", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
-                label.setSizeUndefined();
-                menuItemsLayout.addComponent(label);
-            }
+//            if (item.getKey().equals("curriculum")) {
+//                label = new Label("System Administration", ContentMode.HTML);
+//                label.setPrimaryStyleName("valo-menu-subtitle");
+//                label.addStyleName("h4");
+//                label.setSizeUndefined();
+//                menuItemsLayout.addComponent(label);
+//            }
             
-            if (item.getKey().equals("cells")) {
-                label = new Label("Test Bank", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
-                label.setSizeUndefined();
-                menuItemsLayout.addComponent(label);
-            }
+//            Label lineSeparator = new Label();
+//            lineSeparator.setContentMode(ContentMode.HTML);
+//            lineSeparator.setStyleName("line-separator");
+//            menuItemsLayout.addComponent(lineSeparator);
             
-            if (item.getKey().equals("online-queries")) {
-                label = new Label("Report Management", ContentMode.HTML);
-                label.setPrimaryStyleName("valo-menu-subtitle");
-                label.addStyleName("h4");
-                label.setSizeUndefined();
-                menuItemsLayout.addComponent(label);
-            }
+//            if (item.getKey().equals("cells")) {
+//                label = new Label("Test Bank", ContentMode.HTML);
+//                label.setPrimaryStyleName("valo-menu-subtitle");
+//                label.addStyleName("h4");
+//                label.setSizeUndefined();
+//                menuItemsLayout.addComponent(label);
+//            }
+            
+//            if (item.getKey().equals("online-queries")) {
+//                label = new Label("Report Management", ContentMode.HTML);
+//                label.setPrimaryStyleName("valo-menu-subtitle");
+//                label.addStyleName("h4");
+//                label.setSizeUndefined();
+//                menuItemsLayout.addComponent(label);
+//            }
             
             final Button b = new Button(item.getValue(), (final ClickEvent event) -> {
                 navigator.navigateTo(item.getKey());

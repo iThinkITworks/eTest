@@ -8,6 +8,7 @@ package com.etest.view.systemadministration.syllabus;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 /**
@@ -28,12 +29,16 @@ public class SyllabusDataTable extends Table {
         addContainerProperty("topic no", Integer.class, null);
         addContainerProperty("topic", Label.class, null);
         addContainerProperty("time", Float.class, null);
-        addContainerProperty("modify", HorizontalLayout.class, null);
+        addContainerProperty("modify", VerticalLayout.class, null);
         
-        setColumnAlignment("modify", Align.CENTER);
-        setColumnWidth("modify", 130);
+        setColumnAlignment("modify", Align.LEFT);
+        setColumnAlignment("time", Align.CENTER);
+        setColumnAlignment("topic no", Align.CENTER);
+        
+        setColumnWidth("modify", 80);
         setColumnWidth("descriptive title", 300);
-        setColumnWidth("time", 80);
+        setColumnWidth("subject", 80);
+        setColumnWidth("time", 50);
     }
     
 }

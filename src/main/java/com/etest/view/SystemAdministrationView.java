@@ -5,7 +5,7 @@
  */
 package com.etest.view;
 
-import com.etest.view.systemadministration.syllabus.SyllabusMainUI;
+import com.etest.view.systemadministration.SystemAdministrationUI;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.VerticalLayout;
@@ -14,13 +14,12 @@ import com.vaadin.ui.VerticalLayout;
  *
  * @author jetdario
  */
-public class SyllabusView extends VerticalLayout implements View{
+public class SystemAdministrationView extends VerticalLayout implements View {
 
-    public SyllabusView() {
+    public SystemAdministrationView() {
         setWidth("100%");
-//        addStyleName("background-image-layout");
         
-        addComponent(new SyllabusMainUI());
+        addComponent(new SystemAdministrationUI());
     }
 
     @Override
