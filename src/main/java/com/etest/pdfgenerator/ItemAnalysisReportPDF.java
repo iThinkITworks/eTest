@@ -154,7 +154,7 @@ public class ItemAnalysisReportPDF implements StreamSource {
                 cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
                 cell4.setVerticalAlignment(Element.ALIGN_MIDDLE);
                 
-                PdfPCell cell5 = new PdfPCell(new Paragraph(ItemAnalysisInterpretation.getDifficultyInterpretation(ci.getDiscriminationIndex()), content));
+                PdfPCell cell5 = new PdfPCell(new Paragraph(ItemAnalysisInterpretation.getDiscriminationInterpretation(ci.getDiscriminationIndex()), content));
                 cell5.setBorderWidthTop(1);
                 cell5.setBorderWidthLeft(1);
                 cell5.setBorderWidthRight(1);
