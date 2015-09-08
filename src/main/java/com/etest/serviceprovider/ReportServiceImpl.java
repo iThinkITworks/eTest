@@ -336,5 +336,38 @@ public class ReportServiceImpl implements ReportService {
         
         return totalItems;
     }
+
+    @Override
+    public int getIndexesOfAllTestForASubject(int curriculumId, String dbColumn, double index1, double index2) {
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int totalItems = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS TotalItems FROM "
+                    + "item_analysis_view  "
+                    + "WHERE CurriculumID = "+curriculumId+" "
+                    + "AND ("+dbColumn+" >= "+index1+" AND "+dbColumn+" <= "+index2+") ");
+            while(rs.next()){
+                totalItems = CommonUtilities.convertStringToInt(rs.getString("TotalItems"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(ReportServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(ReportServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return totalItems;
+    }
     
 }

@@ -34,10 +34,10 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
     ReportService rs = new ReportServiceImpl();
     
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    private int tqCoverageId;
+    private int curriculumId;
     
-    public ItemAnalysisOfSubjectReportPDF(int tqCoverageId) {
-        this.tqCoverageId = tqCoverageId;
+    public ItemAnalysisOfSubjectReportPDF(int curriculumId) {
+        this.curriculumId = curriculumId;
         
         Document document = null;
         
@@ -71,7 +71,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellThree = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.00, 0.19))+" Very difficult item(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DifficultIndex", 0.00, 0.19))+" Very difficult item(s)", 
                             content));
             cellThree.setBorder(0);
             cellThree.setPaddingLeft(50);
@@ -80,7 +80,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellFour = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.00, 0.19))+" Poor items(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DiscriminationIndex", 0.00, 0.19))+" Poor items(s)", 
                             content));
             cellFour.setBorder(0);
             cellFour.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -88,7 +88,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellFive = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.20, 0.39))+" difficult item(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DifficultIndex", 0.20, 0.39))+" difficult item(s)", 
                             content));
             cellFive.setBorder(0);
             cellFive.setPaddingLeft(50);
@@ -97,7 +97,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellSix = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.20, 0.29))+" Marginal items(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DiscriminationIndex", 0.20, 0.29))+" Marginal items(s)", 
                             content));
             cellSix.setBorder(0);
             cellSix.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -105,7 +105,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellSeven = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.40, 0.60))+" Average item(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DifficultIndex", 0.40, 0.60))+" Average item(s)", 
                             content));
             cellSeven.setBorder(0);
             cellSeven.setPaddingLeft(50);
@@ -114,7 +114,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellEight = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.30, 0.39))+" Reasonably Good items(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DiscriminationIndex", 0.30, 0.39))+" Reasonably Good items(s)", 
                             content));
             cellEight.setBorder(0);
             cellEight.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -122,7 +122,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellNine = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.61, 0.80))+" Easy item(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DifficultIndex", 0.61, 0.80))+" Easy item(s)", 
                             content));
             cellNine.setBorder(0);
             cellNine.setPaddingLeft(50);
@@ -131,7 +131,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellTen = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.41, 1))+" Very good items(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DiscriminationIndex", 0.41, 1))+" Very good items(s)", 
                             content));
             cellTen.setBorder(0);
             cellTen.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -139,7 +139,7 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             
             PdfPCell cellEleven = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.81, 1))+" Very Easy item(s)", 
+                            String.valueOf(rs.getIndexesOfAllTestForASubject(getCurriculumId(), "DifficultIndex", 0.81, 1))+" Very Easy item(s)", 
                             content));
             cellEleven.setBorder(0);
             cellEleven.setPaddingLeft(50);
@@ -180,8 +180,8 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
 
-    int getTQCoverageId(){
-        return tqCoverageId;
+    int getCurriculumId(){
+        return curriculumId;
     }
     
 }
