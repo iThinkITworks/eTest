@@ -29,17 +29,17 @@ import java.util.logging.Logger;
  *
  * @author jetdario
  */
-public class TQCriticalIndexValues implements StreamSource {
-
+public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
+    
     ReportService rs = new ReportServiceImpl();
     
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     private int tqCoverageId;
     
-    public TQCriticalIndexValues(int tqCoverageId) {
+    public ItemAnalysisOfSubjectReportPDF(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
         
-        Document document = null; 
+        Document document = null;
         
         try {
             document = new Document(PageSize.A4, 50, 50, 50, 50);
@@ -71,7 +71,7 @@ public class TQCriticalIndexValues implements StreamSource {
             
             PdfPCell cellThree = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTqCoverageId(), "DifficultIndex", 0.20, 0.39))+" Very difficult item(s)", 
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.00, 0.19))+" Very difficult item(s)", 
                             content));
             cellThree.setBorder(0);
             cellThree.setPaddingLeft(50);
@@ -80,45 +80,98 @@ public class TQCriticalIndexValues implements StreamSource {
             
             PdfPCell cellFour = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTqCoverageId(), "DiscriminationIndex", 0.00, 0.19))+" Poor items(s)", 
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.00, 0.19))+" Poor items(s)", 
                             content));
             cellFour.setBorder(0);
-//            cellFour.setPaddingLeft(50);
             cellFour.setHorizontalAlignment(Element.ALIGN_CENTER);
             cellFour.setVerticalAlignment(Element.ALIGN_MIDDLE);
             
             PdfPCell cellFive = new PdfPCell(
                     new Phrase(
-                            String.valueOf(rs.getTQCriticalIndexValue(getTqCoverageId(), "DifficultIndex", 0.81, 1))+" Very easy item(s)", 
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.20, 0.39))+" difficult item(s)", 
                             content));
             cellFive.setBorder(0);
             cellFive.setPaddingLeft(50);
             cellFive.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
             cellFive.setVerticalAlignment(Element.ALIGN_MIDDLE);
             
-            PdfPCell cellSix = new PdfPCell(new Phrase(""));
+            PdfPCell cellSix = new PdfPCell(
+                    new Phrase(
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.20, 0.29))+" Marginal items(s)", 
+                            content));
             cellSix.setBorder(0);
             cellSix.setHorizontalAlignment(Element.ALIGN_CENTER);
             cellSix.setVerticalAlignment(Element.ALIGN_MIDDLE);
             
+            PdfPCell cellSeven = new PdfPCell(
+                    new Phrase(
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.40, 0.60))+" Average item(s)", 
+                            content));
+            cellSeven.setBorder(0);
+            cellSeven.setPaddingLeft(50);
+            cellSeven.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+            cellSeven.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
+            PdfPCell cellEight = new PdfPCell(
+                    new Phrase(
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.30, 0.39))+" Reasonably Good items(s)", 
+                            content));
+            cellEight.setBorder(0);
+            cellEight.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellEight.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
+            PdfPCell cellNine = new PdfPCell(
+                    new Phrase(
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.61, 0.80))+" Easy item(s)", 
+                            content));
+            cellNine.setBorder(0);
+            cellNine.setPaddingLeft(50);
+            cellNine.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+            cellNine.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
+            PdfPCell cellTen = new PdfPCell(
+                    new Phrase(
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DiscriminationIndex", 0.41, 1))+" Very good items(s)", 
+                            content));
+            cellTen.setBorder(0);
+            cellTen.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTen.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
+            PdfPCell cellEleven = new PdfPCell(
+                    new Phrase(
+                            String.valueOf(rs.getTQCriticalIndexValue(getTQCoverageId(), "DifficultIndex", 0.81, 1))+" Very Easy item(s)", 
+                            content));
+            cellEleven.setBorder(0);
+            cellEleven.setPaddingLeft(50);
+            cellEleven.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
+            cellEleven.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
+            PdfPCell cellTwelve = new PdfPCell(new Phrase(""));
+            cellTwelve.setBorder(0);
+            cellTwelve.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTwelve.setVerticalAlignment(Element.ALIGN_MIDDLE);
+            
             table.addCell(cellOne);
             table.addCell(cellTwo);
             table.addCell(cellThree);
-            table.addCell(cellFour); 
+            table.addCell(cellFour);
             table.addCell(cellFive);
             table.addCell(cellSix);
+            table.addCell(cellSeven);
+            table.addCell(cellEight);
+            table.addCell(cellNine);
+            table.addCell(cellTen);
+            table.addCell(cellEleven);
+            table.addCell(cellTwelve);
             
-            table.getDefaultCell().setBorderWidth(0f);
             document.add(table);
-            
         } catch (DocumentException ex) {
-            Logger.getLogger(TQCriticalIndexValues.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ItemAnalysisOfSubjectReportPDF.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if(document != null){
                 document.close();
             }
         }
-            
     }
 
     @Override
@@ -126,8 +179,8 @@ public class TQCriticalIndexValues implements StreamSource {
         //return pdf as byte-array
         return new ByteArrayInputStream(outputStream.toByteArray());
     }
-    
-    int getTqCoverageId(){
+
+    int getTQCoverageId(){
         return tqCoverageId;
     }
     

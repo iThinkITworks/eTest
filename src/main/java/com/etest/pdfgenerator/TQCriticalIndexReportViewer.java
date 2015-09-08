@@ -14,17 +14,17 @@ import com.vaadin.ui.Window;
  *
  * @author jetdario
  */
-public class TQCriticalIndexViewer extends Window {
+public class TQCriticalIndexReportViewer extends Window {
 
     private int tqCoverageId;
     
-    public TQCriticalIndexViewer(int tqCoverageId) {
+    public TQCriticalIndexReportViewer(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
         setWidth("900px");
         setHeight("600px");
         center();
                 
-        StreamResource resource = new StreamResource(new TQCriticalIndexValues(getTQCoverageId()), "TQCriticalIndexValues.pdf");
+        StreamResource resource = new StreamResource(new TQCriticalIndexValuesReportPDF(getTQCoverageId()), "TQCriticalIndexValues.pdf");
         resource.setMIMEType("application/pdf");       
 
         VerticalLayout v = new VerticalLayout();

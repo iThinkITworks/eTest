@@ -7,7 +7,8 @@ package com.etest.view.tq.reports;
 
 import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
-import com.etest.pdfgenerator.TQCriticalIndexViewer;
+import com.etest.pdfgenerator.ItemAnalysisOfSubjectReportViewer;
+import com.etest.pdfgenerator.TQCriticalIndexReportViewer;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.view.tq.charts.GraphicalInventoryBarChart;
@@ -312,6 +313,11 @@ public class OnlineQueriesUI extends VerticalLayout {
                     Notification.show("Select a Subject/Test", Notification.Type.WARNING_MESSAGE);
                     return;
                 }
+                
+                Window sub = new ItemAnalysisOfSubjectReportViewer((int) searchSubject2.getValue());
+                if(sub.getParent() == null){
+                    UI.getCurrent().addWindow(sub);
+                }
             } else {
                 if(searchSubject2.getValue() == null || searchTest.getValue() == null){
                     Notification.show("Select a Subject/Test", Notification.Type.WARNING_MESSAGE);
@@ -323,7 +329,7 @@ public class OnlineQueriesUI extends VerticalLayout {
                     return;
                 }
                 
-                Window sub = new TQCriticalIndexViewer((int) searchTest.getValue());
+                Window sub = new TQCriticalIndexReportViewer((int) searchTest.getValue());
                 if(sub.getParent() == null){
                     UI.getCurrent().addWindow(sub);
                 }

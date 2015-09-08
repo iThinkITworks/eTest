@@ -4,6 +4,7 @@ import com.etest.service.UsersService;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
+import com.etest.view.NotificationView;
 import com.etest.view.ReportManagementView;
 import com.etest.view.SystemAdministrationView;
 import com.etest.view.TestBankView;
@@ -156,6 +157,7 @@ private boolean testMode = false;
         navigator.addView("system-administration", SystemAdministrationView.class);
         navigator.addView("test-bank", TestBankView.class);
         navigator.addView("report", ReportManagementView.class);
+        navigator.addView("notification", NotificationView.class);
 
         final String f = Page.getCurrent().getUriFragment();
         if (f == null || f.equals("")) {
@@ -281,6 +283,9 @@ private boolean testMode = false;
         top.addComponent(title);
         top.setExpandRatio(title, 1);
         
+        Label notification = new Label();
+        notification.setCaption("Notifications");
+        
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         final MenuBar.MenuItem settingsItem = settings.addItem(VaadinSession.getCurrent().getAttribute("username").toString(),
@@ -291,6 +296,7 @@ private boolean testMode = false;
 //                null);
         settingsItem.addItem("Edit Profile", menuCommand);
         settingsItem.addItem("Preferences", menuCommand);
+        settingsItem.addItem(notification.getCaption(), menuCommand);
         settingsItem.addSeparator();
         settingsItem.addItem("Sign Out", menuCommand);
         menu.addComponent(settings);
@@ -298,6 +304,14 @@ private boolean testMode = false;
         menuItemsLayout.setPrimaryStyleName("valo-menuitems");
         menuItemsLayout.setWidth("100%");
         menu.addComponent(menuItemsLayout);
+        
+        Label notificationCounter = new Label();
+        notificationCounter.setCaption("You have "+2+" notification(s)");
+        notificationCounter.setContentMode(ContentMode.HTML);
+        notificationCounter.setPrimaryStyleName("valo-menu-subtitle");
+        notificationCounter.addStyleName("h4");
+        notificationCounter.setSizeUndefined();
+        menuItemsLayout.addComponent(notificationCounter);
         
         Label label = null;
         int count = -1;
@@ -478,6 +492,10 @@ private boolean testMode = false;
             if(selectedItem.getText().equals("Sign Out")){
                 VaadinSession.getCurrent().close();
                 Page.getCurrent().reload();
+            }
+            
+            if(selectedItem.getText().equals("Notifications")){
+                navigator.navigateTo("notification");
             }
         }
         

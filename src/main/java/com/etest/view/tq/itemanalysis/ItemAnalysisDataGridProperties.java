@@ -10,14 +10,11 @@ import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Grid;
-import com.vaadin.ui.UI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
