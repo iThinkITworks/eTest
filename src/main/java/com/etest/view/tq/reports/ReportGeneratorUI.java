@@ -5,10 +5,10 @@
  */
 package com.etest.view.tq.reports;
 
-import com.etest.pdfgenerator.SummaryReportViewer;
+import com.etest.pdfviewer.SummaryReportViewer;
 import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
-import com.etest.pdfgenerator.ItemAnalysisReportViewer;
+import com.etest.pdfviewer.ItemAnalysisReportViewer;
 import com.etest.pdfgenerator.TQViewer;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;

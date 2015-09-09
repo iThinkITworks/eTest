@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.pdfgenerator;
+package com.etest.pdfviewer;
 
+import com.etest.pdfgenerator.ItemAnalysisOfSubjectReportPDF;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.VerticalLayout;
@@ -14,18 +15,18 @@ import com.vaadin.ui.Window;
  *
  * @author jetdario
  */
-public class ItemAnalysisReportViewer extends Window {
+public class ItemAnalysisOfSubjectReportViewer extends Window {
 
     private int tqCoverageId;
     
-    public ItemAnalysisReportViewer(int tqCoverageId) {
+    public ItemAnalysisOfSubjectReportViewer(int tqCoverageId) {
         this.tqCoverageId = tqCoverageId;
         
         setWidth("900px");
         setHeight("600px");
         center();
                 
-        StreamResource resource = new StreamResource(new ItemAnalysisReportPDF(getTqCoverageId()), "ItemAnalysis.pdf");
+        StreamResource resource = new StreamResource(new ItemAnalysisOfSubjectReportPDF(getTQCoverageId()), "ItemAnalysis.pdf");
         resource.setMIMEType("application/pdf");       
 
         VerticalLayout v = new VerticalLayout();
@@ -39,7 +40,7 @@ public class ItemAnalysisReportViewer extends Window {
         setContent(v);
     }
     
-    int getTqCoverageId(){
+    int getTQCoverageId(){
         return tqCoverageId;
     }
 }

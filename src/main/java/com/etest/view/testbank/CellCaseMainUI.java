@@ -9,6 +9,7 @@ import com.etest.view.testbank.cellitem.CellCaseItemWindow;
 import com.etest.common.CommonComboBox;
 import com.etest.common.CurriculumPropertyChangeListener;
 import com.etest.model.CellCase;
+import com.etest.pdfviewer.MultipleChoiceHelpViewer;
 import com.etest.service.CellCaseService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
 import com.vaadin.data.Property;
@@ -72,7 +73,7 @@ public class CellCaseMainUI extends VerticalLayout {
         hlayout.setComponentAlignment(topic, Alignment.MIDDLE_LEFT);
         
         Button createCellBtn = new Button("CREATE");
-        createCellBtn.setWidth("150px");
+        createCellBtn.setWidthUndefined();
         createCellBtn.setIcon(FontAwesome.OPENID);
         createCellBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
         createCellBtn.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -88,12 +89,26 @@ public class CellCaseMainUI extends VerticalLayout {
         hlayout.addComponent(createCellBtn);
         hlayout.setComponentAlignment(createCellBtn, Alignment.MIDDLE_LEFT);
         
+        Button helpBtn = new Button("HELP");
+        helpBtn.setWidthUndefined();
+        helpBtn.setIcon(FontAwesome.TASKS);
+        helpBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        helpBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        helpBtn.addClickListener((Button.ClickEvent event) -> {
+            Window sub = new MultipleChoiceHelpViewer();
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+        hlayout.addComponent(helpBtn);
+        hlayout.setComponentAlignment(helpBtn, Alignment.MIDDLE_LEFT);
+        
         return hlayout;
     }
     
     Panel getCellCasePanel(){
         Panel panel = new Panel();
-        panel.setWidth("1000px");
+        panel.setWidth("100%");
         
         populateDataTable();
         panel.setContent(table);

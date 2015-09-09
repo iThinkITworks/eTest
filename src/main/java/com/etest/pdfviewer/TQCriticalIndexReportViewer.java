@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.pdfgenerator;
+package com.etest.pdfviewer;
 
+import com.etest.pdfgenerator.TQCriticalIndexValuesReportPDF;
 import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.VerticalLayout;

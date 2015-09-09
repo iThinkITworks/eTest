@@ -7,8 +7,8 @@ package com.etest.view.tq.reports;
 
 import com.etest.common.CommonCascadeComboBox;
 import com.etest.common.CommonComboBox;
-import com.etest.pdfgenerator.ItemAnalysisOfSubjectReportViewer;
-import com.etest.pdfgenerator.TQCriticalIndexReportViewer;
+import com.etest.pdfviewer.ItemAnalysisOfSubjectReportViewer;
+import com.etest.pdfviewer.TQCriticalIndexReportViewer;
 import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.view.tq.charts.GraphicalInventoryBarChart;

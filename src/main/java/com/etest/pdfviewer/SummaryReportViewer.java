@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.etest.pdfgenerator;
+package com.etest.pdfviewer;
 
 import com.etest.pdfgenerator.InventoryCasesReportPDF;
+import com.etest.pdfgenerator.InventoryCasesReportPDF;
+import com.etest.pdfgenerator.InventoryItemsReportPDF;
 import com.etest.pdfgenerator.InventoryItemsReportPDF;
 import com.etest.pdfgenerator.TQCoveragePDF;
 import com.vaadin.server.StreamResource;

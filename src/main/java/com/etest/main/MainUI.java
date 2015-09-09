@@ -490,6 +490,7 @@ private boolean testMode = false;
             Notification.show("Action " + selectedItem.getText(),
                     Type.TRAY_NOTIFICATION);
             if(selectedItem.getText().equals("Sign Out")){
+                navigator.navigateTo("dashboard");
                 VaadinSession.getCurrent().close();
                 Page.getCurrent().reload();
             }
