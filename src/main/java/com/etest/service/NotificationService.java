@@ -25,4 +25,9 @@ public interface NotificationService {
     public void isReplyNotification(int notificationId);
     
     public int totalUnreadNotification(int userId);
+    
+    public EtestNotification getNotificationById(int notificationId);
+    
+    public boolean updateNoficationStatus(int notificationId);
+    
 }

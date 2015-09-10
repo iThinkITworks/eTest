@@ -163,7 +163,7 @@ public class CellCaseMainUI extends VerticalLayout {
             label.setStyleName("label-padding");
             
             table.addItem(new Object[]{
-//                cc.getCellCaseId(),
+                cc.getCellCaseId(),
                 label, 
                 cc.getUsername_(), 
                 cc.getDateCreated(), 

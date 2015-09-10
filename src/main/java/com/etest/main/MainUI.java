@@ -104,6 +104,8 @@ private boolean testMode = false;
     private Navigator navigator;
     private final LinkedHashMap<String, String> menuItems = new LinkedHashMap<String, String>(); 
     
+    Label notificationCounter = new Label();
+    
     @Override
     protected void init(final VaadinRequest request) {
 //        setTheme("dashboard");
@@ -309,8 +311,7 @@ private boolean testMode = false;
         menu.addComponent(menuItemsLayout);
         
         NotificationService ns = new NotificationServiceImpl();
-        
-        Label notificationCounter = new Label();
+                
         notificationCounter.setCaption("You have "
                 +ns.totalUnreadNotification(
                         CommonUtilities.convertStringToInt(
@@ -505,6 +506,7 @@ private boolean testMode = false;
             }
             
             if(selectedItem.getText().equals("Notifications")){
+                notificationCounter.setCaption("You have "+0+" notification(s)");
                 navigator.navigateTo("notification");
             }
         }

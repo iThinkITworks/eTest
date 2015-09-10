@@ -24,14 +24,14 @@ public class CellCaseDataTable extends Table {
         setStyleName("wordwrap-table");
         setImmediate(true);
         
-//        addContainerProperty("id", Integer.class, null);
+        addContainerProperty("id", Integer.class, null);
         addContainerProperty("case", Label.class, null);
         addContainerProperty("author", String.class, null);
         addContainerProperty("date created", Date.class, null);
         addContainerProperty("modify", VerticalLayout.class, null);
         
-        setColumnWidth("case", 600);
-//        setColumnWidth("author", 120);
+        setColumnWidth("case", 550);
+        setColumnWidth("id", 50);
         setColumnWidth("date created", 150);
         setColumnWidth("modify", 100);
         setColumnAlignment("modify", Align.CENTER);
