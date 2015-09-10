@@ -9,6 +9,7 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.CellItem;
 import com.etest.utilities.CommonUtilities;
+import com.etest.view.notification.constants.EtestNotificationConstants;
 import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -249,6 +250,20 @@ public class CellItemDAO {
             pstmt.executeUpdate();
             
             conn.commit();
+            
+            conn.setAutoCommit(true);
+            pstmt = conn.prepareStatement("INSERT INTO notifications SET "
+                    + "UserID = ?, "
+                    + "SenderID = ?, "
+                    + "Notice = ?, "
+                    + "Remarks = ?, "
+                    + "NoteDate = now() ");            
+            pstmt.setInt(1, TeamTeachDAO.getTeamLeaderIdByCurriculumId(SyllabusDAO.getCurriculumIdBySyllabusId(CellCaseDAO.getSyllabusIdByCellCaseId(ci.getCellCaseId()))));
+            pstmt.setInt(2, ci.getUserId());
+            pstmt.setString(3, "CellItemID #"+cellItemId);
+            pstmt.setString(4, EtestNotificationConstants.NEW_ITEM_NOTIFICATION);
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {
             try {

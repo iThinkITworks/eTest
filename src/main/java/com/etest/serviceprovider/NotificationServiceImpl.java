@@ -76,7 +76,8 @@ public class NotificationServiceImpl implements NotificationService {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM notifications "
-                    + "WHERE UserID = "+userId+" ");
+                    + "WHERE UserID = "+userId+" "
+                    + "ORDER BY NotificationID DESC");
             while(rs.next()){
                 EtestNotification en = new EtestNotification();
                 en.setNotificationId(CommonUtilities.convertStringToInt(rs.getString("NotificationID")));

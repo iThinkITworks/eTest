@@ -9,7 +9,6 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.CellCase;
 import com.etest.model.CellItem;
-import com.etest.model.EtestNotification;
 import com.etest.utilities.CommonUtilities;
 import com.etest.view.notification.constants.EtestNotificationConstants;
 import com.vaadin.server.VaadinSession;

@@ -24,7 +24,7 @@ public class NotifiationDataTable extends Table {
         setStyleName("wordwrap-table");
         setImmediate(true);
         
-        addContainerProperty("message", Label.class, null);
+        addContainerProperty("message", String.class, null);
         addContainerProperty("sender", String.class, null);
         addContainerProperty("date created", Date.class, null);
         addContainerProperty("action", VerticalLayout.class, null);

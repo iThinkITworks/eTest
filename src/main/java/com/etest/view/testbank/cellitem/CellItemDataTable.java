@@ -23,12 +23,12 @@ public class CellItemDataTable extends Table {
         setStyleName("wordwrap-table");
         setImmediate(true);
         
-//        addContainerProperty("id", Integer.class, null);
+        addContainerProperty("id", Integer.class, null);
         addContainerProperty("stem", Label.class, null);
         addContainerProperty("modify", VerticalLayout.class, null);
                 
-        setColumnWidth("stem", 570);
-//        setColumnWidth("modify", 130);
+        setColumnWidth("stem", 520);
+        setColumnWidth("id", 50);
         setColumnAlignment("modify", Align.CENTER);
     }
     

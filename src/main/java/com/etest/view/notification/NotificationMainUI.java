@@ -7,15 +7,18 @@ package com.etest.view.notification;
 
 import com.etest.model.EtestNotification;
 import com.etest.service.CellCaseService;
+import com.etest.service.CellItemService;
 import com.etest.service.NotificationService;
 import com.etest.service.UsersService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
+import com.etest.serviceprovider.CellItemServiceImpl;
 import com.etest.serviceprovider.NotificationServiceImpl;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.VaadinSession;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
@@ -35,8 +38,11 @@ public class NotificationMainUI extends VerticalLayout {
     NotificationService ns = new NotificationServiceImpl();
     UsersService ss = new UsersServiceImpl();
     CellCaseService ccs = new CellCaseServiceImpl();
+    CellItemService cis = new CellItemServiceImpl();
     Table notificationTable = new NotifiationDataTable();
         
+    Label message = new Label();
+    
     public NotificationMainUI() {
         setSizeFull();
         setSpacing(true);
@@ -48,8 +54,9 @@ public class NotificationMainUI extends VerticalLayout {
         sendMsgBtn.addClickListener((Button.ClickEvent event) -> {
             Notification.show("Send Message!");
         });
+        sendMsgBtn.setVisible(false);        
+        addComponent(sendMsgBtn);    
         
-        addComponent(sendMsgBtn);        
         if(VaadinSession.getCurrent().getAttribute("userId") == null){
             Page.getCurrent().setLocation("http://localhost:8080/");             
         } else {
@@ -78,8 +85,17 @@ public class NotificationMainUI extends VerticalLayout {
             v.addComponent(read);
             v.setComponentAlignment(read, Alignment.MIDDLE_LEFT);
                         
+            message.setContentMode(ContentMode.HTML);
+            
             String[] split = en.getNotice().split(" ");
-            int cellCaseId = CommonUtilities.convertStringToInt(split[1].replace("#", ""));
+            int cellCaseId;
+            if(split[0].equals("CellCaseID")){
+                message.setCaption(en.getRemarks()+en.getNotice());
+                cellCaseId = CommonUtilities.convertStringToInt(split[1].replace("#", ""));
+            } else {
+                cellCaseId = cis.getCellItemById(CommonUtilities.convertStringToInt(split[1].replace("#", ""))).getCellCaseId();
+                message.setCaption(en.getRemarks()+en.getNotice()+" from CellCaseID #"+cellCaseId);                
+            }
             
             Button approve = new Button("status");
             approve.setSizeFull();         
@@ -92,9 +108,9 @@ public class NotificationMainUI extends VerticalLayout {
             
             if(ccs.getCellCaseById(cellCaseId).getApprovalStatus() == 0){ approve.setIcon(FontAwesome.THUMBS_DOWN); }
             else { approve.setIcon(FontAwesome.THUMBS_UP); }
-            
+                        
             notificationTable.addItem(new Object[]{
-                new Label(en.getRemarks()+en.getNotice()), 
+                message.getCaption().toString(), 
                 ss.getUsernameById(en.getSenderId()), 
                 en.getNoteDate(), 
                 v                
@@ -109,8 +125,18 @@ public class NotificationMainUI extends VerticalLayout {
         if(event.getButton().getCaption().equals("read") || 
                 event.getButton().getCaption().equals("unread")){
             EtestNotification en = ns.getNotificationById((int) event.getButton().getData());
+            String[] split = en.getNotice().split(" ");
+            int cellCaseId;
+            int cellItemId;
+            if(split[0].equals("CellCaseID")){
+                cellCaseId = CommonUtilities.convertStringToInt(split[1].replace("#", ""));
+                cellItemId = 0;
+            } else {
+                cellCaseId = cis.getCellItemById(CommonUtilities.convertStringToInt(split[1].replace("#", ""))).getCellCaseId();
+                cellItemId = CommonUtilities.convertStringToInt(split[1].replace("#", ""));
+            }
             
-            Window sub = new ViewCaseNotificationWindow(getCellCaseId(en.getNotice().split(" ")));
+            Window sub = new ViewCaseNotificationWindow(cellCaseId, cellItemId);
             if(sub.getParent() == null){
                 UI.getCurrent().addWindow(sub);
             }          

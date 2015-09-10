@@ -142,7 +142,7 @@ public class CellCaseItemWindow extends Window {
             label.setStyleName("label-padding");
             
             table.addItem(new Object[]{
-//                ci.getCellItemId(), 
+                ci.getCellItemId(), 
                 label, 
                 v
             }, i);
