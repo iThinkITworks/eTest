@@ -30,7 +30,7 @@ public class CellCaseDataTable extends Table {
         addContainerProperty("date created", Date.class, null);
         addContainerProperty("modify", VerticalLayout.class, null);
         
-        setColumnWidth("case", 630);
+        setColumnWidth("case", 600);
 //        setColumnWidth("author", 120);
         setColumnWidth("date created", 150);
         setColumnWidth("modify", 100);

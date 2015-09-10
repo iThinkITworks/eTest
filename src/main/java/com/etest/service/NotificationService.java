@@ -24,4 +24,5 @@ public interface NotificationService {
     
     public void isReplyNotification(int notificationId);
     
+    public int totalUnreadNotification(int userId);
 }

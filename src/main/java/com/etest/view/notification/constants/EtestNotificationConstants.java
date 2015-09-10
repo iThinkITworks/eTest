@@ -11,9 +11,9 @@ package com.etest.view.notification.constants;
  */
 public class EtestNotificationConstants {
     
-    public static final String NEW_CASE_NOTIFICATION = "A new case was created with case id: ";
-    public static final String EDIT_CASE_NOTIFICATION = "A case was editted with case id: ";
-    public static final String NEW_ITEM_NOTIFICATION = "A new item was created with case id: ";
-    public static final String EDIT_ITEM_NOTIFICATION = "An item was editted with case id: ";
+    public static final String NEW_CASE_NOTIFICATION = "A new case was created and needs approval. ";
+    public static final String EDIT_CASE_NOTIFICATION = "A case was editted and needs approval. ";
+    public static final String NEW_ITEM_NOTIFICATION = "A new item was created and needs approval. ";
+    public static final String EDIT_ITEM_NOTIFICATION = "An item was editted and needs approval ";
     
 }

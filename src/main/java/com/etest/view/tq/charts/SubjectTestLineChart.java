@@ -72,13 +72,13 @@ public class SubjectTestLineChart{
         DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                 
         for(CellItem ci : CellItemDAO.getItemAnalysisResult(tqCoverageId)){
-            dataset.setValue((int)(ci.getDifficultIndex()*100), "Difficult Index", String.valueOf(ci.getItemNo()));
+            dataset.setValue((int)(ci.getDifficultIndex()*100), "Difficulty Index", String.valueOf(ci.getItemNo()));
         }
         
         JFreeChart chart = ChartFactory.createLineChart(
                 "Item Analysis Report", 
                 "Item No.", 
-                "Difficult Index (%)", 
+                "Difficulty Index (%)", 
                 dataset, 
                 PlotOrientation.VERTICAL, 
                 true, 

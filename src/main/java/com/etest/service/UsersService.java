@@ -18,4 +18,6 @@ public interface UsersService {
             int facultyId);
     
     public int getUserIdByFacultyId(int facultyId);
+    
+    public String getUsernameById(int userId);
 }

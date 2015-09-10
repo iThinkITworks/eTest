@@ -116,5 +116,37 @@ public class NotificationServiceImpl implements NotificationService {
     public void isReplyNotification(int notificationId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public int totalUnreadNotification(int userId) {
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int count = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS total FROM notifications "
+                    + "WHERE UserID = "+userId+" "
+                    + "AND Status = 0");
+            while(rs.next()){
+                count = CommonUtilities.convertStringToInt(rs.getString("total"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(NotificationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(NotificationServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return count;
+    }
     
 }

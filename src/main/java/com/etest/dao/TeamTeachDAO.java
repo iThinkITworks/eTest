@@ -466,5 +466,33 @@ public class TeamTeachDAO {
         return result;
     }
     
-    
+    public static int getTeamLeaderIdByCurriculumId(int curriculumId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int teamLeaderId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT UserID FROM team_teach "
+                    + "WHERE CurriculumID = "+curriculumId+" ");
+            while(rs.next()){
+                teamLeaderId = CommonUtilities.convertStringToInt(rs.getString("UserID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(TeamTeachDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return teamLeaderId;
+    }
 }

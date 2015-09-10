@@ -160,7 +160,7 @@ public class ItemAnalysisGraphicalViewAll extends Window {
         }
         
         JFreeChart difficultIndexChart = ChartFactory.createPieChart(
-                "Difficult Index", 
+                "Difficulty Index", 
                 difficultyDataSet, 
                 true, 
                 true, 

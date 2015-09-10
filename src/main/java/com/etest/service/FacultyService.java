@@ -33,4 +33,5 @@ public interface FacultyService {
             String value, 
             int facultyId);
     
+    public String getFacultyPositionById(int facultyId);
 }

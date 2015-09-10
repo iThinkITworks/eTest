@@ -80,4 +80,9 @@ public class CellItemServiceImpl implements CellItemService {
     public List<CellItem> getItemAnalysisResult(int tqCoverageId) {
         return CellItemDAO.getItemAnalysisResult(tqCoverageId);
     }
+
+    @Override
+    public int getCellItemAuthorById(int cellItemId) {
+        return CellItemDAO.getCellItemAuthorById(cellItemId);
+    }
 }

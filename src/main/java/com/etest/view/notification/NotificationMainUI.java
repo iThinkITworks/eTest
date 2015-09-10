@@ -7,7 +7,9 @@ package com.etest.view.notification;
 
 import com.etest.model.EtestNotification;
 import com.etest.service.NotificationService;
+import com.etest.service.UsersService;
 import com.etest.serviceprovider.NotificationServiceImpl;
+import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.etest.valo.ValoMenuLayout;
 import com.vaadin.server.FontAwesome;
@@ -31,11 +33,9 @@ import com.vaadin.ui.themes.ValoTheme;
 public class NotificationMainUI extends VerticalLayout {
 
     NotificationService ns = new NotificationServiceImpl();
+    UsersService ss = new UsersServiceImpl();
     Table notificationTable = new NotifiationDataTable();
-    
-    ValoMenuLayout root = new ValoMenuLayout();
-    ComponentContainer viewDisplay = root.getContentContainer();
-    
+        
     public NotificationMainUI() {
         setSizeFull();
         setSpacing(true);
@@ -60,30 +60,27 @@ public class NotificationMainUI extends VerticalLayout {
     Table populateNoficationTable(){
         notificationTable.removeAllItems();
         int i = 0;
-        System.out.println("userId: "+VaadinSession.getCurrent().getAttribute("userId"));
-//        System.out.println("username: "+VaadinSession.getCurrent().getAttribute("username"));
-        
-        
-        
         for(EtestNotification en : ns.getAllNotificationByUser(CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()))){
             VerticalLayout v = new VerticalLayout();
             v.setWidth("100%");
             
-            Button read = new Button("read");
-            read.setSizeFull();
-            read.setData(en.getNotificationId());
-            read.setIcon(FontAwesome.ASTERISK);
-            read.addStyleName(ValoTheme.BUTTON_LINK);
-            read.addStyleName(ValoTheme.BUTTON_TINY);
-            read.addStyleName(ValoTheme.BUTTON_QUIET);
-            read.addStyleName("button-container");
+            Button view = new Button("view");
+            view.setSizeFull();
+            view.setData(en.getNotificationId());
+            view.setIcon(FontAwesome.VIDEO_CAMERA);
+            view.addStyleName(ValoTheme.BUTTON_LINK);
+            view.addStyleName(ValoTheme.BUTTON_TINY);
+            view.addStyleName(ValoTheme.BUTTON_QUIET);
+            view.addStyleName("button-container");
 //            read.addClickListener(modifyBtnClickListener);
-            v.addComponent(read);
-            v.setComponentAlignment(read, Alignment.MIDDLE_LEFT);
+            v.addComponent(view);
+            v.setComponentAlignment(view, Alignment.MIDDLE_LEFT);
+            
+            System.out.println("remarks: "+en.getRemarks());
             
             notificationTable.addItem(new Object[]{
-                en.getNotice(), 
-                "Sender", 
+                new Label(en.getRemarks()+en.getNotice()), 
+                ss.getUsernameById(en.getSenderId()), 
                 en.getNoteDate(), 
                 v                
             }, i);

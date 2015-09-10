@@ -562,4 +562,34 @@ public class CellItemDAO {
         
         return cellItemlist;
     }        
+
+    public static int getCellItemAuthorById(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int authorId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT AuthoredBy_UserID FROM cell_items "
+                    + "WHERE CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                authorId = CommonUtilities.convertStringToInt(rs.getString("AuthoredBy_UserID"));
+            }            
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return authorId;
+    }
 }

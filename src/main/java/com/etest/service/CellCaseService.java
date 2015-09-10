@@ -32,5 +32,7 @@ public interface CellCaseService {
     
     public boolean isCellCaseApproved(int cellCaseId);
     
-    public CellCase getCellCaseIdByCellItemId(int cellItemId);    
+    public CellCase getCellCaseIdByCellItemId(int cellItemId);   
+    
+    public int getCellCaseAuthorById(int cellCaseId);
 }

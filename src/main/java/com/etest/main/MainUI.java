@@ -1,7 +1,10 @@
 package com.etest.main;
 
+import com.etest.service.NotificationService;
 import com.etest.service.UsersService;
+import com.etest.serviceprovider.NotificationServiceImpl;
 import com.etest.serviceprovider.UsersServiceImpl;
+import com.etest.utilities.CommonUtilities;
 import com.etest.valo.*;
 import com.etest.view.DashboardView;
 import com.etest.view.NotificationView;
@@ -305,8 +308,13 @@ private boolean testMode = false;
         menuItemsLayout.setWidth("100%");
         menu.addComponent(menuItemsLayout);
         
+        NotificationService ns = new NotificationServiceImpl();
+        
         Label notificationCounter = new Label();
-        notificationCounter.setCaption("You have "+2+" notification(s)");
+        notificationCounter.setCaption("You have "
+                +ns.totalUnreadNotification(
+                        CommonUtilities.convertStringToInt(
+                                VaadinSession.getCurrent().getAttribute("userId").toString()))+" notification(s)");
         notificationCounter.setContentMode(ContentMode.HTML);
         notificationCounter.setPrimaryStyleName("valo-menu-subtitle");
         notificationCounter.addStyleName("h4");
@@ -491,7 +499,8 @@ private boolean testMode = false;
                     Type.TRAY_NOTIFICATION);
             if(selectedItem.getText().equals("Sign Out")){
                 navigator.navigateTo("dashboard");
-                VaadinSession.getCurrent().close();
+//                VaadinSession.getCurrent().close();
+                UI.getCurrent().getSession().close();
                 Page.getCurrent().reload();
             }
             
@@ -617,5 +626,5 @@ private boolean testMode = false;
         root.setWidth("100%");
         root.addMenu(buildMenu());
         Notification.show("WELCOME "+VaadinSession.getCurrent().getAttribute("username"));
-};
+    };
 }

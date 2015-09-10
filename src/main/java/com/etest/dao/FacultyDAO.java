@@ -322,4 +322,35 @@ public class FacultyDAO {
         
         return result;
     }
+
+    public static String getFacultyPositionById(int facultyId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String position = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT Position FROM enrolled_faculty_view "
+                    + "WHERE FacultyStatus = 0 "
+                    + "AND facultyID = "+facultyId+" ");            
+            while(rs.next()){
+                position = rs.getString("Position");
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(FacultyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(FacultyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return position;
+    }
 }

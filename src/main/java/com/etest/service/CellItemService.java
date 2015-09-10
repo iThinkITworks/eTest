@@ -41,4 +41,6 @@ public interface CellItemService {
     public Map<String, Character> getOptionAnswer(int cellItemId);
     
     public List<CellItem> getItemAnalysisResult(int tqCoverageId);
+    
+    public int getCellItemAuthorById(int cellItemId);
 }

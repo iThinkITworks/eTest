@@ -42,7 +42,7 @@ public class CellCaseMainUI extends VerticalLayout {
     private int syllabusId;
     
     public CellCaseMainUI() {
-        setSizeFull();
+        setWidth("100%");
         setMargin(true);
         setSpacing(true);
                 

@@ -65,5 +65,10 @@ public class CellCaseServiceImpl implements CellCaseService {
     public CellCase getCellCaseIdByCellItemId(int cellItemId) {
         return CellCaseDAO.getCellCaseIdByCellItemId(cellItemId);
     }
+
+    @Override
+    public int getCellCaseAuthorById(int cellCaseId) {
+        return CellCaseDAO.getCellCaseAuthorById(cellCaseId);
+    }
     
 }

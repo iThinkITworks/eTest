@@ -59,5 +59,10 @@ public class facultyServiceImpl implements FacultyService {
                 value, 
                 facultyId);
     }
+
+    @Override
+    public String getFacultyPositionById(int facultyId) {
+        return FacultyDAO.getFacultyPositionById(facultyId);
+    }
    
 }

@@ -29,9 +29,6 @@ public class MultipleChoiceHelpViewer extends Window {
             @Override
             public InputStream getStream() {
                 try {
-//                    File f = new File("../VAADIN/files/TestConstRules.pdf");
-//                    FileInputStream fis = new FileInputStream(f);
-//                    return fis;
                     return this.getClass().getResourceAsStream("/files/TestConstRules.pdf");
                 } catch (Exception e) {
                     e.getMessage();

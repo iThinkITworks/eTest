@@ -32,5 +32,10 @@ public class UsersServiceImpl implements UsersService {
     public int getUserIdByFacultyId(int facultyId) {
         return UsersDAO.getUserIdByFacultyId(facultyId);
     }
+
+    @Override
+    public String getUsernameById(int userId) {
+        return UsersDAO.getUsernameById(userId);
+    }
     
 }

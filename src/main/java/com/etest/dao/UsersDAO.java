@@ -38,6 +38,7 @@ public class UsersDAO {
                 VaadinSession.getCurrent().setAttribute("username", rs.getString("Username_"));
                 VaadinSession.getCurrent().setAttribute("userId", rs.getString("UserID"));
                 VaadinSession.getCurrent().setAttribute("userType", rs.getString("UserType"));
+                VaadinSession.getCurrent().setAttribute("facultyId", rs.getString("FacultyID"));
                 result = true;
             }            
         } catch (SQLException ex) {
@@ -121,5 +122,35 @@ public class UsersDAO {
         }
         
         return userId;
+    }
+
+    public static String getUsernameById(int userId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String username = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT Username_ FROM users "
+                    + "WHERE UserID = "+userId+" ");
+            while(rs.next()){
+                username = rs.getString("Username_");
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }            
+        }
+        
+        return username;
     }
 }

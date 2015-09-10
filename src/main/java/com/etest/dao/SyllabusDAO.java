@@ -293,4 +293,34 @@ public class SyllabusDAO {
         
         return estimatedTime;
     }
+    
+    public static int getCurriculumIdBySyllabusId(int syllabusId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int curriculumId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT CurriculumID FROM syllabus "
+                    + "WHERE SyllabusID = "+syllabusId+" ");
+            while(rs.next()){                
+                curriculumId = CommonUtilities.convertStringToInt(rs.getString("CurriculumID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CurriculumDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CurriculumDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return curriculumId;
+    }
 }

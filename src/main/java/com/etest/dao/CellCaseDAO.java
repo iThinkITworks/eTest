@@ -9,7 +9,9 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.CellCase;
 import com.etest.model.CellItem;
+import com.etest.model.EtestNotification;
 import com.etest.utilities.CommonUtilities;
+import com.etest.view.notification.constants.EtestNotificationConstants;
 import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -200,7 +202,7 @@ public class CellCaseDAO {
             while(rs.next()){
                 cellCaseId = CommonUtilities.convertStringToInt(rs.getString("id"));
             }
-            
+                        
             pstmt = conn.prepareStatement("INSERT INTO case_log SET "
                     + "cellCaseID = ?, "
                     + "UserID = ?, "
@@ -214,6 +216,20 @@ public class CellCaseDAO {
             pstmt.executeUpdate();
             
             conn.commit();
+            
+            conn.setAutoCommit(true);
+            pstmt = conn.prepareStatement("INSERT INTO notifications SET "
+                    + "UserID = ?, "
+                    + "SenderID = ?, "
+                    + "Notice = ?, "
+                    + "Remarks = ?, "
+                    + "NoteDate = now() ");            
+            pstmt.setInt(1, TeamTeachDAO.getTeamLeaderIdByCurriculumId(SyllabusDAO.getCurriculumIdBySyllabusId(getSyllabusIdByCellCaseId(cellCaseId))));
+            pstmt.setInt(2, c.getUserId());
+            pstmt.setString(3, "CellCaseID #"+cellCaseId);
+            pstmt.setString(4, EtestNotificationConstants.NEW_CASE_NOTIFICATION);
+            pstmt.executeUpdate();
+                        
             result = true;
         } catch (SQLException ex) {
             try {
@@ -473,5 +489,65 @@ public class CellCaseDAO {
         }
         
         return c;
+    }
+
+    public static int getCellCaseAuthorById(int cellCaseId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int authorId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT CellCaseID FROM enrolled_cell_case_view "
+                    + "WHERE CellCaseID = "+cellCaseId+" ");
+            while(rs.next()){
+                authorId = CommonUtilities.convertStringToInt(rs.getString("CellCaseID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return authorId;
+    }
+    
+    public static int getSyllabusIdByCellCaseId(int cellCaseId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int syllabusId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT SyllabusID FROM cell_cases "
+                    + "WHERE CellCaseID = "+cellCaseId+" ");
+            while(rs.next()){
+                syllabusId = CommonUtilities.convertStringToInt(rs.getString("SyllabusID"));
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellCaseDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return syllabusId;
     }
 }
