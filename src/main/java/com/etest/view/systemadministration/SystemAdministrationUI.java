@@ -51,7 +51,7 @@ public class SystemAdministrationUI extends TabSheet implements TabSheet.Selecte
         v = new VerticalLayout();
         v.setCaption("Housekeeping");
         v.setWidth("100%");
-//        v.addComponent(new CurriculumMainUI());
+        v.addComponent(new HousekeepingMainUI());
 //        v.setMargin(true);
         addComponent(v);
     }

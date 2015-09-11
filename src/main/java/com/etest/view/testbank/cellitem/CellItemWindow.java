@@ -244,9 +244,9 @@ public class CellItemWindow extends Window {
         save.addStyleName(ValoTheme.BUTTON_SMALL);
         save.addClickListener(buttonClickListener);        
                 
-        Button remove = new Button("REMOVE ITEM?");
+        Button remove = new Button("ARCHIVE/REMOVE ITEM?");
         remove.setWidth("200px");
-        remove.setIcon(FontAwesome.THUMBS_O_UP);
+        remove.setIcon(FontAwesome.ARCHIVE);
         remove.addStyleName(ValoTheme.BUTTON_PRIMARY);
         remove.addStyleName(ValoTheme.BUTTON_SMALL);
         remove.addClickListener(buttonClickListener);
@@ -411,7 +411,7 @@ public class CellItemWindow extends Window {
                         close();
                     }       break;
                 }
-            case "REMOVE ITEM?":
+            case "ARCHIVE/REMOVE ITEM?":
                 {
                     boolean result = cis.removeCellItem(getCellItemId());
                     if(result){

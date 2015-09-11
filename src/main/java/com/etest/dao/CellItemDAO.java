@@ -392,15 +392,42 @@ public class CellItemDAO {
     public static boolean removeCellItem(int cellItemId){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;
+        Statement stmt = null;
         boolean result = false;
         
-        try {
-            conn.setAutoCommit(false);
-            pstmt = conn.prepareStatement("UPDATE cell_items SET "
-                    + "CellItemStatus = ? "
-                    + "WHERE CellItemID = ? ");
-            pstmt.setInt(1, 1);
-            pstmt.setInt(2, cellItemId);
+        try {            
+            System.out.println("cell item id: "+cellItemId);
+            conn.setAutoCommit(false);                        
+            if(!isCellItemIDInItemLog(cellItemId)){
+                pstmt = conn.prepareStatement("INSERT INTO item_log SET "
+                        + "CellItemID = ?, "
+                        + "UserID = ?, "
+                        + "Remarks = ?, "
+                        + "DateRemarked = now(), "
+                        + "ActionDone = ? ");
+                pstmt.setInt(1, cellItemId);
+                pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+                pstmt.setString(3, "insert new item");
+                pstmt.setString(4, "insert");
+                pstmt.executeUpdate();
+            }
+            
+            pstmt = conn.prepareStatement("INSERT INTO cell_items_archive(CellItemID, CellCaseID, BloomsClassID, "
+                    + "Item, OptionA, OptionB, OptionC, OptionD, ApproveStatus, DifficultIndex, DiscriminationIndex, "
+                    + "AuthoredBy_UserID, DateCreated, CellItemStatus, Analyzed) "
+                    + "SELECT ci.* FROM cell_items ci WHERE CellItemID = "+cellItemId+" ");
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO item_log SET "
+                    + "CellItemID = ?, "
+                    + "UserID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "ActionDone = ? ");
+            pstmt.setInt(1, cellItemId);
+            pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(3, "archive cell item");
+            pstmt.setString(4, "archive");
             pstmt.executeUpdate();
             
             pstmt = conn.prepareStatement("INSERT INTO item_log SET "
@@ -415,7 +442,13 @@ public class CellItemDAO {
             pstmt.setString(4, "delete");
             pstmt.executeUpdate();
             
-            conn.commit();
+            stmt = conn.createStatement();
+            stmt.addBatch("SET FOREIGN_KEY_CHECKS = 0");
+            stmt.addBatch("DELETE FROM cell_items WHERE CellItemID = "+cellItemId+" ");
+            stmt.addBatch("SET FOREIGN_KEY_CHECKS = 1");
+            stmt.executeBatch();            
+            
+            conn.commit();            
             result = true;
         } catch (SQLException ex) {
             try {
@@ -606,5 +639,37 @@ public class CellItemDAO {
         }
         
         return authorId;
+    }
+    
+    public static boolean isCellItemIDInItemLog(int cellItemId){
+        Connection conn = DBConnection.connectToDB();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS itemId FROM item_log "
+                    + "WHERE CellItemID = "+cellItemId+" ");
+            while(rs.next()){
+                if(!rs.getString("itemId").equals("0")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+            Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                stmt.close();
+                rs.close();
+                conn.close();
+            } catch (SQLException ex) {
+                ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
+                Logger.getLogger(CellItemDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }
