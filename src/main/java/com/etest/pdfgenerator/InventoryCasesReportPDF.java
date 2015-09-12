@@ -24,6 +24,8 @@ import com.vaadin.server.StreamResource.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,6 +41,7 @@ public class InventoryCasesReportPDF implements StreamSource {
     
     public InventoryCasesReportPDF() {
         Document document = null;
+        Date date = new Date();
         
         try {
             document = new Document(PageSize.LETTER, 50, 50, 50, 50);
@@ -47,13 +50,18 @@ public class InventoryCasesReportPDF implements StreamSource {
             
             Font header = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);
+            Font dateFont = FontFactory.getFont("Times-Roman", 8);
             
             Paragraph reportTitle = new Paragraph();
-            reportTitle.setSpacingAfter(30f);
             reportTitle.setAlignment(Element.ALIGN_CENTER);
-            reportTitle.add(new Phrase("Inventory of Cases Report", header));
-            
+            reportTitle.add(new Phrase("Inventory of Cases Report", header));            
             document.add(reportTitle);
+            
+            Paragraph datePrinted = new Paragraph();
+            datePrinted.setSpacingAfter(20f);
+            datePrinted.setAlignment(Element.ALIGN_CENTER);
+            datePrinted.add(new Phrase("Date printed: "+new SimpleDateFormat("dd MMMM yyyy").format(date), dateFont));            
+            document.add(datePrinted);
             
             PdfPTable table = new PdfPTable(4);
             table.setWidthPercentage(100);

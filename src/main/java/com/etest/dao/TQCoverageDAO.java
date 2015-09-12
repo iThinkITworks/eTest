@@ -842,10 +842,11 @@ public class TQCoverageDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT c.CurrSubject, tc.ExamTitle, tc.DateCreated, tc.TqCoverageID FROM tq_coverage tc "
-                    + "INNER JOIN curriculum c ON tc.CurriculumID = c.CurriculumID "
+            rs = stmt.executeQuery("SELECT c.CurriculumID AS CurriculumID,c.CurrSubject, tc.ExamTitle, tc.DateCreated, tc.TqCoverageID "
+                    + "FROM tq_coverage tc INNER JOIN curriculum c ON tc.CurriculumID = c.CurriculumID "
                     + "WHERE tc.TqCoverageID = "+tqCoverageId+" ");
             while(rs.next()){
+                tqCoverage.setCurriculumId(CommonUtilities.convertStringToInt(rs.getString("CurriculumID")));
                 tqCoverage.setSubject(rs.getString("c.CurrSubject"));
                 tqCoverage.setExamTitle(rs.getString("tc.ExamTitle"));
                 tqCoverage.setDateCreated(CommonUtilities.parsingDateWithTime(rs.getString("tc.DateCreated")));

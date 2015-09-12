@@ -5,7 +5,9 @@
  */
 package com.etest.pdfgenerator;
 
+import com.etest.service.CurriculumService;
 import com.etest.service.ReportService;
+import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.ReportServiceImpl;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -31,6 +33,7 @@ import java.util.logging.Logger;
  */
 public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
     
+    CurriculumService cs = new CurriculumServiceImpl();
     ReportService rs = new ReportServiceImpl();
     
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -46,15 +49,39 @@ public class ItemAnalysisOfSubjectReportPDF implements StreamSource {
             PdfWriter.getInstance(document, outputStream);
             document.open();
             
-            Font header = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
+            Font header1 = FontFactory.getFont("Times-Roman", 14, Font.BOLD);
+            Font header2 = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);
             
-            Paragraph reportTitle = new Paragraph();
-            reportTitle.setSpacingAfter(30f);
-            reportTitle.setAlignment(Element.ALIGN_CENTER);
-            reportTitle.add(new Phrase("Interactive Querying", header));
+            Paragraph title1 = new Paragraph();
+            title1.setSpacingAfter(10f);
+            title1.setAlignment(Element.ALIGN_CENTER);
+            title1.add(new Phrase("Interactive Querying", header1));            
+            document.add(title1);
             
-            document.add(reportTitle);
+            Paragraph title2 = new Paragraph();
+            title2.setSpacingAfter(10f);
+            title2.setAlignment(Element.ALIGN_CENTER);
+            title2.add(new Phrase("View Item Analysis of a Subject", content));            
+            document.add(title2);
+            
+            Paragraph subject = new Paragraph();
+            subject.setAlignment(Element.ALIGN_LEFT);
+            subject.add(new Phrase("Subject: "+cs.getCurriculumById(getCurriculumId()).getSubject().toUpperCase(), 
+                    content));
+            document.add(subject);
+            
+            Paragraph descriptiveTitle = new Paragraph();
+            descriptiveTitle.setAlignment(Element.ALIGN_LEFT);
+            descriptiveTitle.add(new Phrase("Descriptive Title: "+cs.getCurriculumById(getCurriculumId()).getDescriptiveTitle(), 
+                    content));
+            document.add(descriptiveTitle);
+            
+            Paragraph term = new Paragraph();
+            term.setSpacingAfter(20f);
+            term.setAlignment(Element.ALIGN_LEFT);
+            term.add(new Phrase("Normal Course Offering: 2nd Semester",content));
+            document.add(term);
             
             PdfPTable table = new PdfPTable(2);
             table.setWidthPercentage(75);            

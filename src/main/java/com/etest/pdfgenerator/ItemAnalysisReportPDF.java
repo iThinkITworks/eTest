@@ -7,7 +7,11 @@ package com.etest.pdfgenerator;
 
 import com.etest.model.CellItem;
 import com.etest.service.CellItemService;
+import com.etest.service.CurriculumService;
+import com.etest.service.TQCoverageService;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.CurriculumServiceImpl;
+import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.view.tq.itemanalysis.ItemAnalysisInterpretation;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -25,6 +29,8 @@ import com.vaadin.server.StreamResource.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,7 +40,9 @@ import java.util.logging.Logger;
  */
 public class ItemAnalysisReportPDF implements StreamSource {
 
-    CellItemService cs = new CellItemServiceImpl();
+    CurriculumService cs = new CurriculumServiceImpl();
+    CellItemService cis = new CellItemServiceImpl();
+    TQCoverageService tq = new TQCoverageServiceImpl();
     
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     int tqCoverageId;
@@ -43,6 +51,7 @@ public class ItemAnalysisReportPDF implements StreamSource {
         this.tqCoverageId = tqCoverageId;
         
         Document document = null;        
+        Date date = new Date();
         
         try {
             document = new Document(PageSize.A4, 50, 50, 50, 50);
@@ -51,13 +60,37 @@ public class ItemAnalysisReportPDF implements StreamSource {
             
             Font header = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);
+            Font dateFont = FontFactory.getFont("Times-Roman", 8);
             
             Paragraph reportTitle = new Paragraph();
-            reportTitle.setSpacingAfter(30f);
             reportTitle.setAlignment(Element.ALIGN_CENTER);
-            reportTitle.add(new Phrase("Item Analysis", header));
-            
+            reportTitle.add(new Phrase("Item Analysis Report", header));            
             document.add(reportTitle);
+            
+            Paragraph datePrinted = new Paragraph();
+            datePrinted.setSpacingAfter(20f);
+            datePrinted.setAlignment(Element.ALIGN_CENTER);
+            datePrinted.add(new Phrase("Date printed: "+new SimpleDateFormat("dd MMMM yyyy").format(date), dateFont));            
+            document.add(datePrinted);
+            
+            Paragraph subject = new Paragraph();
+            subject.setAlignment(Element.ALIGN_LEFT);
+            subject.add(new Phrase("Subject: "+cs.getCurriculumById(
+                    tq.getTQCoverageById(
+                            getTqCoverageId()).getCurriculumId()).getSubject().toUpperCase(), 
+                    content));
+            document.add(subject);
+            
+            Paragraph term = new Paragraph();
+            term.setAlignment(Element.ALIGN_LEFT);
+            term.add(new Phrase("SY and Semester Administered: 2015-16 2nd Semester", content));
+            document.add(term);
+            
+            Paragraph type = new Paragraph();
+            type.setSpacingAfter(20f);
+            type.setAlignment(Element.ALIGN_LEFT);
+            type.add(new Phrase("Type of Test: "+tq.getTQCoverageById(getTqCoverageId()).getExamTitle(), content));
+            document.add(type);
             
             PdfPTable table = new PdfPTable(5);
             table.setWidthPercentage(100);
@@ -120,7 +153,7 @@ public class ItemAnalysisReportPDF implements StreamSource {
             table2.setWidths(new int[]{130, 300, 300, 300, 300});
             
             int itemNo = 1;
-            for(CellItem ci : cs.getItemAnalysisResult(tqCoverageId)){
+            for(CellItem ci : cis.getItemAnalysisResult(tqCoverageId)){
                 PdfPCell cell1 = new PdfPCell(new Paragraph(String.valueOf(itemNo), content));
                 cell1.setBorderWidthTop(1);
                 cell1.setBorderWidthLeft(1);

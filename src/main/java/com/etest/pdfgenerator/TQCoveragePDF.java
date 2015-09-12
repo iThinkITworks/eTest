@@ -9,12 +9,14 @@ import com.etest.global.ShowErrorNotification;
 import com.etest.model.TQAnswerKey;
 import com.etest.service.CellCaseService;
 import com.etest.service.CellItemService;
+import com.etest.service.CurriculumService;
 import com.etest.service.ItemKeyService;
 import com.etest.service.SyllabusService;
 import com.etest.service.TQCoverageService;
 import com.etest.service.TeamTeachService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
@@ -49,6 +51,7 @@ import java.util.logging.Logger;
  */
 public class TQCoveragePDF implements StreamSource {
 
+    CurriculumService cs = new CurriculumServiceImpl();
     SyllabusService ss = new SyllabusServiceImpl();
     TeamTeachService tts = new TeamTeachServiceImpl();
     TQCoverageService tq = new TQCoverageServiceImpl();
@@ -77,7 +80,41 @@ public class TQCoveragePDF implements StreamSource {
             PdfWriter.getInstance(document, outputStream);
             document.open();
             
+            Font header1 = FontFactory.getFont("Times-Roman", 14, Font.BOLD);
+            Font header2 = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);            
+            
+            Paragraph title = new Paragraph();
+            title.setAlignment(Element.ALIGN_CENTER);
+            title.add(new Phrase("COLLEGE OF NURSING", header2));
+            document.add(title);
+            
+            Paragraph school = new Paragraph();
+            school.setAlignment(Element.ALIGN_CENTER);
+            school.add(new Phrase("Siliman University", header2));
+            document.add(school);
+            
+            Paragraph location = new Paragraph();
+            location.setSpacingAfter(10f);
+            location.setAlignment(Element.ALIGN_CENTER);
+            location.add(new Phrase("Dumaguete City", header2));
+            document.add(location);
+            
+            Paragraph examTitle = new Paragraph();
+            examTitle.setSpacingAfter(20f);
+            examTitle.setAlignment(Element.ALIGN_CENTER);
+            examTitle.add(new Phrase(cs.getCurriculumById(
+                    tq.getTQCoverageById(
+                            getTQCoverageId()).getCurriculumId()).getSubject()+" "+
+                    tq.getTQCoverageById(getTQCoverageId()).getExamTitle(), header2));
+            document.add(examTitle);
+            
+            Paragraph instruction = new Paragraph();
+            instruction.setSpacingAfter(5f);
+            instruction.setAlignment(Element.ALIGN_LEFT);
+            instruction.add(new Phrase("INSTRUCTIONS: Read the cases carefully. Choose the letter of the correct answer. "
+                    + "Use an answer sheet and follow instruction for its use.", content));
+            document.add(instruction);
             
             int itemNo = 1;
             Map<Integer, Map<Integer, Integer>> tqCoverage = tq.getTQCoverage(getTQCoverageId());
@@ -87,7 +124,7 @@ public class TQCoveragePDF implements StreamSource {
                 Label caseTopic = new Label();
                 caseTopic.setValue(ccs.getCellCaseById(tqCaseId).getCaseTopic());
                 caseTopic.setContentMode(ContentMode.HTML); 
-                document.add(new Paragraph(caseTopic.getValue().replaceAll("(?i)<p.*?>.*?</p>", "")));
+                document.add(new Paragraph(caseTopic.getValue().replaceAll("(?i)<p.*?>.*?</p>", ""), content));
 
                 Map<Integer, Integer> value = tqCases.getValue();
                 for (Map.Entry<Integer, Integer> itemIds : value.entrySet()) {
@@ -105,7 +142,7 @@ public class TQCoveragePDF implements StreamSource {
 //                    stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", keyList.get(0)));
                     stem.setValue(itemNo+". "+cis.getCellItemById(itemId).getItem().replace("{key}", k.getItemKeyById(itemKeyId)));
                     stem.setContentMode(ContentMode.HTML);
-                    document.add(new Paragraph(stem.getValue()));
+                    document.add(new Paragraph(stem.getValue(), content));
 
                     PdfPTable table = new PdfPTable(2);
                     table.setWidthPercentage(100);
@@ -116,28 +153,28 @@ public class TQCoveragePDF implements StreamSource {
                     float[] columnWidths = {1f, 1f};
                     table.setWidths(columnWidths);
 
-                    PdfPCell cell1 = new PdfPCell(new Paragraph("A) "+cis.getCellItemById(itemId).getOptionA()));
+                    PdfPCell cell1 = new PdfPCell(new Paragraph("A) "+cis.getCellItemById(itemId).getOptionA(), content));
     //                cell1.setBorderColor(BaseColor.BLUE);
                     cell1.setBorder(0);
                     cell1.setPaddingLeft(10);
                     cell1.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
                     cell1.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-                    PdfPCell cell2 = new PdfPCell(new Paragraph("C) "+cis.getCellItemById(itemId).getOptionC()));
+                    PdfPCell cell2 = new PdfPCell(new Paragraph("C) "+cis.getCellItemById(itemId).getOptionC(), content));
     //                cell2.setBorderColor(BaseColor.GREEN);
                     cell2.setBorder(0);
                     cell2.setPaddingLeft(10);
                     cell2.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
                     cell2.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-                    PdfPCell cell3 = new PdfPCell(new Paragraph("B) "+cis.getCellItemById(itemId).getOptionB()));
+                    PdfPCell cell3 = new PdfPCell(new Paragraph("B) "+cis.getCellItemById(itemId).getOptionB(), content));
     //                cell3.setBorderColor(BaseColor.RED);
                     cell3.setBorder(0);
                     cell3.setPaddingLeft(10);
                     cell3.setHorizontalAlignment(Element.ALIGN_JUSTIFIED);
                     cell3.setVerticalAlignment(Element.ALIGN_MIDDLE);
 
-                    PdfPCell cell4 = new PdfPCell(new Paragraph("D) "+ cis.getCellItemById(itemId).getOptionD()));
+                    PdfPCell cell4 = new PdfPCell(new Paragraph("D) "+ cis.getCellItemById(itemId).getOptionD(), content));
     //                cell4.setBorderColor(BaseColor.RED);
                     cell4.setBorder(0);
                     cell4.setPaddingLeft(10);

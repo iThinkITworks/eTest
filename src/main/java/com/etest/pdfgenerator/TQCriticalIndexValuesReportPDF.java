@@ -5,8 +5,12 @@
  */
 package com.etest.pdfgenerator;
 
+import com.etest.service.CurriculumService;
 import com.etest.service.ReportService;
+import com.etest.service.TQCoverageService;
+import com.etest.serviceprovider.CurriculumServiceImpl;
 import com.etest.serviceprovider.ReportServiceImpl;
+import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -31,6 +35,8 @@ import java.util.logging.Logger;
  */
 public class TQCriticalIndexValuesReportPDF implements StreamSource {
 
+    CurriculumService cs = new CurriculumServiceImpl();
+    TQCoverageService tq = new TQCoverageServiceImpl();
     ReportService rs = new ReportServiceImpl();
     
     private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -50,12 +56,36 @@ public class TQCriticalIndexValuesReportPDF implements StreamSource {
             Font content = FontFactory.getFont("Times-Roman", 10);
             
             Paragraph reportTitle = new Paragraph();
-            reportTitle.setSpacingAfter(30f);
+            reportTitle.setSpacingAfter(10f);
             reportTitle.setAlignment(Element.ALIGN_CENTER);
-            reportTitle.add(new Phrase("Interactive Querying", header));
-            
+            reportTitle.add(new Phrase("Interactive Querying", header));            
             document.add(reportTitle);
             
+            Paragraph title2 = new Paragraph();
+            title2.setSpacingAfter(10f);
+            title2.setAlignment(Element.ALIGN_CENTER);
+            title2.add(new Phrase("View Item Analysis Critical Values of a Test", content));            
+            document.add(title2);
+            
+            Paragraph subject = new Paragraph();
+            subject.setAlignment(Element.ALIGN_LEFT);
+            subject.add(new Phrase("Subject: "+cs.getCurriculumById(
+                    tq.getTQCoverageById(
+                            getTqCoverageId()).getCurriculumId()).getSubject().toUpperCase()+"("+
+                    cs.getCurriculumById(tq.getTQCoverageById(getTqCoverageId()).getCurriculumId()).getDescriptiveTitle()+")", content));
+            document.add(subject);
+            
+            Paragraph term = new Paragraph();
+            term.setAlignment(Element.ALIGN_LEFT);
+            term.add(new Phrase("SY and Semester Administered: 2015-16 2nd Semester", content));
+            document.add(term);
+            
+            Paragraph descriptiveTitle = new Paragraph();
+            descriptiveTitle.setSpacingAfter(10f);
+            descriptiveTitle.setAlignment(Element.ALIGN_LEFT);
+            descriptiveTitle.add(new Phrase("Type of Test: "+tq.getTQCoverageById(getTqCoverageId()).getExamTitle(), content));
+            document.add(descriptiveTitle);
+                        
             PdfPTable table = new PdfPTable(2);
             table.setWidthPercentage(75);            
             

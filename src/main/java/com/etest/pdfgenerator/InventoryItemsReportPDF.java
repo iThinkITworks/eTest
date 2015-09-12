@@ -26,6 +26,8 @@ import com.vaadin.server.StreamResource.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,6 +50,7 @@ public class InventoryItemsReportPDF implements StreamSource {
     
     public InventoryItemsReportPDF() {
         Document document = null;
+        Date date = new Date();
         
         try {
             document = new Document(PageSize.LETTER.rotate(), 50, 50, 50, 50);
@@ -56,13 +59,23 @@ public class InventoryItemsReportPDF implements StreamSource {
             
             Font header = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);
+            Font dateFont = FontFactory.getFont("Times-Roman", 8);
             
-            Paragraph reportTitle = new Paragraph();
-            reportTitle.setSpacingAfter(30f);
-            reportTitle.setAlignment(Element.ALIGN_CENTER);
-            reportTitle.add(new Phrase("Inventory of Items Report"));
+            Paragraph title1 = new Paragraph();
+            title1.setAlignment(Element.ALIGN_CENTER);
+            title1.add(new Phrase("Inventory of Items Report"));            
+            document.add(title1);
             
-            document.add(reportTitle);
+            Paragraph title2 = new Paragraph();
+            title2.setAlignment(Element.ALIGN_CENTER);
+            title2.add(new Phrase("Grouped According to the Revised Bloom's Taxonomy"));            
+            document.add(title2);
+            
+            Paragraph datePrinted = new Paragraph();
+            datePrinted.setSpacingAfter(20f);
+            datePrinted.setAlignment(Element.ALIGN_CENTER);
+            datePrinted.add(new Phrase("Date printed: "+new SimpleDateFormat("dd MMMM yyyy").format(date), content));            
+            document.add(datePrinted);
             
             PdfPTable table = new PdfPTable(8);
             table.setWidthPercentage(100);
