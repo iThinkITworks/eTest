@@ -9,8 +9,10 @@ import com.etest.global.ShowErrorNotification;
 import com.etest.model.CellItem;
 import com.etest.model.ItemKeys;
 import com.etest.service.CellItemService;
+import com.etest.service.HousekeepingService;
 import com.etest.service.ItemKeyService;
 import com.etest.serviceprovider.CellItemServiceImpl;
+import com.etest.serviceprovider.HousekeepingServieImpl;
 import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Property;
@@ -40,6 +42,7 @@ public class ViewStemWindow extends Window {
 
     CellItemService cis = new CellItemServiceImpl();
     ItemKeyService k = new ItemKeyServiceImpl();
+    HousekeepingService hs = new HousekeepingServieImpl();
     private int cellItemId;
     private int keyIndex = 0;
     private int keyIndexSize = 0;
@@ -71,7 +74,11 @@ public class ViewStemWindow extends Window {
         form.setMargin(true);
         form.setSpacing(true);
     
-        CellItem ci = cis.getCellItemById(getCellItemId());        
+        CellItem ci = cis.getCellItemById(getCellItemId()); 
+        if(ci.getCellItemId() == 0){
+            ci = hs.getCellItemById(getCellItemId());
+        }
+        
         keyList = k.getAllItemKey(getCellItemId());
         keyIndexSize = keyList.size();
         if(keyList.isEmpty()){
@@ -196,6 +203,10 @@ public class ViewStemWindow extends Window {
     
     String getStem(){
         CellItem ci = cis.getCellItemById(getCellItemId());
+        if(ci.getCellItemId() == 0){
+            ci = hs.getCellItemById(getCellItemId());
+        }
+        
         keyList = k.getAllItemKey(getCellItemId());
         itemKey = keyList.get(getKeyIndex());
         stem = ci.getItem().replace("{key}", getItemKey());

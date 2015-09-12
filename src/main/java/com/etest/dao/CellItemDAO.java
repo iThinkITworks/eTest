@@ -136,6 +136,7 @@ public class CellItemDAO {
                     + "WHERE CellItemStatus = 0 "
                     + "AND CellItemID = "+cellItemId+" ");
             while(rs.next()){                
+                ci.setCellItemId(cellItemId);
                 ci.setCellCaseId(CommonUtilities.convertStringToInt(rs.getString("CellCaseID")));
                 ci.setBloomsClassId(CommonUtilities.convertStringToInt(rs.getString("BloomsClassID")));
                 ci.setItem(CommonUtilities.escapeSingleQuote(rs.getString("Item")));

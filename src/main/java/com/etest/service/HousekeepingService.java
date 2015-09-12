@@ -5,7 +5,7 @@
  */
 package com.etest.service;
 
-import com.etest.model.Housekeeping;
+import com.etest.model.CellItem;
 import java.util.List;
 
 /**
@@ -14,6 +14,8 @@ import java.util.List;
  */
 public interface HousekeepingService {
     
-    public List<Housekeeping> getAllItemsFromArchive();
+    public List<CellItem> getAllItemsFromArchive();
+    
+    public CellItem getCellItemById(int cellItemId);
     
 }
