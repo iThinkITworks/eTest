@@ -21,23 +21,28 @@ import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.serviceprovider.TQCoverageServiceImpl;
 import com.etest.serviceprovider.TeamTeachServiceImpl;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.Label;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +88,16 @@ public class TQCoveragePDF implements StreamSource {
             Font header1 = FontFactory.getFont("Times-Roman", 14, Font.BOLD);
             Font header2 = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);            
+            
+            Image img = null;
+            try {
+                img = Image.getInstance("C:\\eTest-images\\SUCN_seal.png");
+                img.scaleToFit(60, 60);
+                img.setAbsolutePosition(100, 720);
+            } catch (BadElementException | IOException ex) {
+                Logger.getLogger(TQCoveragePDF.class.getName()).log(Level.SEVERE, null, ex);
+            }             
+            document.add(img);
             
             Paragraph title = new Paragraph();
             title.setAlignment(Element.ALIGN_CENTER);

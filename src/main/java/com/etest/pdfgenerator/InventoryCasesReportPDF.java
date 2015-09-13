@@ -8,11 +8,13 @@ package com.etest.pdfgenerator;
 import com.etest.model.InventoryOfCasesReport;
 import com.etest.service.InventoryReportService;
 import com.etest.serviceprovider.InventoryReportServiceImpl;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
+import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
@@ -23,6 +25,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.vaadin.server.StreamResource.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,6 +54,16 @@ public class InventoryCasesReportPDF implements StreamSource {
             Font header = FontFactory.getFont("Times-Roman", 12, Font.BOLD);
             Font content = FontFactory.getFont("Times-Roman", 10);
             Font dateFont = FontFactory.getFont("Times-Roman", 8);
+            
+            Image img = null;
+            try {
+                img = Image.getInstance("C:\\eTest-images\\SUCN_seal.png");
+                img.scaleToFit(60, 60);
+                img.setAbsolutePosition(500, 700);
+            } catch (BadElementException | IOException ex) {
+                Logger.getLogger(TQCoveragePDF.class.getName()).log(Level.SEVERE, null, ex);
+            }             
+            document.add(img);
             
             Paragraph reportTitle = new Paragraph();
             reportTitle.setAlignment(Element.ALIGN_CENTER);
