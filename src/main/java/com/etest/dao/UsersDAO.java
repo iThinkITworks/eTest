@@ -27,6 +27,7 @@ public class UsersDAO {
         Connection conn = DBConnection.connectToDB();
         Statement stmt = null;
         ResultSet rs = null;
+        PreparedStatement pstmt = null;
         boolean result = false;
         
         try {
@@ -41,6 +42,15 @@ public class UsersDAO {
                 VaadinSession.getCurrent().setAttribute("facultyId", rs.getString("FacultyID"));
                 result = true;
             }            
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Logged In!");
+            pstmt.executeUpdate();
+            
         } catch (SQLException ex) {
             ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -49,6 +59,7 @@ public class UsersDAO {
             try {
                 stmt.close();
                 rs.close();
+                pstmt.close();
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.errorNotificationOnDBAccess("Cannot close DB Connection");
@@ -152,5 +163,5 @@ public class UsersDAO {
         }
         
         return username;
-    }
+    }    
 }

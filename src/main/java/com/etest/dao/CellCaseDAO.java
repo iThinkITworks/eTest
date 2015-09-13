@@ -228,6 +228,14 @@ public class CellCaseDAO {
             pstmt.setString(3, "CellCaseID #"+cellCaseId);
             pstmt.setString(4, EtestNotificationConstants.NEW_CASE_NOTIFICATION);
             pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, c.getUserId());
+            pstmt.setString(2, "Created new cell case with CellCaseID #"+cellCaseId);
+            pstmt.executeUpdate();
                         
             result = true;
         } catch (SQLException ex) {
@@ -282,6 +290,14 @@ public class CellCaseDAO {
             pstmt.setString(4, c.getActionDone());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, c.getUserId());
+            pstmt.setString(2, "Modify cell case with CellCaseID #"+c.getCellCaseId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -330,6 +346,14 @@ public class CellCaseDAO {
             pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
             pstmt.setString(3, "approved case");
             pstmt.setString(4, "approved");
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Approved cell case with CellCaseID #"+cellCaseId);
             pstmt.executeUpdate();
             
             conn.commit();
@@ -402,6 +426,14 @@ public class CellCaseDAO {
                 pstmt.setString(4, "delete");
                 pstmt.executeUpdate();
             }            
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed cell case with CellCaseID #"+cellCaseId);
+            pstmt.executeUpdate();
             
             conn.commit();
             result = true;

@@ -9,6 +9,7 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.Curriculum;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,6 +43,14 @@ public class CurriculumDAO {
             pstmt.setString(2, curriculum.getSubject());
             pstmt.setString(3, curriculum.getDescriptiveTitle());
             pstmt.setInt(4, curriculum.getNormCourseOffering());
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Created new curriculum "+curriculum.getSubject());
             pstmt.executeUpdate();
             
             result = true;
@@ -78,6 +87,14 @@ public class CurriculumDAO {
             pstmt.setString(3, curriculum.getDescriptiveTitle());
             pstmt.setInt(4, curriculum.getNormCourseOffering());
             pstmt.setInt(5, curriculum.getCurriculumId());
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Update Curriculum with CurriculumID #"+curriculum.getCurriculumId());
             pstmt.executeUpdate();
             
             result = true;
@@ -144,6 +161,14 @@ public class CurriculumDAO {
                     + "WHERE CurriculumID = ? ");
             pstmt.setInt(1, 1);
             pstmt.setInt(2, curriculumId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed Curriculum with CurriculumID #"+curriculumId);
             pstmt.executeUpdate();
             
             result = true;

@@ -3,6 +3,7 @@ package com.etest.main;
 import com.etest.service.NotificationService;
 import com.etest.service.UsersService;
 import com.etest.serviceprovider.NotificationServiceImpl;
+import com.etest.serviceprovider.SystemLogServiceImpl;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.etest.valo.*;
@@ -29,6 +30,7 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.Responsive;
+import com.vaadin.server.StreamResource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
@@ -54,6 +56,7 @@ import static com.vaadin.ui.UI.getCurrent;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -291,10 +294,22 @@ private boolean testMode = false;
         Label notification = new Label();
         notification.setCaption("Notifications");
         
+        StreamResource.StreamSource source = new StreamResource.StreamSource() {
+            @Override
+            public InputStream getStream() {
+                try {
+                    return this.getClass().getResourceAsStream("/files/GeePatrimonio.jpg");
+                } catch (Exception e) {
+                    e.getMessage();
+                    return null;
+                }
+            }
+        };
+        
         final MenuBar settings = new MenuBar();
         settings.addStyleName("user-menu");
         final MenuBar.MenuItem settingsItem = settings.addItem(VaadinSession.getCurrent().getAttribute("username").toString(),
-                new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
+                new ThemeResource("../tests-valo/img/GeePatrimonio.jpg"),
                 null);
 //        final MenuBar.MenuItem settingsItem = settings.addItem("Admin",
 //                new ThemeResource("../tests-valo/img/profile-pic-300px.jpg"),
@@ -500,7 +515,8 @@ private boolean testMode = false;
                     Type.TRAY_NOTIFICATION);
             if(selectedItem.getText().equals("Sign Out")){
                 navigator.navigateTo("dashboard");
-//                VaadinSession.getCurrent().close();
+                
+                new UsersServiceImpl().logout();
                 UI.getCurrent().getSession().close();
                 Page.getCurrent().reload();
             }

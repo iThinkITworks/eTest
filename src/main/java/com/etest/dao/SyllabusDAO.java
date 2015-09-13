@@ -9,6 +9,7 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.Syllabus;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -183,6 +184,14 @@ public class SyllabusDAO {
             pstmt.setFloat(4, s.getEstimatedTime());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New Syllabus was added with CurriculumID #"+s.getCurriculumId()+", Topic: "+s.getTopic());
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -206,6 +215,7 @@ public class SyllabusDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE syllabus SET "
                     + "CurriculumID = ?, "
                     + "TopicNo = ?, "
@@ -219,6 +229,15 @@ public class SyllabusDAO {
             pstmt.setInt(5, s.getSyllabusId());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Update Syllabus Topic with SyllabusID #"+s.getTopic());
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -242,11 +261,21 @@ public class SyllabusDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("DELETE FROM syllabus "
                     + "WHERE SyllabusID = ? ");            
             pstmt.setInt(1, syllabusId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed Syllabus with SyllabusID #"+syllabusId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());

@@ -35,6 +35,7 @@ public class ItemKeyDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("INSERT INTO item_keys SET "
                     + "CellItemID = ?, "
                     + "ItemKey = ?, "
@@ -44,6 +45,15 @@ public class ItemKeyDAO {
             pstmt.setString(3, answer);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New Item Key was added with CellItemID #"+cellItemId+" Key value: "+itemKey);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -289,25 +299,35 @@ public class ItemKeyDAO {
     public static boolean modifyItemOption(int cellItemId, 
             String optionColumn, 
             String optionValue, 
-            boolean isOptionAKeyExist, 
+            boolean isOptionKeyExist, 
             int itemKeyId){
         Connection conn = DBConnection.connectToDB();
         PreparedStatement pstmt = null;
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE cell_items SET "
                     + ""+optionColumn+" = '"+optionValue.replace("'", "\\'")+"' "
                     + "WHERE cellItemId = "+cellItemId+" ");
             pstmt.executeUpdate();
             
-            if(isOptionAKeyExist){
+            if(isOptionKeyExist){
                 pstmt = conn.prepareStatement("UPDATE item_keys SET "
                         + "Answer = '"+optionValue.replace("'", "\\'")+"' "
                         + "WHERE ItemKeyID = "+itemKeyId+" ");
                 pstmt.executeUpdate();
             }
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Modified item option with CellItemID #"+cellItemId+", "+optionColumn+": "+optionValue);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -369,6 +389,14 @@ public class ItemKeyDAO {
             pstmt.setString(4, actionDone);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Modified Item Key with CellItemID #"+cellItemId+", ItemKey: "+keyValue+", answer: "+answer);
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -414,6 +442,14 @@ public class ItemKeyDAO {
             pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
             pstmt.setString(3, "delete item key");
             pstmt.setString(4, "delete");
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed Item Key with ItemKeyID #"+itemKeyId);
             pstmt.executeUpdate();
             
             conn.commit();

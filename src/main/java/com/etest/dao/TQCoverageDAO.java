@@ -18,6 +18,7 @@ import com.etest.serviceprovider.ItemKeyServiceImpl;
 import com.etest.serviceprovider.SyllabusServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.vaadin.data.Item;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.Grid;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -408,6 +409,7 @@ public class TQCoverageDAO {
         PreparedStatement tqCases = null;
         PreparedStatement tqItems = null;
         PreparedStatement tqAnswerKey = null;
+        PreparedStatement pstmt = null;
         Statement stmt = null;
         ResultSet rs = null;
         boolean result = false;
@@ -538,6 +540,14 @@ public class TQCoverageDAO {
                 }
             }            
                         
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New TQ Coverage was created with Exam Title: "+coverage.getExamTitle());
+            pstmt.executeUpdate();
+                        
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -656,11 +666,21 @@ public class TQCoverageDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE tq_coverage "
                     + "SET Status = 1 "
                     + "WHERE TqCoverageID = "+tqCoverageId+" ");
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Approved TQ Coverage with TqCoverageID #"+tqCoverageId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -716,10 +736,20 @@ public class TQCoverageDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("DELETE FROM tq_coverage "
                     + "WHERE TqCoverageID = "+tqCoverageId+" ");
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed TQ Coverage with TqCoverageID #"+tqCoverageId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -911,6 +941,14 @@ public class TQCoverageDAO {
                     }                    
                 }
             }         
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New Item Analysis was performed with TqCoverageID #"+tqCoverageId);
+            pstmt.executeUpdate();
             
             conn.commit();
             result = true;

@@ -54,6 +54,13 @@ public class SystemAdministrationUI extends TabSheet implements TabSheet.Selecte
         v.addComponent(new HousekeepingMainUI());
 //        v.setMargin(true);
         addComponent(v);
+        
+        v = new VerticalLayout();
+        v.setCaption("System Logs");
+        v.setWidth("100%");
+        v.addComponent(new SystemLogsMainUI());
+//        v.setMargin(true);
+        addComponent(v);
     }
 
     @Override

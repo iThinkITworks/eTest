@@ -9,6 +9,7 @@ import com.etest.connection.DBConnection;
 import com.etest.connection.ErrorDBNotification;
 import com.etest.model.Users;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -210,6 +211,14 @@ public class FacultyDAO {
             pstmt.setString(4, users.getUserType());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New Faculty account was added. "+users.getFirstname()+" "+users.getMiddlename()+" "+users.getLastname());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -255,6 +264,14 @@ public class FacultyDAO {
             pstmt.setString(4, users.getUserType());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Update faculty account with FacultyID #"+users.getFacultyId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -284,6 +301,14 @@ public class FacultyDAO {
             pstmt.setInt(2, facultyId);
             pstmt.executeUpdate();                        
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed Faculty with FacultyID #"+facultyId);
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {            
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -301,6 +326,7 @@ public class FacultyDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE faculty SET "
                     + ""+column+" = ? "
                     + "WHERE FacultyID = ?");
@@ -308,6 +334,15 @@ public class FacultyDAO {
             pstmt.setInt(2, facultyId);
             pstmt.executeUpdate();
                  
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Update Faculty account with FacultyID #"+facultyId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             try {

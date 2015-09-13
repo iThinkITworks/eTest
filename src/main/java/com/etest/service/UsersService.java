@@ -20,4 +20,6 @@ public interface UsersService {
     public int getUserIdByFacultyId(int facultyId);
     
     public String getUsernameById(int userId);
+    
+    public void logout();
 }

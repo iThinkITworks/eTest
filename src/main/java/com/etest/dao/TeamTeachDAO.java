@@ -10,6 +10,7 @@ import com.etest.connection.ErrorDBNotification;
 import com.etest.model.TeamTeach;
 import com.etest.model.Users;
 import com.etest.utilities.CommonUtilities;
+import com.vaadin.server.VaadinSession;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -163,6 +164,14 @@ public class TeamTeachDAO {
             pstmt.setInt(2, tt.getFacultyId());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New TTL was added with FacultyID #"+tt.getFacultyId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -193,6 +202,7 @@ public class TeamTeachDAO {
         boolean result = false;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE team_teach SET "
                     + "UserID = ? "
                     + "WHERE TeamTeachID = ? ");
@@ -200,6 +210,15 @@ public class TeamTeachDAO {
             pstmt.setInt(2, teamTeachId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Changed TTL with UserID #"+userId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -226,6 +245,14 @@ public class TeamTeachDAO {
             pstmt = conn.prepareStatement("DELETE FROM team_teach "
                     + "WHERE TeamTeachID = ? ");
             pstmt.setInt(1, teamTeachId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "removed Semestral Team with TeamTeachID #"+teamTeachId);
             pstmt.executeUpdate();
             
             result = true;
@@ -353,6 +380,14 @@ public class TeamTeachDAO {
             pstmt.setInt(2, facultyId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "New Team Member was added with FacultyID #"+facultyId);
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {            
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
@@ -381,6 +416,14 @@ public class TeamTeachDAO {
                     + "AND FacultyID = ? ");
             pstmt.setInt(1, teamTeachId);
             pstmt.setInt(2, facultyId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed Team Member with FacultyID #"+facultyId);
             pstmt.executeUpdate();
             
             result = true;

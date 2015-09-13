@@ -265,6 +265,14 @@ public class CellItemDAO {
             pstmt.setString(4, EtestNotificationConstants.NEW_ITEM_NOTIFICATION);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, ci.getUserId());
+            pstmt.setString(2, "Created new cell item with CellItemID #"+cellItemId);
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {
             try {
@@ -316,6 +324,14 @@ public class CellItemDAO {
             pstmt.setString(4, ci.getActionDone());
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Modify cell item with CellItemID #"+ci.getCellItemId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -364,6 +380,14 @@ public class CellItemDAO {
             pstmt.setInt(2, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
             pstmt.setString(3, "approved cell item");
             pstmt.setString(4, "approved");
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Approved cell item with CellItemID #"+cellItemId);
             pstmt.executeUpdate();
             
             conn.commit();
@@ -448,6 +472,14 @@ public class CellItemDAO {
             stmt.addBatch("DELETE FROM cell_items WHERE CellItemID = "+cellItemId+" ");
             stmt.addBatch("SET FOREIGN_KEY_CHECKS = 1");
             stmt.executeBatch();            
+            
+            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                    + "UserID = ?, "
+                    + "EntryDateTime = now(), "
+                    + "Activity = ? ");            
+            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+            pstmt.setString(2, "Removed cell item with CellItemID #"+cellItemId);
+            pstmt.executeUpdate();
             
             conn.commit();            
             result = true;
