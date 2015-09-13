@@ -41,25 +41,31 @@ public class UsersDAO {
                 VaadinSession.getCurrent().setAttribute("userType", rs.getString("UserType"));
                 VaadinSession.getCurrent().setAttribute("facultyId", rs.getString("FacultyID"));
                 result = true;
-            }            
+            }                       
             
-            pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
-                    + "UserID = ?, "
-                    + "EntryDateTime = now(), "
-                    + "Activity = ? ");            
-            pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
-            pstmt.setString(2, "Logged In!");
-            pstmt.executeUpdate();
+            if(result){
+                pstmt = conn.prepareStatement("INSERT INTO system_logs SET "
+                        + "UserID = ?, "
+                        + "EntryDateTime = now(), "
+                        + "Activity = ? ");            
+                pstmt.setInt(1, CommonUtilities.convertStringToInt(VaadinSession.getCurrent().getAttribute("userId").toString()));
+                pstmt.setString(2, "Logged In!");
+                pstmt.executeUpdate();
+            }
             
         } catch (SQLException ex) {
             ErrorDBNotification.errorNotificationOnDBAccess("Severe Login ERROR");
             ErrorDBNotification.showLoggedErrorOnWindow(ex.toString());
             Logger.getLogger(UsersDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            try {
+            try {            
                 stmt.close();
                 rs.close();
-                pstmt.close();
+                
+                if(result){
+                    pstmt.close();
+                }
+                
                 conn.close();
             } catch (SQLException ex) {
                 ErrorDBNotification.errorNotificationOnDBAccess("Cannot close DB Connection");

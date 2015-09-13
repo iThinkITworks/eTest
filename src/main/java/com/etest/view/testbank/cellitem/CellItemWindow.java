@@ -10,6 +10,7 @@ import com.etest.common.CommonComboBox;
 import com.etest.common.CommonTextField;
 import com.etest.model.CellCase;
 import com.etest.model.CellItem;
+import com.etest.pdfviewer.MultipleChoiceHelpViewer;
 import com.etest.service.CellItemService;
 import com.etest.service.ItemKeyService;
 import com.etest.serviceprovider.CellItemServiceImpl;
@@ -80,6 +81,7 @@ public class CellItemWindow extends Window {
         }
         
         setContent(buildForms());
+        getContent().setHeightUndefined();
     }
     
     FormLayout buildForms(){
@@ -88,9 +90,27 @@ public class CellItemWindow extends Window {
         form.setMargin(true);
         form.setSpacing(true);
                 
+        HorizontalLayout hlayout = new HorizontalLayout();
+        hlayout.setWidth("100%");
+        
+        Button helpBtn = new Button("HELP");
+        helpBtn.setWidthUndefined();
+        helpBtn.setIcon(FontAwesome.TASKS);
+        helpBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
+        helpBtn.addStyleName(ValoTheme.BUTTON_SMALL);
+        helpBtn.addClickListener((Button.ClickEvent event) -> {
+            Window sub = new MultipleChoiceHelpViewer();
+            if(sub.getParent() == null){
+                UI.getCurrent().addWindow(sub);
+            }
+        });
+        hlayout.addComponent(helpBtn);
+        hlayout.setComponentAlignment(helpBtn, Alignment.MIDDLE_RIGHT);
+        form.addComponent(hlayout);
+        
         bloomsTaxonomy.setCaption("Blooms Class: ");
         bloomsTaxonomy.setWidth("30%");
-        form.addComponent(bloomsTaxonomy);
+        form.addComponent(bloomsTaxonomy);        
         
         stem = new TextArea("Stem: ");
         stem.setWidth("100%");

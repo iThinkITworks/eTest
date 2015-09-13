@@ -7,6 +7,7 @@ package com.etest.view.testbank.cellitem;
 
 import com.etest.model.CellCase;
 import com.etest.model.CellItem;
+import com.etest.pdfviewer.MultipleChoiceHelpViewer;
 import com.etest.service.CellCaseService;
 import com.etest.service.CellItemService;
 import com.etest.serviceprovider.CellCaseServiceImpl;
@@ -81,18 +82,18 @@ public class CellCaseItemWindow extends Window {
         
         form.addComponent(table);
                 
-        HorizontalLayout h = new HorizontalLayout();
-        h.setWidth("100%");
+        HorizontalLayout v = new HorizontalLayout();
+        v.setWidth("100%");
         
         Button create = new Button("CREATE NEW STEM");
-        create.setWidth("200px");         
+        create.setWidthUndefined();         
         create.addStyleName(ValoTheme.BUTTON_LINK);
         create.addStyleName(ValoTheme.BUTTON_TINY);
         create.addStyleName(ValoTheme.BUTTON_QUIET);
         create.addClickListener(modifyBtnClickListener);
-        h.addComponent(create);
-        h.setComponentAlignment(create, Alignment.MIDDLE_RIGHT);
-        form.addComponent(h);
+        v.addComponent(create);
+        v.setComponentAlignment(create, Alignment.MIDDLE_RIGHT);
+        form.addComponent(v);
         
         return form;
     }

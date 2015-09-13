@@ -89,20 +89,6 @@ public class CellCaseMainUI extends VerticalLayout {
         hlayout.addComponent(createCellBtn);
         hlayout.setComponentAlignment(createCellBtn, Alignment.MIDDLE_LEFT);
         
-        Button helpBtn = new Button("HELP");
-        helpBtn.setWidthUndefined();
-        helpBtn.setIcon(FontAwesome.TASKS);
-        helpBtn.addStyleName(ValoTheme.BUTTON_PRIMARY);
-        helpBtn.addStyleName(ValoTheme.BUTTON_SMALL);
-        helpBtn.addClickListener((Button.ClickEvent event) -> {
-            Window sub = new MultipleChoiceHelpViewer();
-            if(sub.getParent() == null){
-                UI.getCurrent().addWindow(sub);
-            }
-        });
-        hlayout.addComponent(helpBtn);
-        hlayout.setComponentAlignment(helpBtn, Alignment.MIDDLE_LEFT);
-        
         return hlayout;
     }
     
