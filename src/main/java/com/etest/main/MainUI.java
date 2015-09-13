@@ -43,12 +43,14 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -291,10 +293,27 @@ private boolean testMode = false;
         top.addComponent(title);
         top.setExpandRatio(title, 1);
         
+        Image img = new Image(null, new ThemeResource("../tests-valo/img/SU_seal.png"));
+        img.setWidth("150px");
+        img.setHeight("150px");
+        
+        Panel imgPanel = new Panel();
+        imgPanel.setWidth("100%");
+        
+        HorizontalLayout h = new HorizontalLayout();
+        h.setWidth("100%");
+        h.setHeightUndefined();
+        h.addComponent(img);
+        h.setComponentAlignment(img, Alignment.MIDDLE_CENTER);
+        
+        imgPanel.setContent(h);
+        imgPanel.setHeightUndefined();
+        menu.addComponent(imgPanel);
+        
         Label notification = new Label();
         notification.setCaption("Notifications");
         
-        StreamResource.StreamSource source = new StreamResource.StreamSource() {
+        StreamResource.StreamSource avatar = new StreamResource.StreamSource() {
             @Override
             public InputStream getStream() {
                 try {
