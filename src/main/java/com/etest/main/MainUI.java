@@ -3,7 +3,6 @@ package com.etest.main;
 import com.etest.service.NotificationService;
 import com.etest.service.UsersService;
 import com.etest.serviceprovider.NotificationServiceImpl;
-import com.etest.serviceprovider.SystemLogServiceImpl;
 import com.etest.serviceprovider.UsersServiceImpl;
 import com.etest.utilities.CommonUtilities;
 import com.etest.valo.*;
@@ -530,8 +529,8 @@ private boolean testMode = false;
 
         @Override
         public void menuSelected(MenuBar.MenuItem selectedItem) {
-            Notification.show("Action " + selectedItem.getText(),
-                    Type.TRAY_NOTIFICATION);
+//            Notification.show("Action " + selectedItem.getText(),
+//                    Type.TRAY_NOTIFICATION);
             if(selectedItem.getText().equals("Sign Out")){
                 navigator.navigateTo("dashboard");
                 

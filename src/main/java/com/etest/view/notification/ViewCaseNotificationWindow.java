@@ -98,11 +98,13 @@ public class ViewCaseNotificationWindow extends Window {
             CellItem ci = cis.getCellItemById(getCellItemId());        
             keyList = k.getAllItemKey(getCellItemId());
             keyIndexSize = keyList.size();
+            
             if(keyList.isEmpty()){
                 ShowErrorNotification.error("No Item Key was found for STEM: \n"
                         +ci.getItem());
                 return null;
             }
+                        
             stem = ci.getItem().replace("{key}", "<u>"+keyList.get(getKeyIndex())+"</u>");
             cellItem.setValue("<b>STEM</b>: "+getStem());
             OptionGroup options = new OptionGroup();

@@ -5,6 +5,7 @@
  */
 package com.etest.view.notification;
 
+import com.etest.global.ShowErrorNotification;
 import com.etest.model.EtestNotification;
 import com.etest.service.CellCaseService;
 import com.etest.service.CellItemService;
@@ -21,6 +22,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
@@ -46,6 +48,15 @@ public class NotificationMainUI extends VerticalLayout {
     public NotificationMainUI() {
         setSizeFull();
         setSpacing(true);
+                
+        if(VaadinSession.getCurrent().getAttribute("userId") == null){
+            Page.getCurrent().setLocation("http://localhost:8080/");             
+        } else {
+            addComponent(populateNoficationTable());
+        }
+        
+        HorizontalLayout h = new HorizontalLayout();
+        h.setWidth("950px");
         
         Button sendMsgBtn = new Button("Send Message");
         sendMsgBtn.setWidthUndefined();
@@ -54,15 +65,10 @@ public class NotificationMainUI extends VerticalLayout {
         sendMsgBtn.addClickListener((Button.ClickEvent event) -> {
             Notification.show("Send Message!");
         });
-        sendMsgBtn.setVisible(false);        
-        addComponent(sendMsgBtn);    
         
-        if(VaadinSession.getCurrent().getAttribute("userId") == null){
-            Page.getCurrent().setLocation("http://localhost:8080/");             
-        } else {
-            addComponent(populateNoficationTable());
-        }
-        
+        h.addComponent(sendMsgBtn);
+        h.setComponentAlignment(sendMsgBtn, Alignment.MIDDLE_RIGHT);
+        addComponent(h);
     }
     
     Table populateNoficationTable(){
@@ -117,6 +123,8 @@ public class NotificationMainUI extends VerticalLayout {
             }, i);
             i++;
         }
+        notificationTable.setPageLength(0);
+        notificationTable.setHeight("100%");
         
         return notificationTable;
     }
@@ -134,7 +142,13 @@ public class NotificationMainUI extends VerticalLayout {
             } else {
                 cellCaseId = cis.getCellItemById(CommonUtilities.convertStringToInt(split[1].replace("#", ""))).getCellCaseId();
                 cellItemId = CommonUtilities.convertStringToInt(split[1].replace("#", ""));
-            }
+                
+                if(cis.getCellItemById(cellItemId).getItem() == null){
+                    ShowErrorNotification.error("No Item was found for CellItemID #"+cellItemId+". \n The Item must have been removed \n "
+                            + "or has been transfered to Archive!"); 
+                    return;
+                }
+            }            
             
             Window sub = new ViewCaseNotificationWindow(cellCaseId, cellItemId);
             if(sub.getParent() == null){
